@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('role')->default('student');
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
+            $table->string('status')->nullable();
+            $table->string('verification_code')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

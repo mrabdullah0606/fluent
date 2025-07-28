@@ -54,6 +54,11 @@
         </style>
     @endpush
     <div class="container py-5">
+        @if (session('error'))
+            <div class="alert alert-warning">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="login-box">
             <h3 class="text-center fw-bold">Log in As Admin</h3>
             <form method="POST" action="{{ route('admin.login') }}">

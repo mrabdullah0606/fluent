@@ -1,7 +1,65 @@
 @extends('website.master.master')
 @section('title', 'Student Login - FluentAll')
 @section('content')
+    @push('styles')
+        <style>
+            .navbar-nav .nav-link:hover {
+                color: #fdbd00 !important;
+            }
+
+            .login-box {
+                max-width: 400px;
+                margin: auto;
+                border: 1px solid #ffc107;
+                border-radius: 15px;
+                box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+                padding: 30px;
+                background-color: #fff;
+            }
+
+            .form-control:focus {
+                border-color: #ffc107;
+                box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+            }
+
+            .input-group-text {
+                background-color: #fff;
+                border-right: 0;
+            }
+
+            .form-control {
+                border-left: 0;
+            }
+
+            .login-btn {
+                background-color: #e53935;
+                color: white;
+            }
+
+            .login-btn:hover {
+                background-color: #FFC107;
+                color: white;
+            }
+
+
+            .form-icon {
+                border-color: #ffc107;
+            }
+
+            @media (max-width: 356px) {
+                .responsive-wrap {
+                    white-space: normal !important;
+                }
+            }
+        </style>
+    @endpush
     <div class="container py-5">
+        @if (session('error'))
+            <div class="alert alert-warning">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="login-box">
             <h3 class="text-center fw-bold">Log in As Student</h3>
             <form method="POST" action="{{ route('student.login') }}">

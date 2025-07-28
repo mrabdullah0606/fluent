@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Auth\StudentAuthController;
+use App\Http\Controllers\Auth\TeacherAuthController;
 use App\Http\Controllers\Dashboard\StudentController;
 use App\Http\Controllers\Dashboard\TeacherController;
+use App\Http\Controllers\Dashboard\UserAuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -34,16 +37,40 @@ Route::get('/dashboard', function () {
 /*                               STUDENT ROUTES                               */
 /* ************************************************************************** */
 
-Route::group(['prefix' => 'student', 'middleware' => ['auth', 'isStudent']], function () {
-    Route::get('/dashboard', [StudentController::class, 'index'])->name('student.index');
+Route::prefix('student')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('login', [StudentAuthController::class, 'showLoginForm'])->name('student.login');
+        Route::post('login', [StudentAuthController::class, 'login'])->name('student.login.submit');
+        Route::get('register', [StudentAuthController::class, 'showRegisterForm'])->name('student.register');
+        Route::post('register', [StudentAuthController::class, 'register'])->name('student.register.submit');
+    });
+
+    Route::middleware(['auth', 'isStudent'])->group(function () {
+        Route::get('dashboard', [StudentController::class, 'index'])->name('student.dashboard');
+        Route::get('public-profile', [StudentController::class, 'publicProfile'])->name('student.public.profile');
+        Route::get('profile/edit', [StudentController::class, 'editProfile'])->name('student.profile.edit');
+        Route::put('profile/update', [StudentController::class, 'updateProfile'])->name('student.profile.update');
+    });
 });
 
 /* ************************************************************************** */
 /*                               TEACHER ROUTES                               */
 /* ************************************************************************** */
 
-Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'isTeacher']], function () {
-    Route::get('/dashboard', [TeacherController::class, 'index'])->name('teacher.index');
+Route::prefix('teacher')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('login', [TeacherAuthController::class, 'showLoginForm'])->name('teacher.login');
+        Route::post('login', [TeacherAuthController::class, 'login'])->name('teacher.login.submit');
+        Route::get('register', [TeacherAuthController::class, 'showRegisterForm'])->name('teacher.register');
+        Route::post('register', [TeacherAuthController::class, 'register'])->name('teacher.register.submit');
+    });
+
+    Route::middleware(['auth', 'isTeacher'])->group(function () {
+        Route::get('dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
+        Route::get('public-profile', [TeacherController::class, 'publicProfile'])->name('teacher.public.profile');
+        Route::get('profile/edit', [TeacherController::class, 'editProfile'])->name('teacher.profile.edit');
+        Route::put('profile/update', [TeacherController::class, 'updateProfile'])->name('teacher.profile.update');
+    });
 });
 
 /* ************************************************************************** */
@@ -54,13 +81,24 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'isTeacher']], fun
 // });
 Route::prefix('admin')->group(function () {
     Route::middleware('guest')->group(function () {
-        Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-        Route::post('login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+        Route::get('login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+        Route::post('login', [AdminController::class, 'login'])->name('admin.login.submit');
     });
 
     Route::middleware(['auth', 'isAdmin'])->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('admin.index');
-        Route::post('logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+        /* ******************************** Language ******************************** */
+        Route::prefix('languages')->group(function () {
+            Route::get('/', [AdminController::class, 'languagesIndex'])->name('admin.languages.index');
+            Route::get('create', [AdminController::class, 'languageCreate'])->name('admin.languages.create');
+            Route::post('/', [AdminController::class, 'languagesStore'])->name('admin.languages.store');
+            Route::get('{language}/edit', [AdminController::class, 'languagesEdit'])->name('admin.languages.edit'); // AJAX route
+            Route::put('{language}', [AdminController::class, 'languagesUpdate'])->name('admin.languages.update');
+            Route::delete('{language}', [AdminController::class, 'languagesDestroy'])->name('admin.languages.destroy');
+        });
+        /* ****************************** language end ****************************** */
+        // Route::post('logout', [AdminController::class, 'logout'])->name('admin.logout');
     });
 });
 
