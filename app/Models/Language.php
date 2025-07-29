@@ -12,4 +12,12 @@ class Language extends Model
         'name',
         'symbol',
     ];
+
+    /**
+     * Get the tutors associated with the language.
+     */
+    public function teachers()
+    {
+        return $this->hasMany(Teacher::class);
+    }
 }

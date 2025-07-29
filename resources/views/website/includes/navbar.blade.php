@@ -9,7 +9,9 @@
             </div>
 
             <div class="d-flex flex-column">
-                <span class="fw-bold text-warning fs-5">FluentAll</span>
+                <a href="{{ route('index') }}">
+                    <span class="fw-bold text-warning fs-5">FluentAll</span>
+                </a>
                 <small class="text-dark lh-sm d-block responsive-wrap" style="white-space: nowrap;">
                     Be fluent in all Languages you want
                 </small>
@@ -27,7 +29,7 @@
         <!-- Navigation -->
         <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100" id="navbarNav">
 
-            <a href="" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
+            <a href="{{ route('switch.to.teacher') }}" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
                 🔁 Switch to Teacher Account
             </a>
 
@@ -42,7 +44,7 @@
             <a href="{{ route('find.tutor') }}" class="btn btn-sm px-4 py-2 fw-semibold text-white me-2"
                 style="background-color: #E83030;">Find Tutor</a>
 
-            <a href="#" class="btn btn-outline-danger px-4 py-2 fw-semibold btn-sm">Student
+            <a href="{{ route('student.login') }}" class="btn btn-outline-danger px-4 py-2 fw-semibold btn-sm">Student
                 Log In</a>
         </div>
     </div>

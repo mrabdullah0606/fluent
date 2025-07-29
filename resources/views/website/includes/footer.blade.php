@@ -1,3 +1,9 @@
+@php
+    use App\Models\Language;
+
+    // Fetch all languages from the database
+    $languages = Language::all();
+@endphp
 <footer class="bg-light border-top border-warning-subtle pt-5 pb-3">
     <div class="container-fluid px-4 px-md-5">
         <div class="row text-start text-muted">
@@ -5,15 +11,10 @@
             <div class="col-md-4 mb-4">
                 <h6 class="fw-bold text-dark mb-3">Teachers</h6>
                 <ul class="list-unstyled">
-                    <li><a href="#" class="text-muted text-decoration-none">German Teachers</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">French Teachers</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">Spanish Teachers</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">Italian Teachers</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">Dutch Teachers</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">Chinese Teachers</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">Arabic Teachers</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">Turkish Teachers</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">English Teachers</a></li>
+                    @foreach ($languages as $language)
+                        <li><a href="{{ route('languages.teachers', $language) }}"
+                                class="text-muted text-decoration-none">{{ $language->name }} Teachers</a></li>
+                    @endforeach
                 </ul>
             </div>
 

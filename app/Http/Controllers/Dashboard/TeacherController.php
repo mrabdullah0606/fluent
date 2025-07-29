@@ -51,11 +51,16 @@ class TeacherController extends Controller
             ->with('success', 'Profile updated successfully.');
     }
 
-    function publicProfile(): View
+    public function publicProfile(): View
     {
         $teacher = auth()->user();
         $languages = Language::all();
 
         return view('teacher.content.profile.public', compact('teacher', 'languages'));
+    }
+
+    public function calendar(): View
+    {
+        return view('teacher.content.calendar.index');
     }
 }

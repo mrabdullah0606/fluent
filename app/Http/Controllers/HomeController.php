@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Language;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -14,7 +16,20 @@ class HomeController extends Controller
      */
     function index(): View
     {
-        return view('website.content.index');
+        $languages = Language::withCount('teachers')->get();
+        return view('website.content.index', compact('languages'));
+    }
+
+
+    public function showByLanguage($languageId): View
+    {
+        $language = Language::findOrFail($languageId);
+
+        $teachers = Teacher::with('user')
+            ->where('language_id', $languageId)
+            ->get();
+
+        return view('website.content.language', compact('language', 'teachers'));
     }
 
     /**
@@ -22,7 +37,7 @@ class HomeController extends Controller
      *
      * @return View
      */
-    function about(): View
+    public function about(): View
     {
         return view('website.content.about');
     }
@@ -31,14 +46,14 @@ class HomeController extends Controller
      *
      * @return View
      */
-    function messages(): View
+    public function messages(): View
     {
         return view('website.content.messages');
     }
 
-    function calender(): View
+    public function calendar(): View
     {
-        return view('website.content.calender');
+        return view('website.content.calendar');
     }
 
     /**
@@ -46,7 +61,7 @@ class HomeController extends Controller
      *
      * @return View
      */
-    function contact(): View
+    public function contact(): View
     {
         return view('website.content.contact');
     }
@@ -57,12 +72,12 @@ class HomeController extends Controller
      * @return View
      * 
      */
-    function findTutor(): View
+    public function findTutor(): View
     {
         return view('website.content.find-tutor');
     }
 
-    function adminLogin(): View
+    public function adminLogin(): View
     {
         return view('auth.admin.login');
     }

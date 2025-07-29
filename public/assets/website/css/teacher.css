@@ -1458,7 +1458,7 @@ h6 {
 }
 
 .border-0 {
-    border-width: 0px !important;
+    border-width: 0px;
 }
 
 .border-2 {
@@ -2330,19 +2330,19 @@ h6 {
 }
 
 .text-primary {
-    color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary));
 }
 
 .text-primary-foreground {
-    color: hsl(var(--primary-foreground)) !important;
+    color: hsl(var(--primary-foreground));
 }
 
 .text-primary-foreground\/70 {
-    color: hsl(var(--primary-foreground) / 0.7) !important;
+    color: hsl(var(--primary-foreground) / 0.7);
 }
 
 .text-primary\/70 {
-    color: hsl(var(--primary) / 0.7) !important;
+    color: hsl(var(--primary) / 0.7);
 }
 
 .text-red-400 {
@@ -2723,31 +2723,31 @@ h6 {
 }
 
 .btn-red {
-    background-color: hsl(var(--secondary)) !important;
-    color: hsl(var(--secondary-foreground)) !important;
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
 }
 
 .btn-red:hover {
-    background-color: hsl(var(--secondary) / 0.9) !important;
+    background-color: hsl(var(--secondary) / 0.9);
 }
 
 .btn-red {
     transform: translate(var(--tw-translate-x), var(--tw-translate-y))
         rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y))
-        scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important;
-    border-radius: calc(var(--radius) - 2px) !important;
-    padding: 0.75rem 1.5rem !important;
-    font-weight: 600 !important;
+        scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    border-radius: calc(var(--radius) - 2px);
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
     --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
         0 2px 4px -2px rgb(0 0 0 / 0.1);
     --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
         0 2px 4px -2px var(--tw-shadow-color);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-        var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
-    transition-property: all !important;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
-    transition-duration: 0.3s !important;
-    animation-duration: 0.3s !important;
+        var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.3s;
+    animation-duration: 0.3s;
 }
 
 .btn-red:hover {
@@ -2755,7 +2755,7 @@ h6 {
     --tw-scale-y: 1.05;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y))
         rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y))
-        scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important;
+        scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .btn-yellow-outline {

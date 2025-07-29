@@ -33,16 +33,21 @@
                 taught by expert tutors.</p>
             <div class="row g-4 justify-content-center">
                 <!-- Card 1 -->
-                {{-- @foreach ($languages as $language) --}}
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="p-4 text-center language-card h-100">
-                        <div class="language-code">EN</div>
-                        <div class="language-name">English</div>
-                        <p class="tutor-info"><i class="bi bi-person"></i> 5 tutors available</p>
-                        <a href="#" class="view-tutors">View Tutors <i class="bi bi-arrow-right"></i></a>
+                @foreach ($languages as $language)
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="p-4 text-center language-card h-100">
+                            <div class="language-code">{{ $language->symbol }}</div>
+                            <div class="language-name">{{ $language->name }}</div>
+                            <p class="tutor-info">
+                                <i class="bi bi-person"></i> {{ $language->teachers_count }} tutors available
+                            </p>
+
+                            <a href="{{ route('languages.teachers', $language->id) }}" class="view-tutors">
+                                View Tutors <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                {{-- @endforeach --}}
+                @endforeach
             </div>
             <!-- Show More Button -->
             <div class="text-center mt-5">

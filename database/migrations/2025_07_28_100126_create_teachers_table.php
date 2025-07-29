@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('experience')->nullable();
             $table->string('teaching_style')->nullable();
             $table->string('about_me')->nullable();
+            $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
             $table->timestamps();
         });
     }

@@ -1,5 +1,5 @@
 @extends('student.master.master')
-@section('title', 'SStudent Dashboard - FluentAll')
+@section('title', 'Student Dashboard - FluentAll')
 @section('content')
     {{-- <div class="container-fluid px-3 px-md-4 px-lg-5 py-5">
 
