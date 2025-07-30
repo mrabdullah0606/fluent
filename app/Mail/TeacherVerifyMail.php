@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Address;
 
-class VerifyMail extends Mailable
+class TeacherVerifyMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -41,7 +41,7 @@ class VerifyMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'student.content.mail.verify-mail',
+            view: 'teacher.content.mail.verify-mail',
         );
     }
 

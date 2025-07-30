@@ -80,6 +80,10 @@ Route::prefix('teacher')->group(function () {
         Route::post('login', [TeacherAuthController::class, 'login'])->name('teacher.login.submit');
         Route::get('register', [TeacherAuthController::class, 'showRegisterForm'])->name('teacher.register');
         Route::post('register', [TeacherAuthController::class, 'register'])->name('teacher.register.submit');
+        // Email verification routes (accessible to guests)
+        Route::get('verify', [TeacherAuthController::class, 'showVerifyForm'])->name('teacher.verify.form');
+        Route::post('verify', [TeacherAuthController::class, 'verify'])->name('teacher.verify');
+        Route::post('resend-code', [TeacherAuthController::class, 'resendCode'])->name('teacher.resend.code');
     });
 
     Route::middleware(['auth', 'isTeacher'])->group(function () {

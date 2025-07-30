@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Mail\VerifyMail;
+use App\Mail\StudentVerifyMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -47,7 +47,7 @@ class StudentAuthController extends Controller
         ]);
 
         // Send verification email
-        Mail::to($user->email)->send(new VerifyMail([
+        Mail::to($user->email)->send(new StudentVerifyMail([
             'title' => 'Email Verification Required',
             'body' => 'Your verification code is: ' . $verificationCode,
             'code' => $verificationCode,
@@ -141,7 +141,7 @@ class StudentAuthController extends Controller
         ]);
 
         // Send new verification email
-        Mail::to($user->email)->send(new VerifyMail([
+        Mail::to($user->email)->send(new StudentVerifyMail([
             'title' => 'New Verification Code',
             'body' => 'Your new verification code is: ' . $verificationCode,
             'code' => $verificationCode,
