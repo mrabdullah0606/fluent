@@ -63,4 +63,14 @@ class TeacherController extends Controller
     {
         return view('teacher.content.calendar.index');
     }
+
+    public function settings(): View
+    {
+        return view('teacher.content.profile.settings');
+    }
+
+    public function wallet(): View
+    {
+        return view('teacher.content.wallet.index');
+    }
 }

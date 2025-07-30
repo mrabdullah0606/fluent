@@ -11,6 +11,7 @@ use App\Http\Controllers\Dashboard\UserAuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ZoomMeetingController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -71,6 +72,9 @@ Route::prefix('student')->group(function () {
 
         // Logout route
         Route::post('logout', [StudentAuthController::class, 'logout'])->name('student.logout');
+        /* ********************************** zoom ********************************** */
+        Route::get('zoom-meetings', [ZoomMeetingController::class, 'indexStudent'])->name('zoom.meetings.index');
+        Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('zoom.meetings.store');
     });
 });
 
@@ -92,11 +96,17 @@ Route::prefix('teacher')->group(function () {
         Route::get('profile/edit', [TeacherController::class, 'editProfile'])->name('teacher.profile.edit');
         Route::put('profile/update', [TeacherController::class, 'updateProfile'])->name('teacher.profile.update');
         Route::get('calendar', [TeacherController::class, 'calendar'])->name('teacher.calendar');
+        Route::get('settings', [TeacherController::class, 'settings'])->name('teacher.settings');
+        Route::get('wallet', [TeacherController::class, 'wallet'])->name('teacher.wallet');
 
         /* ********************************** CHAT ROUTES ********************************** */
         Route::get('chats', [ChatController::class, 'teacherChatList'])->name('teacher.chats.index');
         Route::get('chat/{user}', [ChatController::class, 'index'])->name('teacher.chat.index');
         Route::post('chat/send', [ChatController::class, 'send'])->name('teacher.chat.send');
+
+        /* ********************************** zoom ********************************** */
+        Route::get('zoom-meetings', [ZoomMeetingController::class, 'index'])->name('teacher.zoom.meetings.index');
+        Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('teacher.zoom.meetings.store');
     });
 });
 /* ************************************************************************** */
@@ -112,19 +122,27 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::middleware(['auth', 'isAdmin'])->group(function () {
-        Route::get('dashboard', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
         /* ******************************** Language ******************************** */
         Route::prefix('languages')->group(function () {
             Route::get('/', [AdminController::class, 'languagesIndex'])->name('admin.languages.index');
             Route::get('create', [AdminController::class, 'languageCreate'])->name('admin.languages.create');
             Route::post('/', [AdminController::class, 'languagesStore'])->name('admin.languages.store');
-            Route::get('{language}/edit', [AdminController::class, 'languagesEdit'])->name('admin.languages.edit'); // AJAX route
+            Route::get('{language}/edit', [AdminController::class, 'languagesEdit'])->name('admin.languages.edit');
             Route::put('{language}', [AdminController::class, 'languagesUpdate'])->name('admin.languages.update');
             Route::delete('{language}', [AdminController::class, 'languagesDestroy'])->name('admin.languages.destroy');
         });
         /* ****************************** language end ****************************** */
-        // Route::post('logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+        /* ******************************** User Management ******************************** */
+        Route::prefix('users')->group(function () {
+            Route::get('/', [AdminController::class, 'usersIndex'])->name('admin.users.index');
+            Route::get('edit/{user}', [AdminController::class, 'userEdit'])->name('admin.users.edit');
+            Route::put('{user}', [AdminController::class, 'userUpdate'])->name('admin.users.update');
+            Route::delete('{user}', [AdminController::class, 'deleteUser'])->name('admin.users.destroy');
+        });
+        /* ******************************** User Management End ******************************** */
     });
 });
 

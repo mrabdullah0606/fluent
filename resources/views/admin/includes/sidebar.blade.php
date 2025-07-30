@@ -1,11 +1,11 @@
 <aside class="sidebar">
     <h5 class="text-warning fw-bold">Admin Menu</h5>
     <!-- Dashboard -->
-    <a href="" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+    <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
         <i class="bi bi-house me-2"></i> Dashboard
     </a>
     <!-- User Management -->
-    <a href="" class="nav-link {{ request()->routeIs('admin.users.*') }}">
+    <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') }}">
         <i class="bi bi-person-lines-fill me-2"></i> User Management
     </a>
     <a href="" class="nav-link {{ request()->routeIs('admin.users.*') }}">

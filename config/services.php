@@ -18,6 +18,13 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
+    'zoom' => [
+        'client_id' => env('ZOOM_CLIENT_ID'),
+        'client_secret' => env('ZOOM_CLIENT_SECRET'),
+        'account_id' => env('ZOOM_ACCOUNT_ID'),
+        'host_email' => env('ZOOM_HOST_EMAIL', 'itsabdullah824@gmail.com'),
+    ],
+
     'resend' => [
         'key' => env('RESEND_KEY'),
     ],

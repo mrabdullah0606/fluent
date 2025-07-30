@@ -33,15 +33,16 @@
                              class="bi bi-chat-left-text me-1"></i> Messages</a>
                  </li>
                  <li class="nav-item me-3">
+                     <a class="nav-link d-flex align-items-center" href="{{ route('zoom.meetings.index') }}"><i
+                             class="bi bi-camera-video me-1"></i> Lessons</a>
+                 </li>
+                 <li class="nav-item me-3">
                      <a class="nav-link d-flex align-items-center" href="{{ route('student.public.profile') }}">
                          <i class="bi bi-eye me-1"></i> Profile
                      </a>
                  </li>
              </ul>
              <div class="d-flex align-items-center gap-2">
-                 <a href="#" class="btn btn-switch">
-                     🔁 Switch to Student View
-                 </a>
                  <div class="dropdown">
                      <div class="dropdown-toggle rounded-circle border border-warning text-warning fw-bold d-flex align-items-center justify-content-center"
                          style="width: 32px; height: 32px; cursor: pointer;" data-bs-toggle="dropdown"

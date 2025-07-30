@@ -9,10 +9,13 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Http\Response as HttpResponse;
+
 
 class AdminController extends Controller
 {
@@ -140,4 +143,74 @@ class AdminController extends Controller
         $language->delete();
         return redirect()->route('admin.languages.index')->with('success', 'Language deleted successfully.');
     }
+
+    /* *************************** USERS MANAGEMENT ************************** */
+    /**
+     * Show the list of languages.
+     *
+     * @return View
+     */
+    public function usersIndex(): View
+    {
+        $users = User::where('role', '!=', 'admin')->get();
+        return view('admin.content.user.index', compact('users'));
+    }
+
+    /**
+     * Show the form for editing the specified User.
+     *
+     * @param user $user
+     * @return View
+     */
+    public function userEdit(User $user): View
+    {
+        return view('admin.content.user.edit', compact('user'));
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param User $user
+     * @return void
+     */
+    public function userUpdate(Request $request, User $user): RedirectResponse
+    {
+        $request->validate([
+            'name' => 'required|string'
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->route('admin.users.index')->with('success', 'user updated successfully.');
+    }
+
+    /**
+     * Remove the specified User from storage.
+     *
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function userDestroy(User $user): RedirectResponse
+    {
+        $user->delete();
+        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+    }
+
+    // public function userDestroy(int $user): JsonResponse
+    // {
+    //     $response = ['result' => [], 'errors' => [], 'success' => true];
+    //     $httpStatusCode = HttpResponse::HTTP_OK;
+    //     try {
+    //         $result = User::findOrFail($user);
+    //         $response['result'] = $result->delete();
+    //     } catch (\Throwable $th) {
+    //         $httpStatusCode = HttpResponse::HTTP_BAD_REQUEST;
+    //         $response['errors'][] = $th->getMessage();
+    //         $response['success'] = false;
+    //     }
+    //     return response()->json(['success' => true]);
+    // }
 }

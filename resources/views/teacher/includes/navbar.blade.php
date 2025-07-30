@@ -35,6 +35,10 @@
                              class="bi bi-chat-left-text me-1"></i> Messages</a>
                  </li>
                  <li class="nav-item me-3">
+                     <a class="nav-link d-flex align-items-center" href="{{ route('teacher.zoom.meetings.index') }}"><i
+                             class="bi bi-chat-left-text me-1"></i> Lessons</a>
+                 </li>
+                 <li class="nav-item me-3">
                      <a class="nav-link d-flex align-items-center" href="{{ route('teacher.public.profile') }}">
                          <i class="bi bi-eye me-1"></i> Profile
                      </a>
