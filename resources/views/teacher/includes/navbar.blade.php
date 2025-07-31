@@ -36,7 +36,7 @@
                  </li>
                  <li class="nav-item me-3">
                      <a class="nav-link d-flex align-items-center" href="{{ route('teacher.zoom.meetings.index') }}"><i
-                             class="bi bi-chat-left-text me-1"></i> Lessons</a>
+                             class="bi bi-camera-video me-1"></i> Lessons</a>
                  </li>
                  <li class="nav-item me-3">
                      <a class="nav-link d-flex align-items-center" href="{{ route('teacher.public.profile') }}">
@@ -59,7 +59,7 @@
                      </div>
                      <ul class="dropdown-menu dropdown-menu-end">
                          <li><a class="dropdown-item" href="{{ route('teacher.profile.edit') }}">View Profile</a></li>
-                         <li><a class="dropdown-item" href="">Settings</a></li>
+                         <li><a class="dropdown-item" href="{{ route('teacher.settings.index') }}">Settings</a></li>
                          <li>
                              <hr class="dropdown-divider">
                          </li>

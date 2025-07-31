@@ -69,6 +69,11 @@ class TeacherController extends Controller
         return view('teacher.content.profile.settings');
     }
 
+    public function bookings(): View
+    {
+        return view('teacher.content.profile.bookings');
+    }
+
     public function wallet(): View
     {
         return view('teacher.content.wallet.index');

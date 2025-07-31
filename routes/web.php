@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\StudentAuthController;
 use App\Http\Controllers\Auth\TeacherAuthController;
 use App\Http\Controllers\Dashboard\ChatController;
+use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\StudentController;
 use App\Http\Controllers\Dashboard\TeacherController;
 use App\Http\Controllers\Dashboard\UserAuthController;
@@ -98,8 +99,31 @@ Route::prefix('teacher')->group(function () {
         Route::get('profile/edit', [TeacherController::class, 'editProfile'])->name('teacher.profile.edit');
         Route::put('profile/update', [TeacherController::class, 'updateProfile'])->name('teacher.profile.update');
         Route::get('calendar', [TeacherController::class, 'calendar'])->name('teacher.calendar');
-        Route::get('settings', [TeacherController::class, 'settings'])->name('teacher.settings');
+        Route::get('bookings', [TeacherController::class, 'bookings'])->name('teacher.bookings');
         Route::get('wallet', [TeacherController::class, 'wallet'])->name('teacher.wallet');
+
+
+        // Route::get('settings', [TeacherController::class, 'settings'])->name('teacher.settings');
+        // Settings Management
+        Route::prefix('settings')->name('teacher.settings.')->group(function () {
+            Route::get('/', [SettingsController::class, 'index'])->name('index');
+            Route::put('/update', [SettingsController::class, 'update'])->name('update');
+
+            // Individual lesson pricing
+            Route::put('/pricing', [SettingsController::class, 'updatePricing'])->name('pricing.update');
+
+            // Lesson packages
+            Route::post('/packages', [SettingsController::class, 'storePackage'])->name('packages.store');
+            Route::put('/packages/{package}', [SettingsController::class, 'updatePackage'])->name('packages.update');
+            Route::delete('/packages/{package}', [SettingsController::class, 'destroyPackage'])->name('packages.destroy');
+            Route::patch('/packages/{package}/toggle', [SettingsController::class, 'togglePackage'])->name('packages.toggle');
+
+            // Group classes
+            Route::post('/groups', [SettingsController::class, 'storeGroup'])->name('groups.store');
+            Route::put('/groups/{group}', [SettingsController::class, 'updateGroup'])->name('groups.update');
+            Route::delete('/groups/{group}', [SettingsController::class, 'destroyGroup'])->name('groups.destroy');
+            Route::patch('/groups/{group}/toggle', [SettingsController::class, 'toggleGroup'])->name('groups.toggle');
+        });
 
         /* ********************************** CHAT ROUTES ********************************** */
         Route::get('chats', [ChatController::class, 'teacherChatList'])->name('teacher.chats.index');

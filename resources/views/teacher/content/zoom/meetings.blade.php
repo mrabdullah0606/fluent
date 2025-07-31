@@ -1,5 +1,5 @@
 @extends('teacher.master.master')
-
+@section('title', 'Lessons - FluentAll')
 @section('content')
     <div class="dashboard__content-wrap container">
         <div class="dashboard__content-title mt-4 mb-4 bg-warning p-3">

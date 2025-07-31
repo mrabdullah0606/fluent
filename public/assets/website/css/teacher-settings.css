@@ -1,0 +1,162 @@
+/* Teacher Settings Styles */
+:root {
+    --primary-yellow: #fdbd00;
+    --primary-yellow-hover: #ffbf00;
+    --light-yellow: #ffd65a;
+    --background-gray: #f9fafb;
+    --hover-gray: #f5f5f5;
+    --light-yellow-bg: #fff3cd;
+    --dropdown-yellow: rgb(255, 242, 204);
+    --border-yellow: #ffc107;
+}
+
+body {
+    background-color: var(--background-gray);
+}
+
+/* Navigation Styles */
+.nav-link.active {
+    background-color: var(--light-yellow-bg) !important;
+    border-radius: 8px;
+}
+
+.nav-link:hover {
+    background-color: var(--hover-gray) !important;
+    border-radius: 8px;
+}
+
+.btn-switch {
+    border: 1px solid var(--primary-yellow);
+    color: var(--primary-yellow);
+    font-weight: 500;
+}
+
+.btn-switch:hover {
+    background-color: var(--primary-yellow-hover);
+}
+
+.nav-text-orange {
+    color: #ffae00;
+    font-weight: 600;
+}
+
+.navbar-bottom-border {
+    border-bottom: 1px solid var(--primary-yellow);
+}
+
+.navbar-brand.nav-text-orange:hover {
+    color: #ffae00;
+    text-decoration: none;
+    cursor: default;
+}
+
+/* Dropdown Styles */
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+.dropdown-menu {
+    min-width: 220px;
+    margin-top: 50px;
+    border: 1px solid var(--border-yellow);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item:hover {
+    background-color: var(--dropdown-yellow) !important;
+}
+
+.dropdown-item i {
+    margin-right: 8px;
+}
+
+/* Day Button Styles */
+.day-btn.active,
+.day-btn.selected {
+    background-color: var(--light-yellow) !important;
+    color: #000 !important;
+    border-color: var(--light-yellow) !important;
+}
+
+/* Form Styles */
+.editable-heading {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.editable-heading:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Card Styles */
+.settings-card {
+    border: 1px solid var(--primary-yellow);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.settings-card h5 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.settings-card .text-muted {
+    margin-bottom: 1rem;
+}
+
+/* Package Container */
+.package-container,
+.group-container {
+    border: 1px solid var(--light-yellow);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    background: #fefefe;
+}
+
+/* Toggle Switch */
+.form-check-input:checked {
+    background-color: var(--primary-yellow);
+    border-color: var(--primary-yellow);
+}
+
+/* Delete Button */
+.delete-group-btn {
+    z-index: 10;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.delete-group-btn:hover {
+    opacity: 1;
+}
+
+/* Animation Classes */
+.slide-out {
+    transform: translateX(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .settings-card {
+        padding: 1rem;
+    }
+
+    .package-container,
+    .group-container {
+        padding: 0.75rem;
+    }
+
+    .form-check-input {
+        margin-top: 0.5rem;
+    }
+}

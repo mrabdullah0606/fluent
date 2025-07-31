@@ -31,7 +31,7 @@ class TeacherVerifyMail extends Mailable
     {
         return new Envelope(
             subject: 'Email Verification Code',
-            from: new Address('test@mail.dev', 'Your App Name'),
+            from: new Address('test@mail.dev', 'FluentAll'),
         );
     }
 
