@@ -5,7 +5,13 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold">User Management</h3>
         </div>
-        <table id="languageTable" class="table table-bordered bg-white shadow-sm">
+         <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold"><a href="{{ route('admin.users.create') }}" class="btn btn-secondary">Add New User</a></h3>
+            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-1"></i> Back
+            </a>
+        </div>
+        <table id="userTable" class="table table-bordered bg-white shadow-sm">
             <thead class="table-warning">
                 <tr>
                     <th>ID</th>

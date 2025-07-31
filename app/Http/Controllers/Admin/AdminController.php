@@ -161,7 +161,36 @@ class AdminController extends Controller
      *
      * @param user $user
      * @return View
+
      */
+
+    // Show the form to create a new user
+    public function userCreate(): View
+    {
+    return view('admin.content.user.create');
+    }
+
+    // Store the newly created user
+    public function userStore(Request $request): RedirectResponse
+    {
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        'role' => 'required|in:student,teacher', // or whatever roles you support
+    ]);
+
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role' => $request->role,
+        'is_verified' => true, // default verified, adjust as needed
+    ]);
+
+    return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
+    }
+
     public function userEdit(User $user): View
     {
         return view('admin.content.user.edit', compact('user'));
@@ -174,18 +203,43 @@ class AdminController extends Controller
      * @param User $user
      * @return void
      */
+
     public function userUpdate(Request $request, User $user): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string'
-        ]);
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'role' => 'required|in:student,teacher',
+        'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        $user->update([
-            'name' => $request->name,
-        ]);
+    $data = [
+        'name' => $request->name,
+        'email' => $request->email,
+        'role' => $request->role,
+    ];
 
-        return redirect()->route('admin.users.index')->with('success', 'user updated successfully.');
+    // Only hash and update password if it's filled
+    if ($request->filled('password')) {
+        $data['password'] = Hash::make($request->password);
     }
+
+    $user->update($data);
+
+    return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+    }
+    // public function userUpdate(Request $request, User $user): RedirectResponse
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string'
+    //     ]);
+
+    //     $user->update([
+    //         'name' => $request->name,
+    //     ]);
+
+    //     return redirect()->route('admin.users.index')->with('success', 'user updated successfully.');
+    // }
 
     /**
      * Remove the specified User from storage.

@@ -138,6 +138,8 @@ Route::prefix('admin')->group(function () {
         /* ******************************** User Management ******************************** */
         Route::prefix('users')->group(function () {
             Route::get('/', [AdminController::class, 'usersIndex'])->name('admin.users.index');
+            Route::get('create', [AdminController::class, 'userCreate'])->name('admin.users.create');
+            Route::post('/', [AdminController::class, 'userStore'])->name('admin.users.store');
             Route::get('edit/{user}', [AdminController::class, 'userEdit'])->name('admin.users.edit');
             Route::put('{user}', [AdminController::class, 'userUpdate'])->name('admin.users.update');
             Route::delete('{user}', [AdminController::class, 'deleteUser'])->name('admin.users.destroy');
