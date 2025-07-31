@@ -6,15 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Teacher extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'documents',
-        'hobbies',
-        'certifications',
-        'experience',
-        'teaching_style',
-        'about_me',
-    ];
+   protected $fillable = [
+    'user_id',
+    'documents',
+    'headline',
+    'hobbies',
+    'certifications',
+    'experience',
+    'teaching_style',
+    'about_me',
+    'teaches',
+    'speaks',
+    'country',
+    'rate_per_hour',
+    'language_id',
+];
 
     public function user()
     {
