@@ -15,11 +15,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('documents')->nullable();
+            $table->string('headline')->nullable();
             $table->string('hobbies')->nullable();
             $table->string('certifications')->nullable();
             $table->string('experience')->nullable();
             $table->string('teaching_style')->nullable();
             $table->string('about_me')->nullable();
+            $table->string('teaches')->nullable();
+            $table->string('speaks')->nullable();
+            $table->string('country')->nullable();
+            $table->decimal('rate_per_hour', 8, 2)->nullable();
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
             $table->timestamps();
         });
