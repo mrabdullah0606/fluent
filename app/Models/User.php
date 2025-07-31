@@ -55,6 +55,22 @@ class User extends Authenticatable
         return $this->hasOne(Teacher::class);
     }
 
+    public function lessonPackages()
+    {
+        return $this->hasMany(LessonPackage::class, 'teacher_id');
+    }
+
+    public function teacherSettings()
+    {
+        return $this->hasMany(TeacherSetting::class, 'teacher_id');
+    }
+
+    public function groupClasses()
+    {
+        return $this->hasMany(GroupClass::class, 'teacher_id');
+    }
+
+
     // Chat relationships
     public function sentMessages()
     {
