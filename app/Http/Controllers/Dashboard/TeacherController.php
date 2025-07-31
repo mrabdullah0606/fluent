@@ -24,9 +24,11 @@ class TeacherController extends Controller
         return response()->view('teacher.content.dashboard', compact('teacher'));
     }
 
+
     public function editProfile(): View
-    {
-        $teacher = auth()->user(); // logged-in teacher
+    {   
+        $teacher = auth()->user()->teacherProfile;
+        //$teacher = auth()->user(); // logged-in teacher
         $languages = Language::all();
         return view('teacher.content.profile.edit', compact('teacher', 'languages'));
     }
