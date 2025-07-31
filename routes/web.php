@@ -64,6 +64,8 @@ Route::prefix('student')->group(function () {
         Route::get('public-profile', [StudentController::class, 'publicProfile'])->name('student.public.profile');
         Route::get('profile/edit', [StudentController::class, 'editProfile'])->name('student.profile.edit');
         Route::put('profile/update', [StudentController::class, 'updateProfile'])->name('student.profile.update');
+        Route::get('add-reviews', [StudentController::class, 'addReviews'])->name('student.add.review');
+        Route::post('reviews/{teacher}', [StudentController::class, 'storeReview'])->name('student.reviews.store');
 
         /* ********************************** CHAT ROUTES ********************************** */
         Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');

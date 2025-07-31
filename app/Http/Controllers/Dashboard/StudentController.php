@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Language;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\Review;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -24,6 +25,44 @@ class StudentController extends Controller
         return response()->view('student.content.dashboard', compact('student'));
     }
 
+    public function addReviews()
+    {
+    //$teacher = Teacher::first(); // You can fetch based on logic or selection
+    //return view('student.content.reviews.create', compact('teacher'));
+    return view('student.content.reviews.create'); // Make sure the file is located at /resources/views/student/add-review.blade.php
+    }
+
+    // public function storeReview(Request $request, Teacher $teacher)
+    public function storeReview(Request $request, Teacher $teacher)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'date' => 'required|date',
+            'rating' => 'required|integer|between:1,5',
+            'review' => 'required|string|min:10',
+        ]);
+
+        $student = Auth::user()->student;
+
+        // Check if the student has already submitted a review for this teacher
+        $existingReview = Review::where('teacher_id', $teacher->id)
+            ->where('student_id', $student->id)
+            ->first();
+
+        if ($existingReview) {
+            return redirect()->back()->with('error', 'You have already submitted a review for this teacher.');
+        }
+
+        Review::create([
+            'teacher_id' => $teacher->id,
+            'student_id' => $student->id,
+            'rating' => $request->rating,
+            'comment' => $request->review,
+            'is_approved' => false, // Admin will approve
+        ]);
+
+        return redirect()->back()->with('success', 'Review submitted successfully and is pending approval.');
+    }
     public function editProfile(): View
     {
         $student = auth()->user(); // logged-in student
@@ -58,4 +97,6 @@ class StudentController extends Controller
 
         return view('student.content.profile.public', compact('student', 'languages'));
     }
+
+
 }

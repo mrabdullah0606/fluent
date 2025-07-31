@@ -320,8 +320,9 @@
         <div class="bg-white p-4 rounded shadow-sm">
             <h5 class="mb-4">
                 <i class="bi bi-star-fill text-warning me-1"></i>
-                <strong>Student Reviews (180)</strong>
+                <strong>Student Reviewsss (180)</strong>
             </h5>
+
 
             <div class="row g-3">
                 <!-- Review Card -->
@@ -741,7 +742,10 @@
                                 <polygon
                                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                 </polygon>
-                            </svg> Student Reviews (180)</h2>
+                            </svg> Student Reviewss (180)</h2>
+                            <h5 class="mb-4 d-flex justify-content-end">
+                            <a href="{{route('student.add.review')}}" class="btn btn-secondary">Add Your Review</a>
+                            </h5>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"
                                 style="opacity: 1; transform: none;">

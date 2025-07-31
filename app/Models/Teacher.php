@@ -25,4 +25,9 @@ class Teacher extends Model
     {
         return $this->belongsTo(Language::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }
