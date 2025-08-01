@@ -13,6 +13,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ZoomMeetingController;
+use App\Http\Controllers\Dashboard\StripeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -35,6 +36,7 @@ Route::get('/tutor/{id}', [HomeController::class, 'tutor'])->name('tutor');
 Route::get('/tutor-booking/{id}', [HomeController::class, 'tutorBooking'])->name('tutor.booking');
 Route::get('/one-on-one-tutors', [HomeController::class, 'oneOnOneTutors'])->name('one.on.one.tutors');
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('student.tutor.checkout');
+Route::post('/create-checkout-session', [StripeController::class, 'create'])->name('stripe.checkout');
 Route::get('/switch-to-teacher', function () {
     if (auth()->check() && auth()->user()->role === 'teacher') {
         return redirect()->route('teacher.dashboard');

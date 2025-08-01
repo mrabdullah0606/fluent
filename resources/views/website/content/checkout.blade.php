@@ -47,10 +47,46 @@
                                 </div>
                             </div>
                         </div>
-                        <div><label
+                        <div>
+                            <label
                                 class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg font-semibold text-foreground mb-3 block">Payment
                                 Method</label>
-                            <div role="radiogroup" aria-required="false" dir="ltr" class="grid gap-2 space-y-3"
+                                <div role="radiogroup" class="grid gap-4" id="payment-options">
+                                    <!-- Stripe Payment Option -->
+                                    <label class="flex items-center space-x-3 p-4 border border-gray-300 rounded-lg cursor-pointer transition-all hover:border-blue-500 peer-checked:border-blue-600 peer-checked:bg-blue-50">
+                                        <input type="radio" name="payment" value="stripe" id="stripe-option" class="" />
+
+                                        <!-- Blue circle -->
+                                        <div class="h-5 w-5 rounded-full border-2 border-blue-500 flex items-center justify-center">
+                                            <div class="h-2.5 w-2.5 rounded-full bg-blue-600 scale-0 peer-checked:scale-100 transition-transform duration-200"></div>
+                                        </div>
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-blue-600">
+                                        <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                                        <line x1="2" x2="22" y1="10" y2="10"></line>
+                                    </svg>
+                                    <span class="text-blue-900 font-medium">Pay with Stripe (Credit/Debit Card)</span>
+                                    </label>
+                                <!-- Demo Payment Option -->
+                                <label class="flex items-center space-x-3 p-4 border border-gray-300 rounded-lg cursor-pointer transition-all hover:border-green-500 peer-checked:border-green-600 peer-checked:bg-green-50">
+                                    <input type="radio" name="payment" value="demo" id="demo-option" class="" checked />
+                                    <!-- Green circle -->
+                                    <div class="h-5 w-5 rounded-full border-2 border-green-500 flex items-center justify-center">
+                                        <div class="h-2.5 w-2.5 rounded-full bg-green-600 scale-0 peer-checked:scale-100 transition-transform duration-200"></div>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-green-600">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>                                </svg>
+
+                                    <span class="text-green-900 font-medium">Demo Payment (Simulated)</span>
+                                </label>
+                            </div>
+
+                            <!-- <div role="radiogroup" aria-required="false" dir="ltr" class="grid gap-2 space-y-3"
                                 tabindex="0" style="outline: none;"><label
                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center space-x-3 p-4 border border-input rounded-lg cursor-pointer hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-primary/5 transition-all"
                                     for="stripe-payment"><button type="button" role="radio" aria-checked="false"
@@ -82,7 +118,7 @@
                                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                     </svg><span class="font-medium text-foreground">Demo Payment (Simulated)</span></label>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="pt-4"><button
                                 class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 w-full btn-red text-lg py-3">Pay
@@ -101,5 +137,44 @@
             </div>
         </div>
     </main>
+<script>
+  // Callback function
+  function onPaymentMethodChange(selectedValue) {
+    console.log("Selected payment method:", selectedValue);
+    
+    // Example: update a hidden input or perform UI changes
+    document.getElementById("selected-method-display").textContent = selectedValue;
+  }
+
+  // Attach event listeners
+  document.querySelectorAll('input[name="payment"]').forEach(input => {
+    input.addEventListener('change', function () {
+      if (this.checked) {
+        onPaymentMethodChange(this.value);
+      }
+    });
+  });
+  
+</script>
+<script>
+  document.getElementById('stripe-option').addEventListener('change', function () {
+    if (this.checked) {
+      // Auto-submit POST request to Laravel Stripe route
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = "{{ route('stripe.checkout') }}";
+
+      // CSRF Token for Laravel
+      const token = document.createElement('input');
+      token.type = 'hidden';
+      token.name = '_token';
+      token.value = "{{ csrf_token() }}";
+      form.appendChild(token);
+
+      document.body.appendChild(form);
+      form.submit();
+    }
+  });
+</script>
 
 @endsection
