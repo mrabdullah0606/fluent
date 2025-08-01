@@ -1,7 +1,7 @@
 @extends('website.master.master')
 @section('title', 'Find-Tutor - FluentAll')
 @section('content')
-    <form method="POST" action="{{ route('stripe.checkout') }}">
+    <form method="POST" action="{{ route('student.stripe.checkout') }}">
     @csrf
 
     <main class="flex-grow">

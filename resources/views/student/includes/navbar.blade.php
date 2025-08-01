@@ -41,8 +41,14 @@
                          <i class="bi bi-eye me-1"></i> Profile
                      </a>
                  </li>
+                 
              </ul>
              <div class="d-flex align-items-center gap-2">
+
+                     <a class="btn btn-danger" href="{{ route('student.find.tutor') }}">
+                         Find Tutor
+                     </a>
+                 
                  <div class="dropdown">
                      <div class="dropdown-toggle rounded-circle border border-warning text-warning fw-bold d-flex align-items-center justify-content-center"
                          style="width: 32px; height: 32px; cursor: pointer;" data-bs-toggle="dropdown"
