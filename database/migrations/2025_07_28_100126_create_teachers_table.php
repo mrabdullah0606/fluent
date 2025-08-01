@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('rate_per_hour', 8, 2)->nullable();
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
             $table->timestamps();
+             $table->string('profile_image')->nullable();
         });
     }
 

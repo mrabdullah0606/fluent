@@ -37,8 +37,7 @@ Route::get('/tutor/{id}', [HomeController::class, 'tutor'])->name('tutor');
 Route::get('/tutor-booking/{id}', [HomeController::class, 'tutorBooking'])->name('tutor.booking');
 Route::get('/one-on-one-tutors', [HomeController::class, 'oneOnOneTutors'])->name('one.on.one.tutors');
 Route::get('/group-lesson', [HomeController::class, 'groupLesson'])->name('group.lesson');
-Route::get('/checkout', [HomeController::class, 'checkout'])->name('student.tutor.checkout');
-Route::post('/create-checkout-session', [StripeController::class, 'create'])->name('stripe.checkout');
+
 Route::get('/switch-to-teacher', function () {
     if (auth()->check() && auth()->user()->role === 'teacher') {
         return redirect()->route('teacher.dashboard');
@@ -75,6 +74,9 @@ Route::prefix('student')->group(function () {
         Route::put('profile/update', [StudentController::class, 'updateProfile'])->name('student.profile.update');
         Route::get('add-reviews', [StudentController::class, 'addReviews'])->name('student.add.review');
         Route::post('reviews/{teacher}', [StudentController::class, 'storeReview'])->name('student.reviews.store');
+        Route::get('/find-tutor', [StudentController::class, 'findTutor'])->name('student.find.tutor');
+        Route::get('/one-on-one-tutors', [StudentController::class, 'oneOnOneTutors'])->name('student.one.on.one.tutors');
+        Route::get('/group-lesson', [StudentController::class, 'groupLesson'])->name('student.group.lesson');
 
         /* ********************************** CHAT ROUTES ********************************** */
         Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');
@@ -86,6 +88,9 @@ Route::prefix('student')->group(function () {
         /* ********************************** zoom ********************************** */
         Route::get('zoom-meetings', [ZoomMeetingController::class, 'indexStudent'])->name('zoom.meetings.index');
         Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('zoom.meetings.store');
+        /************************** Stripe *************************************************/
+        Route::get('/checkout', [HomeController::class, 'checkout'])->name('student.tutor.checkout');
+        Route::post('/create-checkout-session', [StripeController::class, 'create'])->name('student.stripe.checkout');
     });
 });
 

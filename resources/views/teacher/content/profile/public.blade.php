@@ -487,12 +487,20 @@
                     <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 mb-8 md:flex items-center">
                         <div
                             class="md:w-1/3 flex flex-col items-center md:items-start text-center md:text-left mb-6 md:mb-0">
-                            <span
-                                class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-primary"><span
-                                    class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-primary text-white">SW</span></span>
-                            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $teacher->name }}</h1>
-                            <p class="text-primary text-md mt-1">Passionate TEFL Certified English Tutor | Conversational
-                                &amp; Business English Expert</p>
+                            <span class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-primary">
+                        @if($teacher && $teacher->profile_image)
+                        <img src="{{ asset('storage/'.$teacher->profile_image) }}" 
+                        class="w-full h-full object-cover rounded-full">
+                    @else
+                    <span class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-primary text-white">
+                        {{ strtoupper(substr($user->name,0,2)) }}
+                    </span>
+                @endif
+                        </span>
+                            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+                            {{ $user->name ?? 'Unnamed Teacher' }}
+                              </h1>
+                            <p class="text-primary text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}</p>
                             <div class="flex items-center mt-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -513,7 +521,7 @@
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-primary">
                                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                         <circle cx="12" cy="10" r="3"></circle>
-                                    </svg> From: 🇺🇸 United States</div>
+                                    </svg> From: {{ $teacher?->country ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -524,7 +532,7 @@
                                         <path d="M7 2h1"></path>
                                         <path d="m22 22-5-10-5 10"></path>
                                         <path d="M14 18h6"></path>
-                                    </svg> Teaches: English</div>
+                                    </svg> Teaches: {{ $teacher?->teaches ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700 col-span-2 sm:col-span-1"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -534,21 +542,21 @@
                                         <path
                                             d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                                         </path>
-                                    </svg> Speaks: English (Native), Spanish (B2)</div>
+                                    </svg> Speaks: {{ $teacher?->speaks ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-primary">
                                         <circle cx="12" cy="8" r="6"></circle>
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                    </svg> Experience: 5+ years</div>
+                                    </svg> Experience: {{ $teacher?->experience ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-primary">
                                         <line x1="12" x2="12" y1="2" y2="22"></line>
                                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg> Rate: $28/hour</div>
+                                    </svg> Rate: ${{ $teacher?->rate_per_hour ?? '0' }}/hour</div>
                             </div>
                             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6"><button
                                     class="inline-flex items-center justify-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/90 h-10 w-full sm:w-auto bg-red-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md"
@@ -586,13 +594,9 @@
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg> About Me</h2>
-                                <p class="text-gray-600 leading-relaxed whitespace-pre-line">Hello! I'm Sarah, a
-                                    TEFL-certified English tutor with over 5 years of experience helping students worldwide
-                                    achieve their language goals. My lessons are dynamic, interactive, and tailored to your
-                                    specific needs, whether you're looking to improve your conversational skills, master
-                                    business English, or prepare for an exam. I believe in creating a supportive and fun
-                                    learning environment where you feel comfortable to practice and grow. Let's embark on
-                                    this language journey together!</p>
+                                <p class="text-gray-600 leading-relaxed whitespace-pre-line">
+                                        {{ $teacher?->about_me ?? "No information provided yet." }}
+                                </p>
                             </div>
                             <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
                                 style="opacity: 1; transform: none;">
