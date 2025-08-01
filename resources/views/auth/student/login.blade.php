@@ -84,7 +84,9 @@
                         <span class="input-group-text"><i class="bi bi-eye"></i></span>
                     </div>
                 </div>
-
+                 <div class="mb-3 text-start">
+                    <a href="{{route('student.register')}}" class="text-primary text-decoration-none">Not a Student? Sign up</a>
+                </div>
                 <!-- Forgot Password -->
                 <div class="mb-3 text-end">
                     <a href="#" class="text-primary text-decoration-none">Forgot password?</a>
