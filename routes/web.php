@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\StudentAuthController;
 use App\Http\Controllers\Auth\TeacherAuthController;
+use App\Http\Controllers\Dashboard\AvailabilityController;
 use App\Http\Controllers\Dashboard\ChatController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\StudentController;
@@ -140,6 +141,15 @@ Route::prefix('teacher')->group(function () {
         /* ********************************** zoom ********************************** */
         Route::get('zoom-meetings', [ZoomMeetingController::class, 'index'])->name('teacher.zoom.meetings.index');
         Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('teacher.zoom.meetings.store');
+
+        /* ****************************** Availability ****************************** */
+        Route::prefix('availability')->name('teacher.availability.')->group(function () {
+            Route::get('/date', [AvailabilityController::class, 'getAvailabilityForDate'])->name('get-date');
+            Route::post('/store', [AvailabilityController::class, 'store'])->name('store');
+            Route::delete('/{id}', [AvailabilityController::class, 'destroy'])->name('destroy');
+            Route::post('/mark-unavailable', [AvailabilityController::class, 'markDayUnavailable'])->name('mark-unavailable');
+            Route::get('/monthly', [AvailabilityController::class, 'getMonthlyAvailability'])->name('monthly');
+        });
     });
 });
 /* ************************************************************************** */
