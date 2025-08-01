@@ -22,7 +22,7 @@ class StripeController extends Controller
     if ($paymentMethod === 'demo') {
         return redirect()->route('find.tutor')->with('success', 'Simulated payment successful.');
     }
-    
+
     // Stripe expects amounts in cents
     $lineItems = [[
         'price_data' => [
@@ -50,7 +50,7 @@ private function recordPayment(Request $request, $status = 'successful')
 {
     Payment::create([
         'student_id'     => auth()->id(),
-        'course_id'      => 'course', // replace with dynamic if needed
+        'course_id'      => 1, // replace with dynamic if needed
         'summary'        => $request->input('summary'),
         'base_price'     => $request->input('calculated_price'),
         'fee'            => $request->input('fee'),
@@ -68,7 +68,7 @@ public function handleStripePayment(Request $request)
 
     Payment::create([
         'student_id'     => $studentId,
-        'course_id'      => 'course',
+        'course_id'      => 1,
         'summary'        => $request->input('summary'),
         'base_price'     => $request->input('calculated_price'),
         'fee'            => $request->input('fee'),
