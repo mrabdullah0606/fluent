@@ -25,7 +25,7 @@
                     <h4 class="fw-bold">Group Lessons</h4>
                     <p class="text-muted">Learn with peers in a collaborative environment. Interactive sessions that are
                         fun, engaging, and budget-friendly.</p>
-                    <a href="#" class="btn btn-danger mt-3">Explore Group Lessons <i
+                    <a href="{{ route('group.lesson') }}" class="btn btn-danger mt-3">Explore Group Lessons <i
                             class="bi bi-arrow-right"></i></a>
                 </div>
             </div>

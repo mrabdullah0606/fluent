@@ -11,7 +11,11 @@
                             class="mr-2 h-4 w-4">
                             <path d="m12 19-7-7 7-7"></path>
                             <path d="M19 12H5"></path>
-                        </svg> Back</button>
+                        </svg>
+                        <a href="{{ url()->previous() }}">
+                            Back
+                        </a>
+                    </button>
                     <div class="text-center mb-8"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="h-16 w-16 mx-auto text-primary mb-3">
@@ -322,30 +326,6 @@
                                     <path d="m3.3 7 8.7 5 8.7-5"></path>
                                     <path d="M12 22V12"></path>
                                 </svg>...Or Buy a Package &amp; Save!</h2>
-                            {{-- <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-                                <div
-                                    class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted hover:border-primary/50">
-                                    <h4 class="font-bold text-lg text-foreground">5 Lessons</h4>
-                                    <p class="text-sm font-semibold text-green-600">Save 5%</p>
-                                    <p class="text-2xl font-bold text-primary mt-2">$118.75</p>
-                                    <p class="text-xs text-muted-foreground">Just $23.75 per lesson</p>
-                                </div>
-                                <div
-                                    class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted hover:border-primary/50">
-                                    <h4 class="font-bold text-lg text-foreground">10 Lessons</h4>
-                                    <p class="text-sm font-semibold text-green-600">Save 10%</p>
-                                    <p class="text-2xl font-bold text-primary mt-2">$225.00</p>
-                                    <p class="text-xs text-muted-foreground">Just $22.50 per lesson</p>
-                                </div>
-                                <div
-                                    class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted hover:border-primary/50">
-                                    <h4 class="font-bold text-lg text-foreground">20 Lessons</h4>
-                                    <p class="text-sm font-semibold text-green-600">Save 20%</p>
-                                    <p class="text-2xl font-bold text-primary mt-2">$400.00</p>
-                                    <p class="text-xs text-muted-foreground">Just $20.00 per lesson</p>
-                                </div>
-                            </div> --}}
                             @php
                                 $lessonPackages = $teacher->lessonPackages;
                             @endphp
@@ -417,37 +397,6 @@
             </div>
         </div>
     </main>
-    {{-- <script>
-        const durationPrices = @json($durationPrices);
-        const packagePrices = @json($teacher->lessonPackages->pluck('price', 'id'));
-        const durationInputs = document.querySelectorAll('input[name="duration"]');
-        const packageInputs = document.querySelectorAll('input[name="lesson_package"]');
-        const selectedDurationElem = document.getElementById('selected-duration');
-        const selectedPriceElem = document.getElementById('selected-price');
-        durationInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                const minutes = this.value;
-                const key = `duration_${minutes}`;
-                packageInputs.forEach(pkg => pkg.checked = false);
-                selectedDurationElem.textContent = `${minutes} minutes`;
-                selectedPriceElem.textContent = durationPrices[key] ?
-                    `Rs. ${durationPrices[key]}` :
-                    'N/A';
-            });
-        });
-        packageInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                const packageId = this.value;
-                durationInputs.forEach(dur => dur.checked = false);
-                const packagePrice = packagePrices[packageId];
-                const selectedPackage = this.closest('label').querySelector('h4')?.textContent.trim();
-                selectedDurationElem.textContent = selectedPackage ?? '—';
-                selectedPriceElem.textContent = packagePrice ?
-                    `Rs. ${packagePrice}` :
-                    'N/A';
-            });
-        });
-    </script> --}}
     <script>
         const durationPrices = @json($durationPrices);
         const packagePrices = @json($teacher->lessonPackages->pluck('price', 'id'));

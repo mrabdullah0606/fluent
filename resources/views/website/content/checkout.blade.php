@@ -4,16 +4,19 @@
     <main class="flex-grow">
         <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 hero-pattern-custom">
             <div class="max-w-2xl mx-auto" style="opacity: 1; transform: none;">
-                <button
-                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 mb-6 border-primary text-primary hover:bg-primary/10"><svg
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="mr-2 h-4 w-4">
-                        <path d="m12 19-7-7 7-7"></path>
-                        <path d="M19 12H5"></path>
-                    </svg>
-                    <a href="#">Back</a>
-                </button>
+                <a href="{{ url()->previous() }}" class="text-sm text-primary hover:underline">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 mb-6 border-primary text-primary hover:bg-primary/10"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="mr-2 h-4 w-4">
+                            <path d="m12 19-7-7 7-7"></path>
+                            <path d="M19 12H5"></path>
+                        </svg>
+
+                        Back
+                    </button>
+                </a>
                 <div class="rounded-lg border bg-card text-card-foreground shadow-xl border-primary/30">
                     <div class="flex flex-col space-y-1.5 bg-primary/5 p-6">
                         <h3 class="tracking-tight text-3xl font-bold text-foreground flex items-center"><svg
@@ -101,5 +104,4 @@
             </div>
         </div>
     </main>
-
 @endsection

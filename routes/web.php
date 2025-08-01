@@ -34,6 +34,7 @@ Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
 Route::get('/tutor/{id}', [HomeController::class, 'tutor'])->name('tutor');
 Route::get('/tutor-booking/{id}', [HomeController::class, 'tutorBooking'])->name('tutor.booking');
 Route::get('/one-on-one-tutors', [HomeController::class, 'oneOnOneTutors'])->name('one.on.one.tutors');
+Route::get('/group-lesson', [HomeController::class, 'groupLesson'])->name('group.lesson');
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('student.tutor.checkout');
 Route::get('/switch-to-teacher', function () {
     if (auth()->check() && auth()->user()->role === 'teacher') {

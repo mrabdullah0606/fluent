@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GroupClass;
 use App\Models\Language;
 use App\Models\LessonPackage;
 use App\Models\Teacher;
@@ -101,14 +102,39 @@ class HomeController extends Controller
     }
 
 
+    // public function checkout(Request $request)
+    // {
+    //     $type = $request->input('type'); // 'duration' or 'package'
+    //     $value = $request->input('value'); // duration in mins OR package_id
+    //     $price = $request->input('price'); // submitted price (optional fallback)
+
+    //     $summary = '';
+    //     $calculatedPrice = (float) $price;
+
+    //     if ($type === 'duration') {
+    //         $summary = "{$value}-Minute Session";
+    //         $fee = round($calculatedPrice * 0.03, 2);
+    //     } elseif ($type === 'package') {
+    //         $package = LessonPackage::find($value);
+    //         $summary = "{$package->number_of_lessons}-Lesson Package";
+    //         $calculatedPrice = $package->price;
+    //         $fee = round($calculatedPrice * 0.03, 2);
+    //     }
+
+    //     $total = round($calculatedPrice + $fee, 2);
+
+
+    //     return view('website.content.checkout', compact('summary', 'calculatedPrice', 'fee', 'total'));
+    // }
     public function checkout(Request $request)
     {
-        $type = $request->input('type'); // 'duration' or 'package'
-        $value = $request->input('value'); // duration in mins OR package_id
-        $price = $request->input('price'); // submitted price (optional fallback)
+        $type = $request->input('type'); // 'duration', 'package', or 'group'
+        $value = $request->input('value'); // duration in mins, package_id, or course_id
+        $price = $request->input('price'); // fallback price (optional)
 
         $summary = '';
         $calculatedPrice = (float) $price;
+        $fee = 0;
 
         if ($type === 'duration') {
             $summary = "{$value}-Minute Session";
@@ -118,13 +144,21 @@ class HomeController extends Controller
             $summary = "{$package->number_of_lessons}-Lesson Package";
             $calculatedPrice = $package->price;
             $fee = round($calculatedPrice * 0.03, 2);
+        } elseif ($type === 'group') {
+            // Group course checkout
+            $courseId = $value;
+            $course = GroupClass::with('teacher')->findOrFail($courseId);
+
+            $summary = "Group Class: {$course->title} by {$course->teacher->name}";
+            $calculatedPrice = $course->price_per_student;
+            $fee = round($calculatedPrice * 0.03, 2);
         }
 
         $total = round($calculatedPrice + $fee, 2);
 
-
         return view('website.content.checkout', compact('summary', 'calculatedPrice', 'fee', 'total'));
     }
+
 
     // public function tutorBooking($id): View
     // {
@@ -156,6 +190,14 @@ class HomeController extends Controller
         $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
         // dd($teachers->toArray());
         return view('website.content.one-to-one', compact('teachers'));
+    }
+
+    public function groupLesson(): View
+    {
+        $courses = GroupClass::with('teacher', 'days')->get();
+        $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
+        // dd($courses->toArray());
+        return view('website.content.group-lesson', compact('teachers', 'courses'));
     }
 
     public function adminLogin(): View
