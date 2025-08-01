@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
+use App\Models\Payment;
 use Stripe\Checkout\Session;
 
 class StripeController extends Controller
@@ -17,11 +18,11 @@ class StripeController extends Controller
     $fee = $request->fee;
     $total = $request->total;
     $paymentMethod = $request->payment;
-
+    //dd($request->all());
     if ($paymentMethod === 'demo') {
         return redirect()->route('find.tutor')->with('success', 'Simulated payment successful.');
     }
-
+    
     // Stripe expects amounts in cents
     $lineItems = [[
         'price_data' => [
@@ -38,11 +39,45 @@ class StripeController extends Controller
         'payment_method_types' => ['card'],
         'line_items' => $lineItems,
         'mode' => 'payment',
-        'success_url' => route('find.tutor'),
+        'success_url' => route('student.dashboard'),
         'cancel_url' => route('student.public.profile'),
     ]);
-
+    $this->recordPayment($request); // Record demo payment
     return redirect($checkoutSession->url);
+}
+
+private function recordPayment(Request $request, $status = 'successful')
+{
+    Payment::create([
+        'student_id'     => auth()->id(),
+        'course_id'      => 'course', // replace with dynamic if needed
+        'summary'        => $request->input('summary'),
+        'base_price'     => $request->input('calculated_price'),
+        'fee'            => $request->input('fee'),
+        'total'          => $request->input('total'),
+        'payment_method' => $request->input('payment'),
+        'status'         => $status,
+    ]);
+}
+
+public function handleStripePayment(Request $request)
+{
+    // Example values, update according to your logic
+    $studentId = auth()->id(); // or get from session
+    //$courseId = $request->input('course_id'); // pass from form or route
+
+    Payment::create([
+        'student_id'     => $studentId,
+        'course_id'      => 'course',
+        'summary'        => $request->input('summary'),
+        'base_price'     => $request->input('calculated_price'),
+        'fee'            => $request->input('fee'),
+        'total'          => $request->input('total'),
+        'payment_method' => $request->input('payment'), // stripe or demo
+        'status'         => 'successful', // update accordingly
+    ]);
+
+    return redirect()->route('student.dashboard')->with('success', 'Payment recorded successfully.');
 }
 
 

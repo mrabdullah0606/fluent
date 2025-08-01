@@ -1,6 +1,7 @@
-@extends('website.master.master')
+@extends('student.master.master')
 @section('title', 'Find-Tutor - FluentAll')
 @section('content')
+
     <div class="container text-center my-5">
         <h1 class="fw-bold">Find Your Lesson</h1>
         <p class="text-muted">Discover the perfect learning experience tailored for you.</p>
@@ -13,7 +14,7 @@
                     <h4 class="fw-bold">One-on-One Lessons</h4>
                     <p class="text-muted">Get personalized attention and a tailored learning plan with a dedicated
                         tutor. Perfect for focused learning and rapid progress.</p>
-                    <a href="{{ route('one.on.one.tutors') }}" class="btn btn-danger mt-3">Find Private Tutors <i
+                    <a href="{{ route('student.one.on.one.tutors') }}" class="btn btn-danger mt-3">Find Private Tutors <i
                             class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
@@ -25,7 +26,7 @@
                     <h4 class="fw-bold">Group Lessons</h4>
                     <p class="text-muted">Learn with peers in a collaborative environment. Interactive sessions that are
                         fun, engaging, and budget-friendly.</p>
-                    <a href="{{ route('group.lesson') }}" class="btn btn-danger mt-3">Explore Group Lessons <i
+                    <a href="{{ route('student.group.lesson') }}" class="btn btn-danger mt-3">Explore Group Lessons <i
                             class="bi bi-arrow-right"></i></a>
                 </div>
             </div>

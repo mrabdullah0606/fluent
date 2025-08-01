@@ -172,7 +172,7 @@
             const courseId = button.dataset.courseId;
             const price = button.dataset.price;
 
-            const url = `/checkout?type=group&value=${courseId}&price=${price}`;
+            const url = `/student/checkout?type=group&value=${courseId}&price=${price}`;
             window.location.href = url;
         }
     </script>

@@ -73,9 +73,9 @@ Route::prefix('student')->group(function () {
         Route::put('profile/update', [StudentController::class, 'updateProfile'])->name('student.profile.update');
         Route::get('add-reviews', [StudentController::class, 'addReviews'])->name('student.add.review');
         Route::post('reviews/{teacher}', [StudentController::class, 'storeReview'])->name('student.reviews.store');
-        Route::get('/find-tutor', [HomeController::class, 'findTutor'])->name('student.find.tutor');
-        Route::get('/one-on-one-tutors', [HomeController::class, 'oneOnOneTutors'])->name('student.one.on.one.tutors');
-        Route::get('/group-lesson', [HomeController::class, 'groupLesson'])->name('student.group.lesson');
+        Route::get('/find-tutor', [StudentController::class, 'findTutor'])->name('student.find.tutor');
+        Route::get('/one-on-one-tutors', [StudentController::class, 'oneOnOneTutors'])->name('student.one.on.one.tutors');
+        Route::get('/group-lesson', [StudentController::class, 'groupLesson'])->name('student.group.lesson');
 
         /* ********************************** CHAT ROUTES ********************************** */
         Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');

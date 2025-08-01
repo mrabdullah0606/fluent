@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Language;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\GroupClass;
 use App\Models\Review;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -96,6 +97,61 @@ class StudentController extends Controller
         $languages = Language::all();
 
         return view('student.content.profile.public', compact('student', 'languages'));
+    }
+
+     public function checkout(Request $request)
+    {
+        $type = $request->input('type'); // 'duration', 'package', or 'group'
+        $value = $request->input('value'); // duration in mins, package_id, or course_id
+        $price = $request->input('price'); // fallback price (optional)
+
+        $summary = '';
+        $calculatedPrice = (float) $price;
+        $fee = 0;
+
+        if ($type === 'duration') {
+            $summary = "{$value}-Minute Session";
+            $fee = round($calculatedPrice * 0.03, 2);
+        } elseif ($type === 'package') {
+            $package = LessonPackage::find($value);
+            $summary = "{$package->number_of_lessons}-Lesson Package";
+            $calculatedPrice = $package->price;
+            $fee = round($calculatedPrice * 0.03, 2);
+        } elseif ($type === 'group') {
+            // Group course checkout
+            $courseId = $value;
+            $course = GroupClass::with('teacher')->findOrFail($courseId);
+
+            $summary = "Group Class: {$course->title} by {$course->teacher->name}";
+            $calculatedPrice = $course->price_per_student;
+            $fee = round($calculatedPrice * 0.03, 2);
+        }
+
+        $total = round($calculatedPrice + $fee, 2);
+
+        return view('website.content.checkout', compact('summary', 'calculatedPrice', 'fee', 'total'));
+    }
+
+    
+       public function findTutor(): View
+    {
+        //dd('test');
+        return view('student.content.find-tutor');
+    }
+
+     public function oneOnOneTutors(): View
+    {
+        $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
+        // dd($teachers->toArray());
+        return view('student.content.one-to-one', compact('teachers'));
+    }
+
+    public function groupLesson(): View
+    {
+        $courses = GroupClass::with('teacher', 'days')->get();
+        $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
+        // dd($courses->toArray());
+        return view('student.content.group-lesson', compact('teachers', 'courses'));
     }
 
 
