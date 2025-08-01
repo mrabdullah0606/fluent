@@ -36,11 +36,15 @@
                                     id="image-upload" accept="image/*">
                             </div>
                             <div class="flex-grow text-center sm:text-left"><label
-                                    class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium text-muted-foreground"
-                                    for="name">Full Name</label>
-                                <input
-                                    class="flex h-10 w-full border-input bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-2xl font-bold border-0 border-b-2 rounded-none shadow-none px-1 focus-visible:ring-0 focus:border-primary"
-                                    id="name" name="name" value="{{ old('name', $teacher->name) }}" type="text">
+                                    class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium text-muted-foreground float-left"
+                                    for="name" style="float: left;margin-left: 3px;">Full Name</label>
+                                    <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    value="{{ old('name', $user->name) }}"
+                                    class="w-full text-2xl font-bold px-1 py-2 form-control rounded-md border-b-2 border-gray-400 focus:border-blue-600 focus:outline-none"
+                                    >
                             </div>
                         </div>
                     </div>
