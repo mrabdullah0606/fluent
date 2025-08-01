@@ -126,6 +126,9 @@
                     <button type="submit" class="btn login-btn shadow-sm border-0 px-4 py-2 fw-semibold">
                         Register
                     </button>
+                    <div class="mt-3 text-center">
+                        <a href="{{route('teacher.login')}}" class="text-primary text-decoration-none">Already Registered? Sign In As Teacher</a>
+                    </div>
                 </div>
             </form>
         </div>

@@ -8,12 +8,12 @@
     <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') }}">
         <i class="bi bi-person-lines-fill me-2"></i> User Management
     </a>
-    <a href="" class="nav-link {{ request()->routeIs('admin.users.*') }}">
+    <!-- <a href="" class="nav-link {{ request()->routeIs('admin.users.*') }}">
         <i class="bi bi-person-lines-fill me-2"></i> Teacher Management
     </a>
     <a href="" class="nav-link {{ request()->routeIs('admin.users.*') }}">
         <i class="bi bi-person-lines-fill me-2"></i> Student Management
-    </a>
+    </a> -->
     <a href="{{ route('admin.languages.index') }}"
         class="nav-link {{ request()->routeIs('admin.languages.*') ? 'active' : '' }}">
         <i class="bi bi-person-lines-fill me-2"></i> Languages Management

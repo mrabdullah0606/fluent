@@ -6,10 +6,10 @@
 </head>
 
 <body>
-    @if (session('success') || session('danger'))
+@if (session('success') || session('danger'))
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
         @if (session('success'))
-        <div class="toast align-items-center text-bg-success border-0 show" role="alert">
+        <div class="toast align-items-center text-bg-success border-0 fade hide" role="alert" data-bs-delay="4000" data-bs-autohide="true">
             <div class="d-flex">
                 <div class="toast-body">
                     {{ session('success') }}
@@ -18,8 +18,9 @@
             </div>
         </div>
         @endif
+
         @if (session('danger'))
-        <div class="toast align-items-center text-bg-danger border-0 show" role="alert">
+        <div class="toast align-items-center text-bg-danger border-0 fade hide" role="alert" data-bs-delay="4000" data-bs-autohide="true">
             <div class="d-flex">
                 <div class="toast-body">
                     {{ session('danger') }}
@@ -29,7 +30,8 @@
         </div>
         @endif
     </div>
-    @endif
+@endif
+
 
     @push('styles')
         <style>

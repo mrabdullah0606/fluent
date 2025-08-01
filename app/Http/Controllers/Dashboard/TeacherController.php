@@ -27,10 +27,11 @@ class TeacherController extends Controller
 
     public function editProfile(): View
     {   
+        $user = auth()->user(); // contains 'name'
         $teacher = auth()->user()->teacherProfile;
         //$teacher = auth()->user(); // logged-in teacher
         $languages = Language::all();
-        return view('teacher.content.profile.edit', compact('teacher', 'languages'));
+        return view('teacher.content.profile.edit', compact('user','teacher', 'languages'));
     }
    public function updateProfile(Request $request)
 {
@@ -48,7 +49,8 @@ class TeacherController extends Controller
     ]);
 
     $user = auth()->user();
-
+    $user->name = $request->name;
+    $user->save();
     // Check if teacher profile exists
     $teacher = $user->teacherProfile;
 

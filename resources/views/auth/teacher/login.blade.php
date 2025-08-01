@@ -85,6 +85,9 @@
                 </div>
 
                 <!-- Forgot Password -->
+                <div class="mb-3 text-start">
+                    <a href="{{route('teacher.register')}}" class="text-primary text-decoration-none">Not a Teacher? Sign up</a>
+                </div>
                 <div class="mb-3 text-end">
                     <a href="#" class="text-primary text-decoration-none">Forgot password?</a>
                 </div>
