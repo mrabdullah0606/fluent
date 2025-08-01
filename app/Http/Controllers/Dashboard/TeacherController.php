@@ -29,11 +29,10 @@ class TeacherController extends Controller
     {   
         $user = auth()->user(); // contains 'name'
         $teacher = auth()->user()->teacherProfile;
-        //$teacher = auth()->user(); // logged-in teacher
         $languages = Language::all();
         return view('teacher.content.profile.edit', compact('user','teacher', 'languages'));
     }
-   public function updateProfile(Request $request)
+  public function updateProfile(Request $request)
 {
     $request->validate([
         'headline'        => 'nullable|string|max:255',
@@ -46,12 +45,13 @@ class TeacherController extends Controller
         'certifications'  => 'nullable|string|max:255',
         'experience'      => 'nullable|string|max:255',
         'teaching_style'  => 'nullable|string|max:255',
+        'profile_image'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
     $user = auth()->user();
     $user->name = $request->name;
     $user->save();
-    // Check if teacher profile exists
+
     $teacher = $user->teacherProfile;
 
     $data = [
@@ -68,16 +68,24 @@ class TeacherController extends Controller
         'teaching_style'  => $request->teaching_style,
     ];
 
+    // ==== Image Upload ====
+    if ($request->hasFile('profile_image')) {
+        $imagePath = $request->file('profile_image')->store('teacher_images', 'public');
+        $data['profile_image'] = $imagePath;
+    } elseif ($teacher) {
+        // Keep old image if no new file
+        $data['profile_image'] = $teacher->profile_image;
+    }
+
     if ($teacher) {
-        // Update existing teacher profile
         $teacher->update($data);
     } else {
-        // Create new teacher profile
         \App\Models\Teacher::create($data);
     }
 
     return redirect()->back()->with('success', 'Profile saved successfully.');
 }
+
 
 
     // public function updateProfile(Request $request)
@@ -99,13 +107,14 @@ class TeacherController extends Controller
     //         ->with('success', 'Profile updated successfully.');
     // }
 
-    public function publicProfile(): View
-    {
-        $teacher = auth()->user();
-        $languages = Language::all();
+   public function publicProfile(): View
+{
+    $user = auth()->user();
+    $teacher = $user->teacherProfile; // yahan profile ka sara data milega
 
-        return view('teacher.content.profile.public', compact('teacher', 'languages'));
-    }
+    return view('teacher.content.profile.public', compact('user','teacher'));
+}
+
 
     public function calendar(): View
     {

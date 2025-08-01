@@ -20,8 +20,8 @@ class Teacher extends Model
     'country',
     'rate_per_hour',
     'language_id',
+    'profile_image',
 ];
-
     public function user()
     {
         return $this->belongsTo(User::class);

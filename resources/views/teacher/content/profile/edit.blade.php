@@ -12,29 +12,40 @@
                 <div style="opacity: 1; transform: none;">
                     <h1 class="text-3xl font-bold text-foreground mb-8">Edit Your Teacher Profileee</h1>
                 </div>
-                <form action="{{ route('teacher.profile.update') }}" method="POST">
+                <form action="{{ route('teacher.profile.update') }}" method="POST" enctype="multipart/form-data">
+
                     @csrf
                     @method('PUT')
                     <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 mb-8"
                         style="opacity: 1; transform: none;">
                         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                             <div class="flex-shrink-0 relative">
-                                <span
-                                    class="relative flex shrink-0 overflow-hidden rounded-full w-28 h-28 border-4 border-primary"><span
-                                        class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ substr($teacher->name, 0, 2) }}</span></span>
-                                <label
-                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 absolute -bottom-2 -right-2 bg-secondary text-secondary-foreground p-1.5 rounded-full cursor-pointer hover:bg-secondary/90 transition-colors"
-                                    for="image-upload">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" x2="12" y1="3" y2="15"></line>
-                                    </svg></label><input type="file"
-                                    class="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 hidden"
-                                    id="image-upload" accept="image/*">
-                            </div>
+    <span class="relative flex shrink-0 overflow-hidden rounded-full w-28 h-28 border-4 border-primary">
+        @if($teacher && $teacher->profile_image)
+            <img src="{{ asset('storage/'.$teacher->profile_image) }}" 
+                 class="w-full h-full object-cover rounded-full">
+        @else
+            <span class="flex h-full w-full items-center justify-center rounded-full bg-muted"></span>
+        @endif
+    </span>
+
+    {{-- Upload Button --}}
+    <label
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 absolute -bottom-2 -right-2 bg-secondary text-secondary-foreground p-1.5 rounded-full cursor-pointer hover:bg-secondary/90 transition-colors"
+        for="image-upload">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" x2="12" y1="3" y2="15"></line>
+        </svg>
+    </label>
+    <input type="file" name="profile_image"
+        class="hidden"
+        id="image-upload" accept="image/*">
+</div>
+
                             <div class="flex-grow text-center sm:text-left"><label
                                     class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium text-muted-foreground float-left"
                                     for="name" style="float: left;margin-left: 3px;">Full Name</label>
