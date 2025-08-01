@@ -14,7 +14,7 @@
                             style="width: 45px; height: 45px; font-weight: bold; font-size: 1.1rem;">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
-
+  
                         <!-- Name and preview -->
                         <div>
                             <h6 class="mb-0">{{ $user->name }}</h6>

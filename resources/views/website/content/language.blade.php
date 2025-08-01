@@ -79,9 +79,14 @@
                                                 d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z">
                                             </path>
                                             <path d="M7 7h.01"></path>
-                                        </svg>Trial: $5</p><button
-                                        class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 w-full btn-red text-sm py-2">View
-                                        Profile &amp; Book</button>
+                                        </svg>Trial: $5</p>
+                                    <a href="{{ route('tutor', ['id' => $teacher->user->id]) }}">
+                                        <button
+                                            class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 w-full btn-red text-sm py-2">
+                                            View
+                                            Profile &amp; Book
+                                        </button>
+                                    </a>
                                 </div>
                                 <div class="md:w-2/3 p-5 md:p-6">
                                     <h4 class="text-lg font-semibold text-foreground mb-2">

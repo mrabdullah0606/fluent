@@ -131,9 +131,9 @@ class ChatController extends Controller
         }
     }
 
-    public function users()
-    {
-        $users = User::where('id', '!=', auth()->id())->get();
-        return view('teacher.content.chat.users', compact('users'));
-    }
+    // public function users()
+    // {
+    //     $users = User::where('id', '!=', auth()->id())->get();
+    //     return view('teacher.content.chat.users', compact('users'));
+    // }
 }
