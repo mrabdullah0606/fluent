@@ -27,26 +27,34 @@ class TeacherController extends Controller
     //     return response()->view('teacher.content.dashboard', compact('teacher'));
     // }
     public function index(): Response
-    {
-        $teacher = auth()->user();
-
-    // Get all Zoom meetings by this teacher
-    //$zoomMeetings = ZoomMeeting::where('teacher_id', $teacher->id)->get();
-        $zoomMeetings = ZoomMeeting::with('group')->where('teacher_id', $teacher->id)->get();
-    // $groupClasses = GroupClass::where('teacher_id', $teacher->id)->get();
-    // Prepare data array
-        $meetingDetails = [];
-
-        foreach ($zoomMeetings as $meeting) {
-        // Match with payment(s)
-            $payments = Payment::where('teacher_id', $teacher->id)
+{
+    $teacher = auth()->user();
+    
+    // Get all Zoom meetings by this teacher, ordered by start_time
+    $zoomMeetings = ZoomMeeting::with('group')
+        ->where('teacher_id', $teacher->id)
+        ->orderBy('start_time', 'asc')
+        ->get();
+    
+    // Debug: Check if meetings exist
+    \Log::info('Zoom Meetings Count: ' . $zoomMeetings->count());
+    
+    // Prepare meeting details array
+    $meetingDetails = [];
+    
+    foreach ($zoomMeetings as $meeting) {
+        \Log::info('Processing meeting: ' . $meeting->topic);
+        
+        // Check if we have payment records or just show all meetings
+        $payments = Payment::where('teacher_id', $teacher->id)
             ->where('type', $meeting->meeting_type)
             ->get();
-
+        
+        if ($payments->count() > 0) {
+            // If payments exist, process with payment logic
             foreach ($payments as $payment) {
                 if ($payment->type === 'duration') {
                     $student = User::find($payment->student_id);
-
                     $meetingDetails[] = [
                         'meeting_type' => $payment->type,
                         'student_name' => $student->name ?? 'N/A',
@@ -55,14 +63,9 @@ class TeacherController extends Controller
                         'duration' => $meeting->duration,
                         'join_url' => $meeting->join_url,
                     ];
-                }
-
-                if ($payment->type === 'group') {
-                // Query to get the group title where teacher_id matches the logged-in user
+                } elseif ($payment->type === 'group') {
                     $groupClass = \App\Models\GroupClass::where('teacher_id', auth()->id())->first();
-
                     $groupName = $groupClass ? $groupClass->title : 'Group Class';
-
                     $meetingDetails[] = [
                         'meeting_type' => $payment->type,
                         'group_name' => $groupName,
@@ -73,10 +76,30 @@ class TeacherController extends Controller
                     ];
                 }
             }
+        } else {
+            // If no payments, just show the meeting (fallback)
+            $meetingDetails[] = [
+                'meeting_type' => 'general',
+                'student_name' => 'General Meeting',
+                'topic' => $meeting->topic,
+                'start_time' => $meeting->start_time,
+                'duration' => $meeting->duration,
+                'join_url' => $meeting->join_url,
+            ];
         }
-
-        return response()->view('teacher.content.dashboard', compact('teacher', 'meetingDetails'));
     }
+    
+    \Log::info('Meeting Details Count: ' . count($meetingDetails));
+    
+    // Separate visible and hidden meetings
+    $visibleMeetings = array_slice($meetingDetails, 0, 4); // Show first 4
+    $hiddenMeetings = array_slice($meetingDetails, 4); // Rest will be hidden
+    
+    \Log::info('Visible Meetings: ' . count($visibleMeetings));
+    \Log::info('Hidden Meetings: ' . count($hiddenMeetings));
+    
+    return response()->view('teacher.content.dashboard', compact('teacher', 'visibleMeetings', 'hiddenMeetings'));
+}
 
     public function editProfile(): View
     {   

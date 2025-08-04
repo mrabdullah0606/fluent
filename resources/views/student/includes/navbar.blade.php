@@ -23,11 +23,11 @@
                      <a class="nav-link active d-flex align-items-center" href="{{ route('student.dashboard') }}">
                          <i class="bi bi-house me-1"></i> Home
                      </a>
-                 </li>
+                 {{-- </li>
                  <li class="nav-item me-3">
                      <a class="nav-link d-flex align-items-center" href="#"><i class="bi bi-calendar3 me-1"></i>
                          My Calendar</a>
-                 </li>
+                 </li> --}}
                  <li class="nav-item me-3">
                      <a class="nav-link d-flex align-items-center" href="{{ route('student.chats.index') }}"><i
                              class="bi bi-chat-left-text me-1"></i> Messages</a>
@@ -36,11 +36,11 @@
                      <a class="nav-link d-flex align-items-center" href="{{ route('zoom.meetings.index') }}"><i
                              class="bi bi-camera-video me-1"></i> Lessons</a>
                  </li> -->
-                 <li class="nav-item me-3">
+                 {{-- <li class="nav-item me-3">
                      <a class="nav-link d-flex align-items-center" href="{{ route('student.public.profile') }}">
                          <i class="bi bi-eye me-1"></i> Profile
                      </a>
-                 </li>
+                 </li> --}}
                  
              </ul>
              <div class="d-flex align-items-center gap-2">

@@ -1,321 +1,330 @@
 @extends('student.master.master')
 @section('title', 'Student Dashboard - FluentAll')
 @section('content')
-    {{-- <div class="container-fluid px-3 px-md-4 px-lg-5 py-5">
-
-        <h3 class="fw-bold">Welcome Back, Teacher!</h3>
-        <p class="text-muted">Here's what's happening on your FluentAll dashboard today.</p>
-
-        <div class="row g-4 my-4">
-            <!-- Available Balance Card -->
-            <div class="col-12 col-md-4">
-                <div class="p-3 position-relative card-border bg-white h-100">
-                    <div class="icon-end"><i class="bi bi-credit-card"></i></div>
-                    <p class="text-muted mb-1">Available Balance</p>
-                    <h4 class="fw-bold mb-1">$2,435.50</h4>
-                    <small class="text-muted">+ $120.00 since last withdrawal</small>
-                </div>
+<main class="flex-grow">
+    <div class="bg-gray-50 flex-grow p-6 md:p-10">
+        <div class="container mx-auto">
+            <div style="opacity: 1; transform: none;">
+                <h1 class="text-3xl font-bold text-foreground mb-2">Welcome Back, {{ $student->name }}!</h1>
+                <p class="text-muted-foreground mb-8">Here's what's happening on your FluentAll dashboard today.</p>
             </div>
-
-            <!-- Total Students Card -->
-            <div class="col-12 col-md-4">
-                <div class="p-3 position-relative card-border bg-white h-100">
-                    <div class="icon-end"><i class="bi bi-people"></i></div>
-                    <p class="text-muted mb-1">Total Students</p>
-                    <h4 class="fw-bold mb-1">23</h4>
-                    <small class="text-muted">+2 new this month</small>
-                </div>
-            </div>
-
-            <!-- Lessons This Week Card -->
-            <div class="col-12 col-md-4">
-                <div class="p-3 position-relative card-border bg-white h-100">
-                    <div class="icon-end"><i class="bi bi-clock"></i></div>
-                    <p class="text-muted mb-1">Lessons This Week</p>
-                    <h4 class="fw-bold mb-1">12</h4>
-                    <small class="text-muted">3 completed, 9 upcoming</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Alert -->
-        <div class="alert alert-custom d-flex align-items-center mt-3" role="alert">
-            <i class="bi bi-exclamation-circle-fill me-2 text-warning"></i>
-            <div>
-                Don't forget to update your availability for next week in your <strong>calendar</strong>!
-            </div>
-        </div>
-
-
-        <div class="container-fluid px-3 px-md-4 px-lg-5 py-5">
-            <h4 class="fw-bold mb-4">Upcoming Lessons</h4>
-
-            <!-- Lesson Card 1 -->
-            <div class="lesson-card p-3 mb-3 d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-start gap-3">
-                    <div class="avatar-circle">J</div>
-                    <div>
-                        <div class="fw-bold">John Doe</div>
-                        <div class="text-muted">English - 60 min</div>
-                        <div class="time-text"><i class="bi bi-clock"></i> Today at 14:00</div>
-                    </div>
-                </div>
-                <a href="#" class="btn btn-yellow d-flex align-items-center mt-3 mt-sm-0">
-                    <i class="bi bi-camera-video me-1"></i> Join Lesson
-                </a>
-            </div>
-
-            <!-- Lesson Card 2 -->
-            <div class="lesson-card p-3 mb-3 d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-start gap-3">
-                    <div class="avatar-circle">M</div>
-                    <div>
-                        <div class="fw-bold">Maria Garcia</div>
-                        <div class="text-muted">Spanish - 30 min (Trial)</div>
-                        <div class="time-text"><i class="bi bi-clock"></i> Today at 16:30</div>
-                    </div>
-                </div>
-                <a href="#" class="btn btn-yellow d-flex align-items-center mt-3 mt-sm-0">
-                    <i class="bi bi-camera-video me-1"></i> Join Lesson
-                </a>
-            </div>
-
-            <!-- Lesson Card 3 -->
-            <div class="lesson-card p-3 mb-3 d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-start gap-3">
-                    <div class="avatar-circle">K</div>
-                    <div>
-                        <div class="fw-bold">Kenji Tanaka</div>
-                        <div class="text-muted">Japanese - 60 min</div>
-                        <div class="time-text"><i class="bi bi-clock"></i> Tomorrow at 10:00</div>
-                    </div>
-                </div>
-                <a href="#" class="btn btn-yellow d-flex align-items-center mt-3 mt-sm-0">
-                    <i class="bi bi-camera-video me-1"></i> Join Lesson
-                </a>
-            </div>
-
-            <!-- Lesson Card 4 -->
-            <div class="lesson-card p-3 mb-3 d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-start gap-3">
-                    <div class="avatar-circle">F</div>
-                    <div>
-                        <div class="fw-bold">French Group A1</div>
-                        <div class="text-muted">French - 90 min</div>
-                        <div class="time-text"><i class="bi bi-clock"></i> Tomorrow at 18:00</div>
-                    </div>
-                </div>
-                <a href="#" class="btn btn-yellow d-flex align-items-center mt-3 mt-sm-0">
-                    <i class="bi bi-camera-video me-1"></i> Join Lesson
-                </a>
-            </div>
-
-            <!-- Show More Button -->
-            <div class="text-center show-more-btn">
-                <button class="btn btn-outline-secondary">Show More (1 more)</button>
-            </div>
-        </div>
-    </div> --}}
-    <main class="flex-grow">
-        <div class="bg-gray-50 flex-grow p-6 md:p-10">
-            <div class="container mx-auto">
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div style="opacity: 1; transform: none;">
-                    <h1 class="text-3xl font-bold text-foreground mb-2">Welcome Back, {{ $student->name }}!</h1>
-                    <p class="text-muted-foreground mb-8">Here's what's happening on your FluentAll dashboard today.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-
-                    <div style="opacity: 1; transform: none;">
-                        <div
-                            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
-                            <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-                                <h3 class="tracking-tight text-sm font-medium">Total Teachers</h3><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <div class="text-2xl font-bold">23</div>
-                                <p class="text-xs text-muted-foreground">+2 new this month</p>
-                            </div>
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
+                        <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
+                            <h3 class="tracking-tight text-sm font-medium">Total Teachers</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
                         </div>
-                    </div>
-                    <div style="opacity: 1; transform: none;">
-                        <div
-                            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
-                            <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-                                <h3 class="tracking-tight text-sm font-medium">Lessons This Week</h3><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                </svg>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <div class="text-2xl font-bold">12</div>
-                                <p class="text-xs text-muted-foreground">3 completed, 9 upcoming</p>
-                            </div>
+                        <div class="p-6 pt-0">
+                            <div class="text-2xl font-bold">23</div>
+                            <p class="text-xs text-muted-foreground">+2 new this month</p>
                         </div>
                     </div>
                 </div>
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md mb-8 flex items-center"
-                    style="opacity: 1; transform: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-yellow-600 mr-3">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" x2="12" y1="8" y2="12"></line>
-                        <line x1="12" x2="12.01" y1="16" y2="16"></line>
-                    </svg>
-                    <p class="text-sm text-yellow-800">Don't forget to update your availability for next week in your
-                        <button
-                            class="inline-flex items-center justify-center rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 underline-offset-4 hover:underline p-0 h-auto text-sm text-yellow-900 font-semibold">calendar</button>!
-                    </p>
-                </div>
+                
                 <div style="opacity: 1; transform: none;">
-                    <h2 class="text-2xl font-bold text-foreground mb-4">Upcoming Lessons</h2>
-                    <div class="space-y-4">
-                        <h1>ajajj</h1>
-                       
-
-                        @foreach ($meetingDetails as $meeting)
-                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
-                        <div class="p-4 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                        <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                        <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
-                        {{ strtoupper(substr($meeting['teacher_name'], 0, 1)) }}
-                        </span>
-                        </span>
-                        <div>
-                        <p class="font-semibold text-foreground">{{ $meeting['teacher_name'] }}</p>
-                        <p class="text-sm text-muted-foreground">{{ $meeting['topic'] }} - {{ $meeting['duration'] }} min</p>
-                        <p class="text-sm text-primary font-medium flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" class="mr-1 h-3.5 w-3.5">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        {{ $meeting['start_time'] }}
-                        </p>
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
+                        <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
+                            <h3 class="tracking-tight text-sm font-medium">Lessons This Week</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
                         </div>
+                        <div class="p-6 pt-0">
+                            <div class="text-2xl font-bold">12</div>
+                            <p class="text-xs text-muted-foreground">3 completed, 9 upcoming</p>
                         </div>
-                        <a href="{{ $meeting['join_url'] }}" target="_blank"
-                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="h-4 w-4 mr-2">
-                        <path d="m22 8-6 4 6 4V8Z"></path>
-                        <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
-                        </svg>Join Lesson
-                        </a>
-                        </div>
-                        </div>
-                        @endforeach
-
-                        <!-- dummy content -->
-                        <!-- <div
-                            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
-                            <div class="p-4 flex items-center justify-between">
-                                <div class="flex items-center space-x-3"><span
-                                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"><span
-                                            class="flex h-full w-full items-center justify-center rounded-full bg-muted">M</span></span>
-                                    <div>
-                                        <p class="font-semibold text-foreground">Maria Garcia</p>
-                                        <p class="text-sm text-muted-foreground">Spanish - 30 min (Trial)</p>
-                                        <p class="text-sm text-primary font-medium flex items-center"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Warning Notice -->
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md mb-8 flex items-center"
+                style="opacity: 1; transform: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                    class="h-5 w-5 text-yellow-600 mr-3">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" x2="12" y1="8" y2="12"></line>
+                    <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                <p class="text-sm text-yellow-800">Don't forget to update your availability for next week in your
+                    <button class="inline-flex items-center justify-center rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 underline-offset-4 hover:underline p-0 h-auto text-sm text-yellow-900 font-semibold">calendar</button>!
+                </p>
+            </div>
+            
+            <!-- Upcoming Lessons -->
+            <div style="opacity: 1; transform: none;">
+                <h2 class="text-2xl font-bold text-foreground mb-4">Upcoming Lessons</h2>
+                
+                @if((isset($visibleMeetings) && count($visibleMeetings) === 0) && (isset($hiddenMeetings) && count($hiddenMeetings) === 0))
+                    <div class="text-center py-8">
+                        <p class="text-muted-foreground">No upcoming lessons scheduled.</p>
+                    </div>
+                @else
+                    <div class="space-y-4" id="lessons-container">
+                        <!-- Visible Lessons (First 4) -->
+                        @if(isset($visibleMeetings))
+                            @foreach ($visibleMeetings as $meeting)
+                            <div class="lesson-item rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
+                                <div class="p-4 flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                                            <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                                                {{ strtoupper(substr($meeting['teacher_name'] ?? $meeting['group_name'] ?? 'T', 0, 1)) }}
+                                            </span>
+                                        </span>
+                                        <div>
+                                            <p class="font-semibold text-foreground">
+                                                {{ $meeting['teacher_name'] ?? $meeting['group_name'] ?? 'Unknown Teacher' }}
+                                            </p>
+                                            <p class="text-sm text-muted-foreground">
+                                                {{ ucfirst($meeting['topic']) }} - {{ $meeting['duration'] }} min
+                                            </p>
+                                            <p class="text-sm text-primary font-medium flex items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="mr-1 h-3.5 w-3.5">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                                </svg>
+                                                {{ \Carbon\Carbon::parse($meeting['start_time'])->format('D, M j \\a\\t H:i') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <a href="{{ $meeting['join_url'] }}" target="_blank">
+                                        <button class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="mr-1 h-3.5 w-3.5">
-                                                <circle cx="12" cy="12" r="10"></circle>
-                                                <polyline points="12 6 12 12 16 14"></polyline>
-                                            </svg>Today at 16:30</p>
+                                                class="h-4 w-4 mr-2">
+                                                <path d="m22 8-6 4 6 4V8Z"></path>
+                                                <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                                            </svg>
+                                            Join Lesson
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
+                        @endif
+                        
+                        <!-- Hidden Lessons (Initially Hidden) -->
+                        @if(isset($hiddenMeetings))
+                            @foreach ($hiddenMeetings as $meeting)
+                            <div class="lesson-item hidden-lesson rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow" style="display: none;">
+                                <div class="p-4 flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                                            <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                                                {{ strtoupper(substr($meeting['teacher_name'] ?? $meeting['group_name'] ?? 'T', 0, 1)) }}
+                                            </span>
+                                        </span>
+                                        <div>
+                                            <p class="font-semibold text-foreground">
+                                                {{ $meeting['teacher_name'] ?? $meeting['group_name'] ?? 'Unknown Teacher' }}
+                                            </p>
+                                            <p class="text-sm text-muted-foreground">
+                                                {{ ucfirst($meeting['topic']) }} - {{ $meeting['duration'] }} min
+                                            </p>
+                                            <p class="text-sm text-primary font-medium flex items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="mr-1 h-3.5 w-3.5">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                                </svg>
+                                                {{ \Carbon\Carbon::parse($meeting['start_time'])->format('D, M j \\a\\t H:i') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <a href="{{ $meeting['join_url'] }}" target="_blank">
+                                        <button class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="h-4 w-4 mr-2">
+                                                <path d="m22 8-6 4 6 4V8Z"></path>
+                                                <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                                            </svg>
+                                            Join Lesson
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
+                        @endif
+                        
+                        <!-- Fallback for old $meetingDetails variable (if still being used) -->
+                        @if(!isset($visibleMeetings) && isset($meetingDetails))
+                            @foreach ($meetingDetails as $index => $meeting)
+                                @if($index < 4)
+                                <div class="lesson-item rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
+                                    <div class="p-4 flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                                                <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                                                    {{ strtoupper(substr($meeting['teacher_name'], 0, 1)) }}
+                                                </span>
+                                            </span>
+                                            <div>
+                                                <p class="font-semibold text-foreground">{{ $meeting['teacher_name'] }}</p>
+                                                <p class="text-sm text-muted-foreground">{{ $meeting['topic'] }} - {{ $meeting['duration'] }} min</p>
+                                                <p class="text-sm text-primary font-medium flex items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" class="mr-1 h-3.5 w-3.5">
+                                                        <circle cx="12" cy="12" r="10"></circle>
+                                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                                    </svg>
+                                                    {{ $meeting['start_time'] }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <a href="{{ $meeting['join_url'] }}" target="_blank"
+                                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="h-4 w-4 mr-2">
+                                                <path d="m22 8-6 4 6 4V8Z"></path>
+                                                <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                                            </svg>Join Lesson
+                                        </a>
                                     </div>
                                 </div>
-                                <button
-                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2">
-                                        <path d="m22 8-6 4 6 4V8Z"></path>
-                                        <rect width="14" height="12" x="2" y="6" rx="2" ry="2">
-                                        </rect>
-                                    </svg>Join Lesson</button>
-                            </div>
-                        </div>
-                        <div
-                            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
-                            <div class="p-4 flex items-center justify-between">
-                                <div class="flex items-center space-x-3"><span
-                                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"><span
-                                            class="flex h-full w-full items-center justify-center rounded-full bg-muted">K</span></span>
-                                    <div>
-                                        <p class="font-semibold text-foreground">Kenji Tanaka</p>
-                                        <p class="text-sm text-muted-foreground">Japanese - 60 min</p>
-                                        <p class="text-sm text-primary font-medium flex items-center"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                @else
+                                <div class="lesson-item hidden-lesson rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow" style="display: none;">
+                                    <div class="p-4 flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                                                <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                                                    {{ strtoupper(substr($meeting['teacher_name'], 0, 1)) }}
+                                                </span>
+                                            </span>
+                                            <div>
+                                                <p class="font-semibold text-foreground">{{ $meeting['teacher_name'] }}</p>
+                                                <p class="text-sm text-muted-foreground">{{ $meeting['topic'] }} - {{ $meeting['duration'] }} min</p>
+                                                <p class="text-sm text-primary font-medium flex items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" class="mr-1 h-3.5 w-3.5">
+                                                        <circle cx="12" cy="12" r="10"></circle>
+                                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                                    </svg>
+                                                    {{ $meeting['start_time'] }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <a href="{{ $meeting['join_url'] }}" target="_blank"
+                                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="mr-1 h-3.5 w-3.5">
-                                                <circle cx="12" cy="12" r="10"></circle>
-                                                <polyline points="12 6 12 12 16 14"></polyline>
-                                            </svg>Tomorrow at 10:00</p>
+                                                class="h-4 w-4 mr-2">
+                                                <path d="m22 8-6 4 6 4V8Z"></path>
+                                                <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                                            </svg>Join Lesson
+                                        </a>
                                     </div>
-                                </div><button
-                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2">
-                                        <path d="m22 8-6 4 6 4V8Z"></path>
-                                        <rect width="14" height="12" x="2" y="6" rx="2" ry="2">
-                                        </rect>
-                                    </svg>Join Lesson</button>
-                            </div>
-                        </div>
-                        <div
-                            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
-                            <div class="p-4 flex items-center justify-between">
-                                <div class="flex items-center space-x-3"><span
-                                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"><span
-                                            class="flex h-full w-full items-center justify-center rounded-full bg-muted">F</span></span>
-                                    <div>
-                                        <p class="font-semibold text-foreground">French Group A1</p>
-                                        <p class="text-sm text-muted-foreground">French - 90 min</p>
-                                        <p class="text-sm text-primary font-medium flex items-center"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="mr-1 h-3.5 w-3.5">
-                                                <circle cx="12" cy="12" r="10"></circle>
-                                                <polyline points="12 6 12 12 16 14"></polyline>
-                                            </svg>Tomorrow at 18:00</p>
-                                    </div>
-                                </div><button
-                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2">
-                                        <path d="m22 8-6 4 6 4V8Z"></path>
-                                        <rect width="14" height="12" x="2" y="6" rx="2" ry="2">
-                                        </rect>
-                                    </svg>Join Lesson</button>
-                            </div>
-                        </div> -->
-                        <!-- dummy content end -->
+                                </div>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
-                    <div class="text-center mt-6"><button
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Show
-                            More (1 more)</button></div>
-                </div>
+                    
+                    <!-- Show More Button -->
+                    @php
+                        $hiddenCount = isset($hiddenMeetings) ? count($hiddenMeetings) : (isset($meetingDetails) ? count($meetingDetails) - 4 : 0);
+                    @endphp
+                    
+                    @if($hiddenCount > 0)
+                    <div class="text-center mt-6">
+                        <button id="show-more-btn" onclick="toggleStudentLessons()" 
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                            <span id="button-text">Show More ({{ $hiddenCount }} more)</span>
+                            <svg id="expand-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            <svg id="collapse-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2" style="display: none;">
+                                <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    @endif
+                @endif
             </div>
         </div>
-    </main>
+    </div>
+</main>
+
+<script>
+let isStudentLessonsExpanded = false;
+
+function toggleStudentLessons() {
+    const hiddenLessons = document.querySelectorAll('.hidden-lesson');
+    const buttonText = document.getElementById('button-text');
+    const expandIcon = document.getElementById('expand-icon');
+    const collapseIcon = document.getElementById('collapse-icon');
+    
+    if (!isStudentLessonsExpanded) {
+        // Show hidden lessons
+        hiddenLessons.forEach(lesson => {
+            lesson.style.display = 'block';
+            // Add smooth animation
+            setTimeout(() => {
+                lesson.style.opacity = '1';
+                lesson.style.transform = 'translateY(0)';
+            }, 10);
+        });
+        
+        buttonText.textContent = 'Show Less';
+        expandIcon.style.display = 'none';
+        collapseIcon.style.display = 'inline';
+        isStudentLessonsExpanded = true;
+    } else {
+        // Hide lessons
+        hiddenLessons.forEach(lesson => {
+            lesson.style.display = 'none';
+            lesson.style.opacity = '0';
+            lesson.style.transform = 'translateY(-10px)';
+        });
+        
+        buttonText.textContent = 'Show More ({{ $hiddenCount }} more)';
+        expandIcon.style.display = 'inline';
+        collapseIcon.style.display = 'none';
+        isStudentLessonsExpanded = false;
+    }
+}
+
+// Add CSS for smooth transitions
+const studentStyle = document.createElement('style');
+studentStyle.textContent = `
+    .hidden-lesson {
+        transition: all 0.3s ease-in-out;
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .lesson-item {
+        transition: all 0.2s ease-in-out;
+    }
+`;
+document.head.appendChild(studentStyle);
+</script>
+
 @endsection
