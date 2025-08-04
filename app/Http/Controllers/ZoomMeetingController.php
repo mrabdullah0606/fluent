@@ -33,6 +33,7 @@ class ZoomMeetingController extends Controller
             'topic' => 'required|string|max:255',
             'start_time' => 'required|date|after:now',
             'duration' => 'required|integer|min:1|max:480', // Max 8 hours
+            'meeting_type' => 'required|min:1|max:480', // Max 8 hours
         ]);
 
         try {
@@ -67,6 +68,8 @@ class ZoomMeetingController extends Controller
                 'topic' => $zoomData['topic'],
                 'start_time' => $zoomData['start_time'],
                 'duration' => $zoomData['duration'],
+                'teacher_id' => auth()->user()->id,
+                'meeting_type' => $request->input('meeting_type'),
                 'timezone' => $zoomData['timezone'] ?? 'Asia/Karachi',
                 'join_url' => $zoomData['join_url'],
                 'start_url' => $zoomData['start_url'] ?? null,

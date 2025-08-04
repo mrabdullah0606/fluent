@@ -108,4 +108,9 @@ class User extends Authenticatable
             ->whereNull('read_at')
             ->count();
     }
+
+    public function zoomMeetings()
+    {
+        return $this->hasMany(ZoomMeeting::class, 'teacher_id');
+    }
 }

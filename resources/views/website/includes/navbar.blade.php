@@ -28,11 +28,15 @@
 
         <!-- Navigation -->
         <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100" id="navbarNav">
+         @php
+         $user = auth()->user();
+         @endphp
 
-            <a href="{{ route('switch.to.teacher') }}" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
-                🔁 Switch to Teacher Account
-            </a>
-
+         @if(!$user || $user->role !== 'student')
+         <a href="{{ route('switch.to.teacher') }}" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
+            🔁 Switch to Teacher Account
+        </a>
+        @endif
             <ul class="navbar-nav me-3">
                 <li class="nav-item"><a class="nav-link text-dark" href="{{ route('index') }}">Home</a></li>
                 <li class="nav-item"><a class="nav-link text-dark" href="{{ route('messages') }}">Messages</a></li>
@@ -43,9 +47,69 @@
 
             <a href="{{ route('find.tutor') }}" class="btn btn-sm px-4 py-2 fw-semibold text-white me-2"
                 style="background-color: #E83030;">Find Tutor</a>
+            @auth
+    @php
+        $user = auth()->user();
+        $initial = strtoupper(substr($user->name, 0, 1));
+    @endphp
 
-            <a href="{{ route('student.login') }}" class="btn btn-outline-danger px-4 py-2 fw-semibold btn-sm">Student
-                Log In</a>
+    {{-- Student Dropdown --}}
+    @if($user->role === 'student')
+        <div class="dropdown">
+            <div class="dropdown-toggle rounded-circle border border-warning text-warning fw-bold d-flex align-items-center justify-content-center"
+                style="width: 32px; height: 32px; cursor: pointer;" data-bs-toggle="dropdown"
+                aria-expanded="false" tabindex="0" role="button">
+                {{ $initial }}
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{{ route('student.profile.edit') }}">View Profile</a></li>
+                
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item text-danger" href="javascript:void(0);"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
+            </ul>
+        </div>
+    
+    {{-- Teacher Dropdown --}}
+    @elseif($user->role === 'teacher')
+        <div class="dropdown">
+            <div class="dropdown-toggle rounded-circle border border-warning text-warning fw-bold d-flex align-items-center justify-content-center"
+                style="width: 32px; height: 32px; cursor: pointer;" data-bs-toggle="dropdown"
+                aria-expanded="false" tabindex="0" role="button">
+                {{ $initial }}
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{{ route('teacher.profile.edit') }}">View Profile</a></li>
+                <li><a class="dropdown-item" href="{{ route('teacher.settings.index') }}">Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item text-danger" href="javascript:void(0);"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
+            </ul>
+        </div>
+    @endif
+
+@else
+    {{-- Not logged in --}}
+    <a href="{{ route('student.login') }}" class="btn btn-outline-danger px-4 py-2 fw-semibold btn-sm">
+        Student Log In
+    </a>
+@endauth
+           <!--  <a href="{{ route('student.login') }}" class="btn btn-outline-danger px-4 py-2 fw-semibold btn-sm">Student
+                Log In</a> -->
         </div>
     </div>
 </nav>

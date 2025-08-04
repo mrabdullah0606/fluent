@@ -8,6 +8,9 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Language;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\ZoomMeeting;
+use App\Models\Payment;
+use App\Models\GroupClass; // assuming you have this model
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -18,12 +21,62 @@ use Illuminate\View\View;
 
 class TeacherController extends Controller
 {
+    // public function index(): Response
+    // {
+    //     $teacher = auth()->user(); // logged-in teacher
+    //     return response()->view('teacher.content.dashboard', compact('teacher'));
+    // }
     public function index(): Response
     {
-        $teacher = auth()->user(); // logged-in teacher
-        return response()->view('teacher.content.dashboard', compact('teacher'));
-    }
+        $teacher = auth()->user();
 
+    // Get all Zoom meetings by this teacher
+    //$zoomMeetings = ZoomMeeting::where('teacher_id', $teacher->id)->get();
+        $zoomMeetings = ZoomMeeting::with('group')->where('teacher_id', $teacher->id)->get();
+    // $groupClasses = GroupClass::where('teacher_id', $teacher->id)->get();
+    // Prepare data array
+        $meetingDetails = [];
+
+        foreach ($zoomMeetings as $meeting) {
+        // Match with payment(s)
+            $payments = Payment::where('teacher_id', $teacher->id)
+            ->where('type', $meeting->meeting_type)
+            ->get();
+
+            foreach ($payments as $payment) {
+                if ($payment->type === 'duration') {
+                    $student = User::find($payment->student_id);
+
+                    $meetingDetails[] = [
+                        'meeting_type' => $payment->type,
+                        'student_name' => $student->name ?? 'N/A',
+                        'topic' => $meeting->topic,
+                        'start_time' => $meeting->start_time,
+                        'duration' => $meeting->duration,
+                        'join_url' => $meeting->join_url,
+                    ];
+                }
+
+                if ($payment->type === 'group') {
+                // Query to get the group title where teacher_id matches the logged-in user
+                    $groupClass = \App\Models\GroupClass::where('teacher_id', auth()->id())->first();
+
+                    $groupName = $groupClass ? $groupClass->title : 'Group Class';
+
+                    $meetingDetails[] = [
+                        'meeting_type' => $payment->type,
+                        'group_name' => $groupName,
+                        'topic' => $meeting->topic,
+                        'start_time' => $meeting->start_time,
+                        'duration' => $meeting->duration,
+                        'join_url' => $meeting->join_url,
+                    ];
+                }
+            }
+        }
+
+        return response()->view('teacher.content.dashboard', compact('teacher', 'meetingDetails'));
+    }
 
     public function editProfile(): View
     {   

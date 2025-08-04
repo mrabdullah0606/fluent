@@ -10,10 +10,16 @@
                 @foreach ($teachers as $teacher)
                     <div class="border border-primary/20 bg-white p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow md:flex gap-6"
                         style="opacity: 1; transform: none;">
-                        <div class="md:w-1/3 flex flex-col items-center text-center mb-4 md:mb-0"><img
-                                class="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover mb-3 border-4 border-primary shadow-md"
-                                alt="{{ $teacher->name }}"
-                                src="https://images.unsplash.com/photo-1540212389296-89cb5df13fa8">
+                        <div class="md:w-1/3 flex flex-col items-center text-center mb-4 md:mb-0">
+                            @if ($teacher->teacherProfile && $teacher->teacherProfile->profile_image)
+                            <img
+                            class="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover mb-3 border-4 border-primary shadow-md"
+                            alt="{{ $teacher->name }}"
+                            src="{{ asset('storage/' . $teacher->teacherProfile->profile_image) }}">
+                            @else
+                            <div class="text-gray-500 text-sm">No image updated</div>
+                            @endif
+
                             <h3 class="text-xl font-bold text-foreground mb-1">{{ $teacher->name }}</h3>
                             <div class="flex items-center text-yellow-500 mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -59,7 +65,7 @@
                                     class="inline h-4 w-4 mr-0.5">
                                     <line x1="12" x2="12" y1="2" y2="22"></line>
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>25/hour</p>
+                                </svg>{{ $teacher->teacherProfile->rate_per_hour ?? 'N/A' }}</p>
                             <p class="text-primary font-semibold text-sm mb-2">Trial: $5</p>
                             <button
                                 class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 btn-red w-full text-sm py-2">
@@ -69,9 +75,7 @@
                             </button>
                         </div>
                         <div class="md:w-2/3">
-                            <p class="text-muted-foreground text-sm leading-relaxed mb-3 line-clamp-3">Experienced Russian
-                                and
-                                English tutor. TEFL certified. Focus on conversational skills.</p>
+                            <p class="text-muted-foreground text-sm leading-relaxed mb-3 line-clamp-3">{{ $teacher->teacherProfile->headline ?? 'N/A' }}</p>
                             <div class="text-xs space-y-1 mb-3">
                                 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -82,7 +86,7 @@
                                         <path d="M7 2h1"></path>
                                         <path d="m22 22-5-10-5 10"></path>
                                         <path d="M14 18h6"></path>
-                                    </svg> Teaches: English, Russian</p>
+                                    </svg> Teaches: {{ $teacher->teacherProfile->teaches ?? 'N/A' }}</p>
                                 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
@@ -92,14 +96,14 @@
                                         <path
                                             d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                                         </path>
-                                    </svg> Speaks: English, Russian, German</p>
+                                    </svg> Speaks: {{ $teacher->teacherProfile->speaks ?? 'N/A' }}</p>
                                 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="inline h-3.5 w-3.5 mr-1 text-primary">
                                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                         <circle cx="12" cy="10" r="3"></circle>
-                                    </svg> From: Russia</p>
+                                    </svg> From: {{ $teacher->teacherProfile->country ?? 'N/A' }}</p>
                             </div>
                             @auth
                                 <a href="{{ route('student.chat.index', $teacher->id) }}" class="btn">

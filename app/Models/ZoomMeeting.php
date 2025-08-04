@@ -9,8 +9,10 @@ class ZoomMeeting extends Model
     protected $fillable = [
         'uuid',
         'meeting_id',
+        'teacher_id',
         'host_id',
         'topic',
+        'meeting_type',
         'start_time',
         'duration',
         'timezone',
@@ -30,5 +32,15 @@ class ZoomMeeting extends Model
         return $this->belongsToMany(User::class, 'zoom_meeting_user')
             ->withPivot('teacher_id')
             ->withTimestamps();
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(GroupClass::class, 'group_id');
     }
 }

@@ -9,11 +9,12 @@ class Payment extends Model
     //
     protected $fillable = [
         'student_id',
-        'course_id',
+        'teacher_id',
         'summary',
         'base_price',
         'fee',
         'total',
+        'type',
         'payment_method',
         'status',
     ];

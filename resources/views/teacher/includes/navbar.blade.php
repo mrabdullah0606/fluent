@@ -48,7 +48,7 @@
              </ul>
 
              <div class="d-flex align-items-center gap-2">
-                 <a href="#" class="btn btn-switch">
+                 <a href="{{route('index')}}" class="btn btn-switch">
                      🔁 Switch to Student View
                  </a>
                  <div class="dropdown">
@@ -72,7 +72,6 @@
                                  @csrf
                              </form>
                          </li>
-
                      </ul>
                  </div>
              </div>

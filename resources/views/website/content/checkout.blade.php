@@ -45,6 +45,7 @@
                             <input type="hidden" name="calculated_price" value="{{ $calculatedPrice }}">
                             <input type="hidden" name="fee" value="{{ $fee }}">
                             <input type="hidden" name="total" value="{{ $total }}">
+                            <input type="hidden" name="type" value="{{ $type }}">
                         </div>
 
                         <!-- Payment Options -->

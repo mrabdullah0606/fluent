@@ -9,6 +9,8 @@ use App\Models\Language;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Models\GroupClass;
+use App\Models\ZoomMeeting;
+use App\Models\Payment;
 use App\Models\Review;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -19,12 +21,61 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class StudentController extends Controller
+{   
+     public function index(): Response
 {
-    public function index(): Response
-    {
-        $student = auth()->user(); // logged-in student
-        return response()->view('student.content.dashboard', compact('student'));
+    $student = auth()->user();
+
+    // Get all payments made by this student
+    $payments = Payment::where('student_id', $student->id)->get();
+
+    $meetingDetails = [];
+
+    foreach ($payments as $payment) {
+        // Fetch the meetings created by the same teacher and with same meeting_type
+        $zoomMeetings = ZoomMeeting::where('teacher_id', $payment->teacher_id)
+            ->where('meeting_type', $payment->type)
+            ->get();
+
+        foreach ($zoomMeetings as $meeting) {
+            if ($payment->type === 'duration') {
+                $meetingDetails[] = [
+                    'meeting_type' => $payment->type,
+                    'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
+                    'topic' => $meeting->topic,
+                    'start_time' => $meeting->start_time,
+                    'duration' => $meeting->duration,
+                    'join_url' => $meeting->join_url,
+                ];
+            }
+
+            if ($payment->type === 'group') {
+                // Get the group class title based on teacher_id
+                $groupClass = \App\Models\GroupClass::where('teacher_id', $payment->teacher_id)->first();
+                $groupName = $groupClass ? $groupClass->title : 'Group Class';
+
+                $meetingDetails[] = [
+                    'meeting_type' => $payment->type,
+                    'group_name' => $groupName,
+                    'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
+                    'topic' => $meeting->topic,
+                    'start_time' => $meeting->start_time,
+                    'duration' => $meeting->duration,
+                    'join_url' => $meeting->join_url,
+                ];
+            }
+        }
     }
+
+    return response()->view('student.content.dashboard', compact('student', 'meetingDetails'));
+}
+
+
+    // public function index(): Response
+    // {
+    //     $student = auth()->user(); // logged-in student
+    //     return response()->view('student.content.dashboard', compact('student'));
+    // }
 
     public function addReviews()
     {
@@ -129,10 +180,10 @@ class StudentController extends Controller
 
         $total = round($calculatedPrice + $fee, 2);
 
-        return view('website.content.checkout', compact('summary', 'calculatedPrice', 'fee', 'total'));
+        return view('website.content.checkout', compact('type', 'summary', 'calculatedPrice', 'fee', 'total'));
     }
 
-    
+
        public function findTutor(): View
     {
         //dd('test');

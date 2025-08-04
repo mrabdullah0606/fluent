@@ -97,7 +97,7 @@ class HomeController extends Controller
             ->where('id', $id)
             ->where('role', 'teacher')
             ->firstOrFail();
-
+        session(['tutor_id' => $teacher->id]); // store in session
         return view('website.content.tutor-booking', compact('teacher'));
     }
 
@@ -127,11 +127,13 @@ class HomeController extends Controller
     //     return view('website.content.checkout', compact('summary', 'calculatedPrice', 'fee', 'total'));
     // }
     public function checkout(Request $request)
-    {
+    {   
+        //dd('dd');
         $type = $request->input('type'); // 'duration', 'package', or 'group'
         $value = $request->input('value'); // duration in mins, package_id, or course_id
         $price = $request->input('price'); // fallback price (optional)
-
+        $tutorId = session('tutor_id');
+        //dd($tutorId);
         $summary = '';
         $calculatedPrice = (float) $price;
         $fee = 0;
@@ -156,7 +158,7 @@ class HomeController extends Controller
 
         $total = round($calculatedPrice + $fee, 2);
 
-        return view('website.content.checkout', compact('summary', 'calculatedPrice', 'fee', 'total'));
+        return view('website.content.checkout', compact('type', 'summary', 'calculatedPrice', 'fee', 'total'));
     }
 
 
@@ -186,7 +188,7 @@ class HomeController extends Controller
      * 
      */
     public function oneOnOneTutors(): View
-    {
+    {   
         $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
         // dd($teachers->toArray());
         return view('website.content.one-to-one', compact('teachers'));

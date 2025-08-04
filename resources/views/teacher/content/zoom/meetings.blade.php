@@ -40,6 +40,15 @@
                             @enderror
                         </div>
 
+                         <div class="mb-3">
+                            <label for="meeting_type" class="form-label">{{ __('Meeting type') }} <code>*</code></label>
+                            <input type="text" id="meeting_type" name="meeting_type" class="form-control"
+                                value="{{ old('meeting_type') }}" required>
+                            @error('meeting_type')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
                         <div class="mb-3">
                             <label for="start_time" class="form-label">{{ __('Start Time') }} <code>*</code></label>
                             <input type="datetime-local" id="start_time" name="start_time" class="form-control"

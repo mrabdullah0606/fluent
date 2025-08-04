@@ -49,7 +49,29 @@
 
         <div class="container-fluid px-3 px-md-4 px-lg-5 py-5">
             <h4 class="fw-bold mb-4">Upcoming Lessons</h4>
-
+            <!--Dynamic Data -->
+            @foreach($zoomMeetings as $meeting)
+            <div class="lesson-card p-3 mb-3 d-flex justify-content-between align-items-center flex-wrap">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="avatar-circle">
+                        {{ strtoupper(substr($meeting->student->name ?? 'U', 0, 1)) }}
+                    </div>
+                    <div>
+                        <div class="fw-bold">{{ $meeting->student->name ?? 'Unknown Student' }}</div>
+                        <div class="text-muted">
+                            {{ $meeting->group->title ?? 'No Group' }} - {{ $meeting->duration }} min
+                        </div>
+                        <div class="time-text">
+                            <i class="bi bi-clock"></i> {{ \Carbon\Carbon::parse($meeting->start_time)->format('D, M j \a\t H:i') }}
+                        </div>
+                    </div>
+                </div>
+                <a href="{{ $meeting->join_url }}" target="_blank" class="btn btn-yellow d-flex align-items-center mt-3 mt-sm-0">
+                    <i class="bi bi-camera-video me-1"></i> Join Lesson
+                </a>
+            </div>
+            @endforeach
+            <h1>test</h1>
             <!-- Lesson Card 1 -->
             <div class="lesson-card p-3 mb-3 d-flex justify-content-between align-items-center flex-wrap">
                 <div class="d-flex align-items-start gap-3">
@@ -198,7 +220,52 @@
                 <div style="opacity: 1; transform: none;">
                     <h2 class="text-2xl font-bold text-foreground mb-4">Upcoming Lessons</h2>
                     <div class="space-y-4">
-                        <div
+                        @foreach ($meetingDetails as $meeting)
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
+                            <div class="p-4 flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                                        <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                                            {{ strtoupper(substr($meeting['student_name'] ?? $meeting['group_name'] ?? 'N', 0, 1)) }}
+                                        </span>
+                                    </span>
+                                    <div>
+                                        <p class="font-semibold text-foreground">
+                                            {{ $meeting['student_name'] ?? $meeting['group_name'] ?? 'Unknown' }}
+                                        </p>
+                                        <p class="text-sm text-muted-foreground">
+                                            {{ ucfirst($meeting['topic']) }} - {{ $meeting['duration'] }} min
+                                        </p>
+                                        <p class="text-sm text-primary font-medium flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="mr-1 h-3.5 w-3.5">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        {{ \Carbon\Carbon::parse($meeting['start_time'])->format('D, M j \\a\\t H:i') }}
+                                    </p>
+                                </div>
+                            </div>
+                            <a href="{{ $meeting['join_url'] }}" target="_blank">
+                                <button
+                                class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="h-4 w-4 mr-2">
+                                <path d="m22 8-6 4 6 4V8Z"></path>
+                                <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                            </svg>
+                            Join Lesson
+                        </button>
+                    </a>
+                </div>
+            </div>
+            @endforeach
+                        <!----- dummy data -->
+                       <!--  <div
                             class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
                             <div class="p-4 flex items-center justify-between">
                                 <div class="flex items-center space-x-3"><span
@@ -315,7 +382,8 @@
                                         </rect>
                                     </svg>Join Lesson</button>
                             </div>
-                        </div>
+                        </div> -->
+                         <!----- dummy data end -->
                     </div>
                     <div class="text-center mt-6"><button
                             class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Show

@@ -17,8 +17,10 @@ return new class extends Migration
             $table->string('meeting_id');
             $table->string('host_id');
             $table->string('topic');
+            $table->string('meeting_type');
             $table->dateTime('start_time');
             $table->integer('duration');
+            $table->integer('teacher_id');
             $table->string('timezone')->nullable();
             $table->string('join_url');
             $table->mediumText('start_url');
