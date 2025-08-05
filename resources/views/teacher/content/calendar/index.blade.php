@@ -2,14 +2,7 @@
 @section('title', 'Calendar - FluentAll')
 @section('content')
     @push('teacherStyles')
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
         <style>
-            body {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                min-height: 100vh;
-            }
-
             .calendar-header {
                 display: flex;
                 justify-content: space-between;
@@ -19,7 +12,6 @@
                 background: #f8f9fa;
                 border-radius: 8px;
             }
-
             .calendar-nav {
                 background: #007bff;
                 color: white;
@@ -32,12 +24,10 @@
                 justify-content: center;
                 transition: all 0.3s ease;
             }
-
             .calendar-nav:hover {
                 background: #0056b3;
                 transform: scale(1.1);
             }
-
             .calendar-day {
                 width: 40px;
                 height: 40px;
@@ -50,36 +40,29 @@
                 transition: all 0.3s ease;
                 margin: 2px;
             }
-
             .calendar-day:hover:not(.outside):not(:disabled) {
                 background: #e9ecef;
                 transform: scale(1.1);
             }
-
             .calendar-day.selected {
                 background: #007bff;
                 color: white;
             }
-
             .calendar-day.has-availability {
                 background: #28a745;
                 color: white;
             }
-
             .calendar-day.has-availability.selected {
                 background: #155724;
             }
-
             .calendar-day.outside {
                 color: #6c757d;
                 opacity: 0.5;
             }
-
             .calendar-day:disabled {
                 opacity: 0.3;
                 cursor: not-allowed;
             }
-
             .time-slot {
                 padding: 12px;
                 margin-bottom: 8px;
@@ -88,12 +71,10 @@
                 border-left: 4px solid #28a745;
                 transition: all 0.3s ease;
             }
-
             .time-slot:hover {
                 background: #e9ecef;
                 transform: translateX(5px);
             }
-
             .btn-remove {
                 background: none;
                 border: none;
@@ -102,12 +83,10 @@
                 border-radius: 4px;
                 transition: all 0.3s ease;
             }
-
             .btn-remove:hover {
                 background: #dc3545;
                 color: white;
             }
-
             .alert-floating {
                 position: fixed;
                 top: 20px;
@@ -116,7 +95,6 @@
                 min-width: 300px;
                 animation: slideInRight 0.3s ease;
             }
-
             @keyframes slideInRight {
                 from {
                     transform: translateX(100%);
@@ -158,8 +136,8 @@
         <div class="bg-light flex-grow-1 p-4 p-md-5" style="background: transparent !important;">
             <div class="container-fluid">
                 <div style="opacity: 1; transform: none;">
-                    <h1 class="display-6 fw-bold text-white mb-4 d-flex align-items-center">
-                        <i class="fas fa-calendar-alt me-3" style="font-size: 2rem;"></i>
+                    <h1 class="display-6 fw-bold text-black mb-4 d-flex align-items-center">
+                        <i class="fas fa-calendar-alt me-3" style="font-size: 2rem;color: #ffbf00"></i>
                         My Calendar & Availability
                     </h1>
                 </div>
@@ -305,7 +283,6 @@
 
     <!-- Alert Container -->
     <div id="alertContainer"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         const API_BASE = '/teacher/availability';
         let currentDate = new Date();
@@ -324,6 +301,7 @@
         ];
 
         const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
         function openAddTimeSlotsModal() {
             try {
                 const modalElement = document.getElementById('addTimeSlotsModal');
@@ -858,7 +836,7 @@
 
             if (!confirm(
                     `Are you sure you want to mark ${dayName}, ${monthName} ${selectedDate} as unavailable? This will remove all existing time slots for this day.`
-                    )) {
+                )) {
                 return;
             }
 
