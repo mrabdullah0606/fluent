@@ -13,7 +13,7 @@
                                 class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400"><span
                                     class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white">EP</span></span>
                             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $teacher->name }}</h1>
-                            <p class="text-yellow-600 text-md mt-1">Experienced TEFL Certified Tutor | Russian &amp; English
+                            <p class="text-yellow-600 text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}
                             </p>
                             <div class="flex items-center mt-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -35,7 +35,7 @@
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
                                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                         <circle cx="12" cy="10" r="3"></circle>
-                                    </svg> From: 🇷🇺 Russia</div>
+                                    </svg> From: {{ $teacher?->country ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -46,7 +46,7 @@
                                         <path d="M7 2h1"></path>
                                         <path d="m22 22-5-10-5 10"></path>
                                         <path d="M14 18h6"></path>
-                                    </svg> Teaches: English, Russian</div>
+                                    </svg> Teaches: {{ $teacher?->teaches ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700 col-span-2 sm:col-span-1"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -56,21 +56,21 @@
                                         <path
                                             d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                                         </path>
-                                    </svg> Speaks: English (Native), Russian (Native), German (B1)</div>
+                                    </svg> Speaks: {{ $teacher?->speaks ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
                                         <circle cx="12" cy="8" r="6"></circle>
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                    </svg> Experience: 4+ years</div>
+                                    </svg> Experience:{{ $teacher?->experience ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
                                         <line x1="12" x2="12" y1="2" y2="22"></line>
                                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg> Rate: $25/hour</div>
+                                    </svg>${{ $teacher?->rate_per_hour ?? '0' }}/hour</div>
                             </div>
                             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6"><button
                                     class="inline-flex items-center justify-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md"><svg
@@ -127,10 +127,7 @@
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg> About Me</h2>
-                                <p class="text-gray-600 leading-relaxed whitespace-pre-line">Privet! I'm Elena, a
-                                    passionate language tutor specializing in Russian and English. With my TEFL
-                                    certification and years of experience, I create engaging lessons focused on your
-                                    conversational fluency and understanding of culture. Let's explore languages together!
+                                <p class="text-gray-600 leading-relaxed whitespace-pre-line"> {{ $teacher?->about_me ?? "No information provided yet." }}
                                 </p>
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"
@@ -160,10 +157,16 @@
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"
                                 style="opacity: 1; transform: none;">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Education &amp; Certifications</h2>
-                                <p class="text-gray-600 mb-2"><strong>Education:</strong> BA in Linguistics, Moscow State
-                                    University</p>
-                                <p class="text-gray-600"><strong>Certifications:</strong> TEFL Certified</p>
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="mr-2 h-6 w-6 text-yellow-500">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                    </svg> Certifications:</h2>
+                                <p class="text-gray-600 leading-relaxed whitespace-pre-line"> {{ $teacher?->certifications ?? "No Certifications provided yet." }}
+                                </p>
                             </div>
                         </div>
                         <div class="md:col-span-1 space-y-8">
