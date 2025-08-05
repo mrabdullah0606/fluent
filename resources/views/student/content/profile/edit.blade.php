@@ -85,8 +85,16 @@
                         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                             <div class="flex-shrink-0 relative">
                                 <span
-                                    class="relative flex shrink-0 overflow-hidden rounded-full w-28 h-28 border-4 border-primary"><span
-                                        class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ substr($student->name, 0, 2) }}</span></span>
+                                    class="relative flex shrink-0 overflow-hidden rounded-full w-28 h-28 border-4 border-primary">
+                                     @if($student->profile_image)
+                                    <img src="{{ asset('storage/'.$student->profile_image) }}" 
+                                    class="w-full h-full object-cover rounded-full">
+                                    @else
+                                    <span
+                                        class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ substr($student->name, 0, 2) }}</span>
+                                     @endif
+                                    </span>
+                                       
                                 <label
                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 absolute -bottom-2 -right-2 bg-secondary text-secondary-foreground p-1.5 rounded-full cursor-pointer hover:bg-secondary/90 transition-colors"
                                     for="image-upload">
@@ -98,6 +106,7 @@
                                         <line x1="12" x2="12" y1="3" y2="15"></line>
                                     </svg></label><input type="file"
                                     class="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 hidden"
+                                    name="profile_image"
                                     id="image-upload" accept="image/*">
                             </div>
                             <div class="flex-grow text-center sm:text-left"><label
@@ -118,12 +127,12 @@
                                     stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5 text-primary">
                                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
-                                </svg>About Me</label>
+                                </svg>Description</label>
                             <textarea
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
-                                id="aboutMe" name="aboutMe" placeholder="Tell students a little about yourself..." rows="4">Hello! I'm Sarah, a TEFL-certified English tutor with over 5 years of experience helping students worldwide achieve their language goals.</textarea>
+                               id="description" name="description" placeholder="Tell us about yourself..." rows="4"> {{ old('description', $student->description ?? '') }}</textarea>
                         </div>
-                        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
+                        {{-- <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
                             style="opacity: 1; transform: none;"><label
                                 class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg font-semibold text-foreground flex items-center mb-3"
                                 for="teachingStyle"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -136,7 +145,7 @@
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
                                 id="teachingStyle" name="teachingStyle" placeholder="Describe your teaching methods and what students can expect..."
                                 rows="4">My lessons are dynamic, interactive, and tailored to your specific needs. I believe in creating a supportive and fun learning environment.</textarea>
-                        </div>
+                        </div> --}}
                         <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
                             style="opacity: 1; transform: none;"><label
                                 class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg font-semibold text-foreground flex items-center mb-3"
@@ -146,13 +155,13 @@
                                     <polygon
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
-                                </svg>My Experience</label>
+                                </svg>Number of lessons Taken</label>
                             <textarea
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
-                                id="experience" name="experience" placeholder="Detail your years of experience, types of students, etc."
-                                rows="3">5+ years of online and in-person teaching experience. Specialized in Business English and IELTS preparation.</textarea>
+                                id="number_of_lessons_taken" name="number_of_lessons_taken" placeholder="Enter number of lessons taken"
+                                rows="3">{{ old('number_of_lessons_taken', $student->number_of_lessons_taken ?? '') }}</textarea>
                         </div>
-                        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
+                        {{-- <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
                             style="opacity: 1; transform: none;"><label
                                 class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg font-semibold text-foreground flex items-center mb-3"
                                 for="certifications"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -166,7 +175,7 @@
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
                                 id="certifications" name="certifications"
                                 placeholder="List any relevant certifications like TEFL, CELTA, or degrees." rows="2">TEFL Certified, Cambridge CELTA, MA in Applied Linguistics</textarea>
-                        </div>
+                        </div> --}}
                         <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
                             style="opacity: 1; transform: none;"><label
                                 class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg font-semibold text-foreground flex items-center mb-3"
@@ -180,13 +189,13 @@
                             <textarea
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
                                 id="hobbies" name="hobbies" placeholder="Share some of your interests to connect with students!"
-                                rows="2">In my free time, I enjoy hiking, reading, and exploring new cultures through travel and food.</textarea>
+                                rows="2">{{ old('hobbies', $student->hobbies ?? '') }}</textarea>
                         </div>
-                        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
+                        {{-- <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
                             style="opacity: 1; transform: none;"><label
                                 class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-lg font-semibold text-foreground flex items-center mb-3"
-                                for="cert-upload"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                for="cert-upload"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" --}}
+                                    {{-- viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5 text-primary">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                     <polyline points="17 8 12 3 7 8"></polyline>
@@ -200,8 +209,8 @@
                             </div>
                             <p class="text-xs text-muted-foreground mt-1">Upload scanned copies of your certificates. (PDF,
                                 JPG, PNG)</p>
-                        </div>
-                    </div>
+                        </div> --}}
+                    {{-- </div> --}}
                     <div class="mt-8 text-right" style="opacity: 1;"><button
                             class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 btn-red text-lg px-8 py-3"
                             type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

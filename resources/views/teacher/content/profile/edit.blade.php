@@ -10,7 +10,7 @@
         <div class="bg-gray-50 flex-grow p-6 md:p-10">
             <div class="container mx-auto max-w-4xl">
                 <div style="opacity: 1; transform: none;">
-                    <h1 class="text-3xl font-bold text-foreground mb-8">Edit Your Teacher Profileee</h1>
+                    <h1 class="text-3xl font-bold text-foreground mb-8">Edit Your Teacher Profile</h1>
                 </div>
                 <form action="{{ route('teacher.profile.update') }}" method="POST" enctype="multipart/form-data">
 
@@ -113,11 +113,37 @@
                     <input type="text" id="experience" name="experience" class="form-control rounded-md" placeholder="E.g., 5 years" value="{{ old('experience', $teacher?->experience) }}">
                     </div>
 
+
                     {{-- Teaching Style --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
                     <label for="teaching_style" class="block text-lg font-semibold mb-2">Teaching Style</label>
                     <input type="text" id="teaching_style" name="teaching_style" class="form-control rounded-md" placeholder="E.g., Conversational, Grammar-Focused" value="{{ old('teaching_style', $teacher?->teaching_style) }}">
                     </div>
+
+
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
+    <label for="intro_video" class="block text-lg font-semibold mb-2">Intro Video</label>
+
+    {{-- Video Preview if Exists --}}
+    @if($teacher?->intro_video)
+        <video class="w-full rounded-md border border-gray-300 mb-3" controls>
+            <source src="{{ asset('storage/'.$teacher->intro_video) }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    @endif
+
+    <input type="file" 
+           id="intro_video" 
+           name="intro_video" 
+           accept="video/*" 
+           class="form-control rounded-md">
+
+    <p class="text-sm text-gray-500 mt-2">
+        Upload an intro/demo video (MP4, WebM, MOV up to 50MB)
+    </p>
+</div>
+
+                    
 
                     {{-- Save Button --}}
                     <div class="text-end mt-4">

@@ -89,9 +89,9 @@ class StudentController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'date' => 'required|date',
-            'rating' => 'required|integer|between:1,5',
-            'review' => 'required|string|min:10',
+            // 'date' => 'required|date',
+            // 'rating' => 'required|integer|between:1,5',
+            // 'review' => 'required|string|min:10',
         ]);
 
         $student = Auth::user()->student;
@@ -122,25 +122,59 @@ class StudentController extends Controller
 
         return view('student.content.profile.edit', compact('student', 'languages'));
     }
+//     public function publicProfile()
+// {
+//     $student = auth()->user();
+//     return view('student.content.profile.public', compact('student'));
+// }
 
-    public function updateProfile(Request $request)
-    {
-        $student = auth()->user();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-        $student->name = $request->name;
+public function updateProfile(Request $request)
+{
+    $user = auth()->user(); // Single variable for user
 
-        if ($request->filled('password')) {
-            $student->password = Hash::make($request->password);
-        }
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string|max:255',
+        'number_of_lessons_taken' => 'nullable|numeric|min:0',
+        'hobbies' => 'nullable|string|max:255',
+        'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
 
-        $student->save();
+    // Update User table
+    $user->name = $request->name;
+    $user->save();
 
-        return redirect()->route('student.profile.edit')
-            ->with('success', 'Profile updated successfully.');
+    // Get related Student profile
+    $studentProfile = $user->studentProfile; // assuming relation: hasOne(Student::class)
+
+    $data = [
+        'user_id'                => $user->id,
+        'description'            => $request->description,
+        'number_of_lessons_taken'=> $request->number_of_lessons_taken,
+        'hobbies'                => $request->hobbies,
+    ];
+// dd($data);
+
+    // Handle Profile Image
+    if ($request->hasFile('profile_image')) {
+        $imagePath = $request->file('profile_image')->store('student_images', 'public');
+        $data['profile_image'] = $imagePath;
+    } elseif ($studentProfile) {
+        // Keep old image if exists
+        $data['profile_image'] = $studentProfile->profile_image;
     }
+
+    // Update or Create Student Profile
+    if ($studentProfile) {
+        $studentProfile->update($data);
+    } else {
+        \App\Models\Student::create($data);
+    }
+
+    return redirect()->route('student.profile.edit')
+        ->with('success', 'Profile updated successfully!');
+}
 
     function publicProfile(): View
     {
