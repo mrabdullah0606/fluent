@@ -113,4 +113,75 @@ class User extends Authenticatable
     {
         return $this->hasMany(ZoomMeeting::class, 'teacher_id');
     }
+
+
+    // User.php
+
+    public function availabilities()
+    {
+        return $this->hasMany(TeacherAvailability::class, 'teacher_id');
+    }
+
+    /**
+     * Get monthly availability grouped by dates.
+     *
+     * @param int $year
+     * @param int $month
+     * @return array
+     */
+    public function getMonthlyAvailability(int $year, int $month): array
+    {
+        // Start and end date of the month
+        $startDate = \Carbon\Carbon::create($year, $month, 1)->startOfDay();
+        $endDate = $startDate->copy()->endOfMonth()->endOfDay();
+
+        // Fetch availability slots in date range
+        $slots = $this->availabilities()
+            ->whereBetween('available_date', [$startDate, $endDate])
+            ->where('is_available', true)
+            ->where('status', 'available')
+            ->get();
+
+        // Group by date string
+        $grouped = $slots->groupBy(function ($item) {
+            return $item->available_date->format('Y-m-d');
+        })->map(function ($items) {
+            // Map slots per date to whatever data frontend expects,
+            // e.g. just presence or list of slots — here we return array of slot ids to denote availability
+            return $items->map(function ($slot) {
+                return [
+                    'id' => $slot->id,
+                    'start_time' => $slot->start_time->format('H:i:s'),
+                    'end_time' => $slot->end_time->format('H:i:s'),
+                    'formatted_range' => $slot->formatted_time_range,
+                    'is_available' => $slot->is_available,
+                ];
+            })->toArray();
+        })->toArray();
+
+        return $grouped;
+    }
+
+    /**
+     * Get availability slots for a specific date.
+     *
+     * @param string $date — format 'YYYY-MM-DD'
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAvailabilityForDate(string $date)
+    {
+        return $this->availabilities()
+            ->whereDate('available_date', $date)
+            ->where('is_available', true)
+            ->where('status', 'available')
+            ->orderBy('start_time')
+            ->get()
+            ->map(function ($slot) {
+                return [
+                    'id' => $slot->id,
+                    'formatted_range' => $slot->formatted_time_range,
+                    'is_available' => $slot->is_available,
+                ];
+            });
+    }
 }

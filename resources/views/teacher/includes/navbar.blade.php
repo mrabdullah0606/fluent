@@ -48,7 +48,7 @@
              </ul>
 
              <div class="d-flex align-items-center gap-2">
-                 <a href="{{route('index')}}" class="btn btn-switch">
+                 <a href="{{ route('index') }}" class="btn btn-switch">
                      🔁 Switch to Student View
                  </a>
                  <div class="dropdown">
@@ -58,8 +58,10 @@
                          T
                      </div>
                      <ul class="dropdown-menu dropdown-menu-end">
-                         <li><a class="dropdown-item" href="{{ route('teacher.profile.edit') }}">View Profile</a></li>
-                         <li><a class="dropdown-item" href="{{ route('teacher.settings.index') }}">Settings</a></li>
+                         <li><a class="dropdown-item" href="{{ route('teacher.profile.edit') }}">My Profile</a></li>
+                         <li><a class="dropdown-item" href="{{ route('teacher.settings.index') }}">Lesson Settings</a>
+                         </li>
+                         <li><a class="dropdown-item" href="{{ route('teacher.wallet') }}">Wallet</a></li>
                          <li>
                              <hr class="dropdown-divider">
                          </li>

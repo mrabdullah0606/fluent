@@ -101,6 +101,34 @@ class HomeController extends Controller
         return view('website.content.tutor-booking', compact('teacher'));
     }
 
+    /**
+     * Get monthly availability for a teacher.
+     */
+    public function monthlyAvailability($teacherId, Request $request)
+    {
+        $year = (int) $request->query('year');
+        $month = (int) $request->query('month');
+
+        $teacher = User::where('id', $teacherId)->where('role', 'teacher')->firstOrFail();
+
+        $availabilities = $teacher->getMonthlyAvailability($year, $month);
+        // dd($availabilities);
+        return response()->json(['availabilities' => $availabilities]);
+    }
+
+    /**
+     * Get availability slots for a teacher on a specific date.
+     */
+    public function dateAvailability($teacherId, Request $request)
+    {
+        $date = $request->query('date'); // Expect 'YYYY-MM-DD'
+
+        $teacher = User::where('id', $teacherId)->where('role', 'teacher')->firstOrFail();
+
+        $slots = $teacher->getAvailabilityForDate($date);
+        // dd($slots);
+        return response()->json(['slots' => $slots]);
+    }
 
     // public function checkout(Request $request)
     // {
@@ -127,7 +155,7 @@ class HomeController extends Controller
     //     return view('website.content.checkout', compact('summary', 'calculatedPrice', 'fee', 'total'));
     // }
     public function checkout(Request $request)
-    {   
+    {
         //dd('dd');
         $type = $request->input('type'); // 'duration', 'package', or 'group'
         $value = $request->input('value'); // duration in mins, package_id, or course_id
@@ -188,7 +216,7 @@ class HomeController extends Controller
      * 
      */
     public function oneOnOneTutors(): View
-    {   
+    {
         $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
         // dd($teachers->toArray());
         return view('website.content.one-to-one', compact('teachers'));
