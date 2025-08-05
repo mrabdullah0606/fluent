@@ -512,6 +512,7 @@
                             <div
                                 class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent mt-3 bg-green-500 hover:bg-green-600 text-white">
                                 Active Now</div>
+                                
                         </div>
                         <div class="md:w-2/3 md:pl-8 space-y-4">
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">

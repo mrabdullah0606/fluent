@@ -28,6 +28,7 @@ return new class extends Migration
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
             $table->timestamps();
              $table->string('profile_image')->nullable();
+             $table->string('intro_video')->nullable();;
         });
     }
 

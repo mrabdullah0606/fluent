@@ -21,6 +21,7 @@ class Teacher extends Model
     'rate_per_hour',
     'language_id',
     'profile_image',
+    'intro_video',
 ];
     public function user()
     {
