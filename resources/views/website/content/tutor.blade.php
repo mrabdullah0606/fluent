@@ -72,27 +72,29 @@
                                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                     </svg>${{ $teacher?->rate_per_hour ?? '0' }}/hour</div>
                             </div>
-                            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6"><button
-                                    class="inline-flex items-center justify-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5">
-                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2">
-                                        </rect>
-                                        <line x1="16" x2="16" y1="2" y2="6"></line>
-                                        <line x1="8" x2="8" y1="2" y2="6"></line>
-                                        <line x1="3" x2="21" y1="10" y2="10"></line>
-                                        <path d="M8 14h.01"></path>
-                                        <path d="M12 14h.01"></path>
-                                        <path d="M16 14h.01"></path>
-                                        <path d="M8 18h.01"></path>
-                                        <path d="M12 18h.01"></path>
-                                        <path d="M16 18h.01"></path>
-                                    </svg>
-                                    <a href="{{ route('tutor.booking', ['id' => $teacher->id]) }}">
+                            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
+                                <a href="{{ route('tutor.booking', ['id' => $teacher->id]) }}">
+                                    <button
+                                        class="inline-flex items-center justify-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5">
+                                            <rect width="18" height="18" x="3" y="4" rx="2"
+                                                ry="2">
+                                            </rect>
+                                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                                            <path d="M8 14h.01"></path>
+                                            <path d="M12 14h.01"></path>
+                                            <path d="M16 14h.01"></path>
+                                            <path d="M8 18h.01"></path>
+                                            <path d="M12 18h.01"></path>
+                                            <path d="M16 18h.01"></path>
+                                        </svg>
                                         Book Lesson
-                                    </a>
-                                </button>
+                                    </button>
+                                </a>
                                 @auth
                                     <a href="{{ route('student.chat.index', $teacher->id) }}" class="btn">
                                         <button
@@ -127,7 +129,8 @@
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg> About Me</h2>
-                                <p class="text-gray-600 leading-relaxed whitespace-pre-line"> {{ $teacher?->about_me ?? "No information provided yet." }}
+                                <p class="text-gray-600 leading-relaxed whitespace-pre-line">
+                                    {{ $teacher?->about_me ?? 'No information provided yet.' }}
                                 </p>
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"
@@ -165,7 +168,8 @@
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg> Certifications:</h2>
-                                <p class="text-gray-600 leading-relaxed whitespace-pre-line"> {{ $teacher?->certifications ?? "No Certifications provided yet." }}
+                                <p class="text-gray-600 leading-relaxed whitespace-pre-line">
+                                    {{ $teacher?->certifications ?? 'No Certifications provided yet.' }}
                                 </p>
                             </div>
                         </div>

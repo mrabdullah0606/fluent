@@ -12,6 +12,7 @@
                 background: #f8f9fa;
                 border-radius: 8px;
             }
+
             .calendar-nav {
                 background: #007bff;
                 color: white;
@@ -24,10 +25,12 @@
                 justify-content: center;
                 transition: all 0.3s ease;
             }
+
             .calendar-nav:hover {
                 background: #0056b3;
                 transform: scale(1.1);
             }
+
             .calendar-day {
                 width: 40px;
                 height: 40px;
@@ -40,29 +43,36 @@
                 transition: all 0.3s ease;
                 margin: 2px;
             }
+
             .calendar-day:hover:not(.outside):not(:disabled) {
                 background: #e9ecef;
                 transform: scale(1.1);
             }
+
             .calendar-day.selected {
                 background: #007bff;
                 color: white;
             }
+
             .calendar-day.has-availability {
                 background: #28a745;
                 color: white;
             }
+
             .calendar-day.has-availability.selected {
                 background: #155724;
             }
+
             .calendar-day.outside {
                 color: #6c757d;
                 opacity: 0.5;
             }
+
             .calendar-day:disabled {
                 opacity: 0.3;
                 cursor: not-allowed;
             }
+
             .time-slot {
                 padding: 12px;
                 margin-bottom: 8px;
@@ -71,10 +81,12 @@
                 border-left: 4px solid #28a745;
                 transition: all 0.3s ease;
             }
+
             .time-slot:hover {
                 background: #e9ecef;
                 transform: translateX(5px);
             }
+
             .btn-remove {
                 background: none;
                 border: none;
@@ -83,10 +95,12 @@
                 border-radius: 4px;
                 transition: all 0.3s ease;
             }
+
             .btn-remove:hover {
                 background: #dc3545;
                 color: white;
             }
+
             .alert-floating {
                 position: fixed;
                 top: 20px;
@@ -95,6 +109,7 @@
                 min-width: 300px;
                 animation: slideInRight 0.3s ease;
             }
+
             @keyframes slideInRight {
                 from {
                     transform: translateX(100%);
@@ -721,6 +736,94 @@
             }
         }
 
+        // async function addTimeSlots() {
+        //     const addBtn = document.getElementById('addSlotsBtn');
+        //     if (!addBtn) {
+        //         console.error('Add slots button not found');
+        //         return;
+        //     }
+
+        //     const originalText = addBtn.innerHTML;
+
+        //     try {
+        //         addBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
+        //         addBtn.disabled = true;
+
+        //         const startTime = document.getElementById('startTime')?.value;
+        //         const endTime = document.getElementById('endTime')?.value;
+        //         const startAmPm = document.getElementById('startAmPm')?.value;
+        //         const endAmPm = document.getElementById('endAmPm')?.value;
+
+        //         if (!startTime || !endTime || !startAmPm || !endAmPm) {
+        //             throw new Error('Please fill in all time fields');
+        //         }
+
+        //         // Validate time range
+        //         const startHour = parseInt(startTime.split(':')[0]);
+        //         const endHour = parseInt(endTime.split(':')[0]);
+
+        //         // Convert to 24-hour format for comparison
+        //         let start24 = startHour;
+        //         let end24 = endHour;
+
+        //         if (startAmPm === 'pm' && startHour !== 12) start24 += 12;
+        //         if (startAmPm === 'am' && startHour === 12) start24 = 0;
+        //         if (endAmPm === 'pm' && endHour !== 12) end24 += 12;
+        //         if (endAmPm === 'am' && endHour === 12) end24 = 0;
+
+        //         if (start24 >= end24) {
+        //             throw new Error('End time must be after start time');
+        //         }
+
+        //         const selectedDateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), selectedDate);
+        //         const dateString = formatDate(selectedDateObj);
+
+        //         console.log('Submitting time slots:', {
+        //             date: dateString,
+        //             start_time: startTime,
+        //             end_time: endTime,
+        //             start_ampm: startAmPm,
+        //             end_ampm: endAmPm
+        //         });
+
+        //         const response = await apiRequest(`${API_BASE}/store`, {
+        //             method: 'POST',
+        //             body: JSON.stringify({
+        //                 date: dateString,
+        //                 start_time: startTime,
+        //                 end_time: endTime,
+        //                 start_ampm: startAmPm,
+        //                 end_ampm: endAmPm
+        //             })
+        //         });
+
+        //         console.log('Add slots response:', response);
+
+        //         // Handle different response structures
+        //         let slotsAdded = response.slots_added || response.count || response.data?.length || 0;
+        //         if (response.message && response.message.includes('added')) {
+        //             slotsAdded = 'multiple';
+        //         }
+
+        //         showAlert(`Successfully added ${slotsAdded} time slots!`, 'success');
+
+        //         // Close modal properly
+        //         closeModal();
+
+        //         // Refresh displays with a small delay to ensure modal is closed
+        //         setTimeout(async () => {
+        //             await displayTimeSlots();
+        //             await generateCalendar();
+        //         }, 300);
+
+        //     } catch (error) {
+        //         console.error('Error adding time slots:', error);
+        //         showAlert('Error adding time slots: ' + error.message, 'danger');
+        //     } finally {
+        //         addBtn.innerHTML = originalText;
+        //         addBtn.disabled = false;
+        //     }
+        // }
         async function addTimeSlots() {
             const addBtn = document.getElementById('addSlotsBtn');
             if (!addBtn) {
@@ -734,13 +837,25 @@
                 addBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
                 addBtn.disabled = true;
 
-                const startTime = document.getElementById('startTime')?.value;
-                const endTime = document.getElementById('endTime')?.value;
-                const startAmPm = document.getElementById('startAmPm')?.value;
-                const endAmPm = document.getElementById('endAmPm')?.value;
+                // Get values from the form fields
+                const startTimeInput = document.getElementById('startTime');
+                const endTimeInput = document.getElementById('endTime');
+                const startAmPmSelect = document.getElementById('startAmPm');
+                const endAmPmSelect = document.getElementById('endAmPm');
+
+                // Check if all elements exist before getting their values
+                if (!startTimeInput || !endTimeInput || !startAmPmSelect || !endAmPmSelect) {
+                    throw new Error('One or more time input fields are missing from the DOM.');
+                }
+
+                const startTime = startTimeInput.value;
+                const endTime = endTimeInput.value;
+                const startAmPm = startAmPmSelect.value;
+                const endAmPm = endAmPmSelect.value;
 
                 if (!startTime || !endTime || !startAmPm || !endAmPm) {
-                    throw new Error('Please fill in all time fields');
+                    // This check is a fallback, in case the elements exist but values are empty.
+                    throw new Error('Please ensure all time fields are filled in.');
                 }
 
                 // Validate time range
@@ -752,9 +867,9 @@
                 let end24 = endHour;
 
                 if (startAmPm === 'pm' && startHour !== 12) start24 += 12;
-                if (startAmPm === 'am' && startHour === 12) start24 = 0;
+                if (startAmPm === 'am' && startHour === 12) start24 = 0; // Midnight case
                 if (endAmPm === 'pm' && endHour !== 12) end24 += 12;
-                if (endAmPm === 'am' && endHour === 12) end24 = 0;
+                if (endAmPm === 'am' && endHour === 12) end24 = 0; // Midnight case for end time
 
                 if (start24 >= end24) {
                     throw new Error('End time must be after start time');
@@ -784,18 +899,13 @@
 
                 console.log('Add slots response:', response);
 
-                // Handle different response structures
-                let slotsAdded = response.slots_added || response.count || response.data?.length || 0;
-                if (response.message && response.message.includes('added')) {
-                    slotsAdded = 'multiple';
-                }
+                let slotsAdded = response.slots_added || response.count || (response.data ? response.data.length : 0) ||
+                    'multiple';
 
                 showAlert(`Successfully added ${slotsAdded} time slots!`, 'success');
 
-                // Close modal properly
                 closeModal();
 
-                // Refresh displays with a small delay to ensure modal is closed
                 setTimeout(async () => {
                     await displayTimeSlots();
                     await generateCalendar();
@@ -805,10 +915,12 @@
                 console.error('Error adding time slots:', error);
                 showAlert('Error adding time slots: ' + error.message, 'danger');
             } finally {
+                // Ensure the button is re-enabled and text is restored even if an error occurs
                 addBtn.innerHTML = originalText;
                 addBtn.disabled = false;
             }
         }
+
 
         async function removeTimeSlot(slotId) {
             if (!confirm('Are you sure you want to remove this time slot?')) {

@@ -114,6 +114,7 @@ Route::prefix('teacher')->group(function () {
         Route::put('profile/update', [TeacherController::class, 'updateProfile'])->name('teacher.profile.update');
         Route::get('calendar', [TeacherController::class, 'calendar'])->name('teacher.calendar');
         Route::get('bookings', [TeacherController::class, 'bookings'])->name('teacher.bookings');
+        Route::post('bookings/update', [TeacherController::class, 'updateBookingRules'])->name('teacher.bookings.update');
         Route::get('wallet', [TeacherController::class, 'wallet'])->name('teacher.wallet');
 
 

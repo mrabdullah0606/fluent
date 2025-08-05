@@ -1,5 +1,5 @@
 @extends('teacher.master.master')
-@section('title', 'Public Profile - FluentAll')
+@section('title', 'Booking Rules - FluentAll')
 @section('content')
     <style>
         body {
@@ -69,11 +69,6 @@
             min-height: 100vh;
         }
 
-        /* .sidebar .nav-link {
-                              background-color: #dc3545;
-                              color: white;
-                              font-weight: 500;
-                            } */
         .setting-box {
             background-color: white;
             border: 1px solid #f0c040;
@@ -119,7 +114,6 @@
         }
     </style>
     <main class="flex-grow">
-
         <div class="container my-4">
             <h3 class="fw-bold mb-4">
                 <i class="bi bi-gear-fill text-warning me-2"></i> Lesson Settings
@@ -143,82 +137,96 @@
 
                 <!-- Main Content -->
                 <div class="col-md-9 col-12 p-4">
-                    <div class="setting-box">
-                        <h5 class="setting-title">Booking Rules</h5>
-                        <p class="setting-description">Define how and when students can book lessons with you.</p>
+                    <form action="{{ route('teacher.bookings.update') }}" method="POST">
+                        @csrf
+                        <div class="setting-box">
+                            <h5 class="setting-title">Booking Rules</h5>
+                            <p class="setting-description">Define how and when students can book lessons with you.</p>
 
-                        <!-- Rule 1 -->
-                        <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-clock icon-yellow"></i>
-                                <div>
-                                    <strong>Minimum booking notice</strong><br>
-                                    <small class="text-muted">How much advance notice you need for a new booking.</small>
+                            <!-- Rule 1: Minimum booking notice -->
+                            <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-clock icon-yellow"></i>
+                                    <div>
+                                        <strong>Minimum booking notice</strong><br>
+                                        <small class="text-muted">How much advance notice you need for a new
+                                            booking.</small>
+                                    </div>
+                                </div>
+                                <select name="min_booking_notice" class="form-select mt-3 mt-md-0" required>
+                                    @foreach (['12 hours', '24 hours', '48 hours'] as $option)
+                                        <option value="{{ $option }}"
+                                            {{ $rule->min_booking_notice == $option ? 'selected' : '' }}>
+                                            {{ $option }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Rule 2: Booking window -->
+                            <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-calendar3 icon-yellow"></i>
+                                    <div>
+                                        <strong>Booking window</strong><br>
+                                        <small class="text-muted">How far in the future students can book.</small>
+                                    </div>
+                                </div>
+                                <select name="booking_window" class="form-select mt-3 mt-md-0" required>
+                                    @foreach (['15 days', '30 days', '60 days'] as $option)
+                                        <option value="{{ $option }}"
+                                            {{ $rule->booking_window == $option ? 'selected' : '' }}>
+                                            {{ $option }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Rule 3: Break after lesson -->
+                            <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-clock-history icon-yellow"></i>
+                                    <div>
+                                        <strong>Automatic break after lesson</strong><br>
+                                        <small class="text-muted">Set a buffer time after each lesson.</small>
+                                    </div>
+                                </div>
+                                <select name="break_after_lesson" class="form-select mt-3 mt-md-0" required>
+                                    @foreach (['none', '15 minutes', '30 minutes', '60 minutes'] as $option)
+                                        <option value="{{ $option }}"
+                                            {{ $rule->break_after_lesson == $option ? 'selected' : '' }}>
+                                            {{ ucfirst($option) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Rule 4: Accepting new students -->
+                            <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person-plus icon-yellow"></i>
+                                    <div>
+                                        <strong>Accepting new students</strong><br>
+                                        <small class="text-muted">Toggle if you are open to new student bookings.</small>
+                                    </div>
+                                </div>
+                                <div class="form-check form-switch mt-3 mt-md-0">
+                                    <!-- Hidden input to ensure false value is sent when unchecked -->
+                                    <input type="hidden" name="accepting_new_students" value="0">
+                                    <input class="form-check-input" type="checkbox" name="accepting_new_students"
+                                        value="1" {{ $rule->accepting_new_students ? 'checked' : '' }}>
                                 </div>
                             </div>
-                            <select class="form-select mt-3 mt-md-0">
-                                <option selected>24 hours</option>
-                                <option>12 hours</option>
-                                <option>48 hour</option>
-                            </select>
-                        </div>
 
-                        <!-- Rule 2 -->
-                        <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-calendar3 icon-yellow"></i>
-                                <div>
-                                    <strong>Booking window</strong><br>
-                                    <small class="text-muted">How far in the future students can book.</small>
-                                </div>
-                            </div>
-                            <select class="form-select mt-3 mt-md-0">
-                                <option selected>30 days</option>
-                                <option>15 days</option>
-                                <option>60 days</option>
-                            </select>
-                        </div>
-
-                        <!-- Rule 3 -->
-                        <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-clock-history icon-yellow"></i>
-                                <div>
-                                    <strong>Automatic break after lesson</strong><br>
-                                    <small class="text-muted">Set a buffer time after each lesson.</small>
-                                </div>
-                            </div>
-                            <select class="form-select mt-3 mt-md-0">
-                                <option selected>15 minutes</option>
-                                <option>None</option>
-                                <option>30 minutes</option>
-                            </select>
-                        </div>
-
-                        <!-- Rule 4 -->
-                        <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-person-plus icon-yellow"></i>
-                                <div>
-                                    <strong>Accepting new students</strong><br>
-                                    <small class="text-muted">Toggle if you are open to new student bookings.</small>
-                                </div>
-                            </div>
-                            <div class="form-check form-switch mt-3 mt-md-0">
-                                <input class="form-check-input" type="checkbox" id="newStudentsToggle" checked>
+                            <!-- Save Button -->
+                            <div class="text-end mt-4">
+                                <button type="submit" class="btn save-btn">
+                                    <i class="bi bi-save"></i> Save All Changes
+                                </button>
                             </div>
                         </div>
-
-                        <!-- Save Button -->
-                        <div class="text-end mt-4">
-                            <button class="btn save-btn">
-                                <i class="bi bi-save"></i> Save All Changes
-                            </button>
-                        </div>
-
-                    </div>
+                    </form>
                 </div>
-
             </div>
         </div>
         <button class="btn btn-warning rounded-circle shadow position-fixed bottom-0 end-0 m-4"

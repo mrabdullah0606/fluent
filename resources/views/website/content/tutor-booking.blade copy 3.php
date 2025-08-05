@@ -151,120 +151,14 @@
             background-color: #3b82f6;
             color: white;
         }
-
-        /* Enhanced Time Slot Highlighting */
-        .time-slot-btn {
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .time-slot-btn:hover {
-            background-color: #dbeafe !important;
-            border-color: #3b82f6 !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
-        }
-
-        .time-slot-btn.selected {
-            background-color: #3b82f6 !important;
-            border-color: #3b82f6 !important;
-            color: white !important;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .time-slot-btn.selected:hover {
-            background-color: #2563eb !important;
-            border-color: #2563eb !important;
-        }
-
-        /* Enhanced Duration Selection Highlighting */
-        .duration-option {
-            transition: all 0.3s ease;
-        }
-
-        .duration-option:hover {
-            background-color: #f3f4f6;
-            border-color: #3b82f6;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .duration-option input[type="radio"]:checked+label {
-            background-color: #3b82f6 !important;
-            border-color: #3b82f6 !important;
-            color: white !important;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25);
-        }
-
-        .duration-option input[type="radio"]:checked+label .text-xs {
-            color: #e5e7eb !important;
-        }
-
-        /* Enhanced Package Selection Highlighting */
-        .package-option {
-            transition: all 0.3s ease;
-        }
-
-        .package-option:hover {
-            background-color: #f8fafc;
-            border-color: #3b82f6;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .package-option input[type="radio"]:checked+div {
-            background-color: #3b82f6 !important;
-            border-color: #3b82f6 !important;
-            color: white !important;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        }
-
-        .package-option input[type="radio"]:checked+div h4,
-        .package-option input[type="radio"]:checked+div p {
-            color: white !important;
-        }
-
-        .package-option input[type="radio"]:checked+div .text-green-600 {
-            color: #bbf7d0 !important;
-        }
-
-        .package-option input[type="radio"]:checked+div .text-muted-foreground {
-            color: #e5e7eb !important;
-        }
-
-        /* Add a subtle animation for selections */
-        @keyframes selectPulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.02);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .time-slot-btn.selected,
-        .duration-option input[type="radio"]:checked+label,
-        .package-option input[type="radio"]:checked+div {
-            animation: selectPulse 0.3s ease-out;
-        }
     </style>
     <main class="flex-grow">
         <div class="min-h-screen bg-gray-50 py-8 md:py-12">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
                 <button
                     class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background hover:text-accent-foreground h-10 px-4 py-2 mb-6 border-primary text-primary hover:bg-primary/10">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="mr-2 h-4 w-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4">
                         <path d="m12 19-7-7 7-7"></path>
                         <path d="M19 12H5"></path>
                     </svg>
@@ -357,11 +251,11 @@
                                     $price = $durationPrices[$key] ?? 'N/A';
                                     $label = $minutes === 120 ? '2 hours' : $minutes . ' minutes';
                                 @endphp
-                                <div class="duration-option">
+                                <div>
                                     <input type="radio" name="duration" value="{{ $minutes }}"
                                         id="duration-{{ $minutes }}" class="peer hidden" required>
                                     <label for="duration-{{ $minutes }}"
-                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer text-center transition-all duration-300">
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-checked:border-primary cursor-pointer text-center">
                                         {{ $label }} <br>
                                         <span class="text-xs text-muted">$ {{ $price }}</span>
                                     </label>
@@ -390,11 +284,11 @@
                         @endphp
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             @foreach ($lessonPackages as $package)
-                                <label for="package_{{ $package->id }}" class="block package-option">
+                                <label for="package_{{ $package->id }}" class="block">
                                     <input type="radio" name="lesson_package" value="{{ $package->id }}"
                                         id="package_{{ $package->id }}" class="hidden peer">
                                     <div
-                                        class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted hover:border-primary/50">
+                                        class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted peer-checked:border-primary/70 hover:border-primary/50">
                                         <h4 class="font-bold text-lg text-foreground">{{ $package->number_of_lessons }}
                                             Lessons</h4>
                                         @if ($package->number_of_lessons >= 20)
@@ -535,12 +429,12 @@
             }
 
             selectTimeSlot(slotElement) {
-                // Remove previous selection with enhanced visual feedback
+                // Remove previous selection
                 document.querySelectorAll('.time-slot-btn').forEach(btn => {
                     btn.classList.remove('selected');
                 });
 
-                // Add selection to clicked slot with enhanced visual feedback
+                // Add selection to clicked slot
                 slotElement.classList.add('selected');
 
                 // Store selected slot data
@@ -737,7 +631,7 @@
                 this.currentSlots.forEach(slot => {
                     const slotButton = document.createElement('button');
                     slotButton.className =
-                        'time-slot-btn px-3 py-2 text-sm border border-gray-300 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500';
+                        'time-slot-btn px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-blue-50 hover:border-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500';
                     slotButton.textContent = slot.formatted_range;
                     slotButton.dataset.slotId = slot.id;
                     slotButton.type = 'button';
@@ -849,18 +743,16 @@
             const checkoutValue = document.getElementById('checkoutValue');
             const checkoutPrice = document.getElementById('checkoutPrice');
 
-            // Enhanced Duration Selection with visual feedback
+            // Handle Duration Selection
             durationInputs.forEach(input => {
                 input.addEventListener('change', function() {
                     const minutes = this.value;
                     const key = `duration_${minutes}`;
                     const price = durationPrices[key];
 
-                    // Clear package selection
                     packageInputs.forEach(pkg => pkg.checked = false);
 
-                    const label = minutes === '120' ? '2 hours' : minutes + ' minutes';
-                    selectedDurationElem.textContent = label;
+                    selectedDurationElem.textContent = `${minutes} minutes`;
                     selectedPriceElem.textContent = price ? `${price}` : 'N/A';
 
                     checkoutType.value = 'duration';
@@ -871,26 +763,107 @@
                     calendar.updateCheckoutButton();
                 });
             });
+        });
 
-            // Enhanced Package Selection with visual feedback
-            packageInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const packageId = this.value;
-                    const price = packagePrices[packageId];
+        const durationPrices = @json($durationPrices);
+        const packagePrices = @json($teacher->lessonPackages->pluck('price', 'id'));
 
-                    durationInputs.forEach(dur => dur.checked = false);
+        const durationInputs = document.querySelectorAll('input[name="duration"]');
+        const packageInputs = document.querySelectorAll('input[name="lesson_package"]');
+        const selectedDurationElem = document.getElementById('selected-duration');
+        const selectedPriceElem = document.getElementById('selected-price');
+        const selectedTimeSlotElem = document.getElementById('selected-time-slot');
 
-                    const packageLabel = this.closest('label').querySelector('h4').textContent;
-                    selectedDurationElem.textContent = packageLabel;
-                    selectedPriceElem.textContent = price ? `${price}` : 'N/A';
+        const checkoutType = document.getElementById('checkoutType');
+        const checkoutValue = document.getElementById('checkoutValue');
+        const checkoutPrice = document.getElementById('checkoutPrice');
+        const checkoutSlotId = document.getElementById('checkoutSlotId');
+        const checkoutSelectedDate = document.getElementById('checkoutSelectedDate');
+        const checkoutButton = document.getElementById('checkoutButton');
 
-                    checkoutType.value = 'package';
-                    checkoutValue.value = packageId;
-                    checkoutPrice.value = price ?? 0;
+        let selectedSlotData = null;
+        let selectedDateString = null;
 
-                    // Update checkout button state
-                    calendar.updateCheckoutButton();
-                });
+        function updateCheckoutButton() {
+            const hasSelection = (durationInputs[0].checked || durationInputs[1].checked || durationInputs[2].checked ||
+                    durationInputs[3].checked) ||
+                (packageInputs.length > 0 && [...packageInputs].some(p => p.checked));
+            const hasTimeSlot = selectedSlotData !== null;
+
+            // For individual lessons, both duration and time slot are required
+            if ([...durationInputs].some(d => d.checked)) {
+                checkoutButton.disabled = !hasTimeSlot;
+            }
+            // For packages, only selection is required (no specific time slot needed)
+            else if ([...packageInputs].some(p => p.checked)) {
+                checkoutButton.disabled = false;
+            } else {
+                checkoutButton.disabled = true;
+            }
+        }
+
+        // Log all summary values to console
+        function logSummaryValues() {
+            const summary = {
+                date: checkoutSelectedDate.value,
+                slotTime: selectedTimeSlotElem.textContent,
+                duration: selectedDurationElem.textContent,
+                price: selectedPriceElem.textContent,
+                checkoutType: checkoutType.value,
+                checkoutValue: checkoutValue.value,
+                slotId: checkoutSlotId.value
+            };
+            console.log('Booking Summary:', summary);
+        }
+
+        // Duration selection
+        durationInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const minutes = this.value;
+                const key = `duration_${minutes}`;
+                const price = durationPrices[key];
+
+                // Clear package selection
+                packageInputs.forEach(pkg => pkg.checked = false);
+
+                const label = minutes === '120' ? '2 hours' : minutes + ' minutes';
+                selectedDurationElem.textContent = label;
+                selectedPriceElem.textContent = price ? `${price}` : 'N/A';
+
+                checkoutType.value = 'duration';
+                checkoutValue.value = minutes;
+                checkoutPrice.value = price ?? 0;
+
+                logSummaryValues();
+
+                updateCheckoutButton();
+            });
+        });
+
+        packageInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const packageId = this.value;
+                const price = packagePrices[packageId];
+                const label = this.closest('label')?.querySelector('h4')?.textContent.trim();
+
+                // Clear duration selection
+                durationInputs.forEach(dur => dur.checked = false);
+
+                // Clear time slot for packages
+                selectedSlotData = null;
+                selectedTimeSlotElem.textContent = 'Not required for packages';
+                checkoutSlotId.value = '';
+
+                selectedDurationElem.textContent = label ?? '—';
+                selectedPriceElem.textContent = price ? `${price}` : 'N/A';
+
+                checkoutType.value = 'package';
+                checkoutValue.value = packageId;
+                checkoutPrice.value = price ?? 0;
+
+                logSummaryValues();
+
+                updateCheckoutButton();
             });
         });
     </script>
