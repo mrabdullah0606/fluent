@@ -215,12 +215,71 @@ class HomeController extends Controller
      * @return View
      * 
      */
-    public function oneOnOneTutors(): View
-    {
-        $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
-        // dd($teachers->toArray());
-        return view('website.content.one-to-one', compact('teachers'));
+    
+
+    public function oneOnOneTutors(Request $request): View
+{   
+    $teacherLanguages = Teacher::select('teaches', 'speaks')->get();
+     $countries = [
+            'Pakistan',
+            'USA',
+            'UK',
+            'Canada',
+            'India',
+            'France',
+            'Germany',
+            'Saudi Arabia',
+            'UAE',
+            'Australia',
+            'Japan',
+            'China',
+            'Bangladesh',
+            'Nepal',
+            'Turkey',
+            'South Africa',
+            'Malaysia',
+            'Indonesia',
+            'Italy',
+            'Spain'
+        ];
+    $query = User::with('teacherProfile')->where('role', 'teacher');
+
+    if ($request->filled('learn_language')) {
+        $query->whereHas('teacherProfile', function ($q) use ($request) {
+            $q->where('teaches', 'LIKE', '%' . $request->learn_language . '%');
+        });
     }
+
+    if ($request->filled('speaks')) {
+        $query->whereHas('teacherProfile', function ($q) use ($request) {
+            $q->where('speaks', 'LIKE', '%' . $request->speaks . '%');
+        });
+    }
+
+    if ($request->filled('country')) {
+        $query->whereHas('teacherProfile', function ($q) use ($request) {
+            $q->where('country', $request->country);
+        });
+    }
+
+    if ($request->filled('name')) {
+        $query->where('name', 'LIKE', '%' . $request->name . '%');
+    }
+
+    if ($request->filled('min_price') && $request->filled('max_price')) {
+        $query->whereHas('teacherProfile', function ($q) use ($request) {
+            $q->whereBetween('hourly_rate', [(int)$request->min_price, (int)$request->max_price]);
+        });
+    }
+
+    $teachers = $query->get();
+
+    $languages = Language::all(); // If you have a languages table
+    
+    return view('website.content.one-to-one', compact('teachers','languages','teacherLanguages','countries'));
+    //return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
+}
+
 
     public function groupLesson(): View
     {
