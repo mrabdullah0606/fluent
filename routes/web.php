@@ -39,9 +39,9 @@ Route::get('/one-on-one-tutors', [HomeController::class, 'oneOnOneTutors'])->nam
 Route::get('/group-lesson', [HomeController::class, 'groupLesson'])->name('group.lesson');
 Route::get('/become/tutor', [HomeController::class, 'becomeTutor'])->name('become.tutor');
 Route::get('/careers', [HomeController::class, 'careers'])->name('careers');
-Route::get('/apply/form', [HomeController::class, 'applyForm'])->name('apply.form');
-Route::get('/apply/form2', [HomeController::class, 'applyForm2'])->name('apply.form2');
-Route::get('/apply/form3', [HomeController::class, 'applyForm3'])->name('apply.form3');
+// Route::get('/apply/form', [HomeController::class, 'applyForm'])->name('apply.form');
+Route::get('/apply/{career}', [HomeController::class, 'applyForm'])->name('apply.form');
+Route::post('/apply', [HomeController::class, 'submitApplication'])->name('apply.submit');
 Route::get('/apply/general', [HomeController::class, 'applyGeneral'])->name('apply.general');
 Route::get('/public/availability/monthly/{teacherId}', [HomeController::class, 'monthlyAvailability']);
 Route::get('/public/availability/date/{teacherId}', [HomeController::class, 'dateAvailability']);
@@ -165,6 +165,7 @@ Route::prefix('teacher')->group(function () {
         });
     });
 });
+
 /* ************************************************************************** */
 /*                                ADMIN Routes                                */
 /* ************************************************************************** */
@@ -201,6 +202,28 @@ Route::prefix('admin')->group(function () {
             Route::delete('{user}', [AdminController::class, 'deleteUser'])->name('admin.users.destroy');
         });
         /* ******************************** User Management End ******************************** */
+
+        /* ******************************** Career Management ******************************** */
+        Route::prefix('careers')->name('admin.careers.')->group(function () {
+            Route::get('/', [AdminController::class, 'careersIndex'])->name('index');
+            Route::get('create', [AdminController::class, 'careerCreate'])->name('create');
+            Route::post('/', [AdminController::class, 'careerStore'])->name('store');
+            Route::get('edit/{career}', [AdminController::class, 'careerEdit'])->name('edit');
+            Route::put('{career}', [AdminController::class, 'careerUpdate'])->name('update');
+            Route::delete('{career}', [AdminController::class, 'careerDestroy'])->name('destroy');
+        });
+        /* ******************************** Career Management End ******************************** */
+
+        /* ******************************** Career Management ******************************** */
+        Route::prefix('applicants')->name('admin.applicants.')->group(function () {
+            Route::get('/', [AdminController::class, 'applicantsIndex'])->name('index');
+            Route::get('create', [AdminController::class, 'applicantsCreate'])->name('create');
+            Route::post('/', [AdminController::class, 'applicantsStore'])->name('store');
+            Route::get('edit/{applicant}', [AdminController::class, 'applicantsEdit'])->name('edit');
+            Route::put('{applicant}', [AdminController::class, 'applicantsUpdate'])->name('update');
+            Route::delete('{applicant}', [AdminController::class, 'applicantsDestroy'])->name('destroy');
+        });
+        /* ******************************** Career Management End ******************************** */
     });
 });
 

@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'isTeacher' => \App\Http\Middleware\IsTeacher::class,
             'isStudent' => \App\Http\Middleware\IsStudent::class,
         ]);
+        $middleware->web([
+            \App\Http\Middleware\RedirectLoginToTeacher::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

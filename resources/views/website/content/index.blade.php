@@ -35,17 +35,16 @@
                 <!-- Card 1 -->
                 @foreach ($languages as $language)
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                        <div class="p-4 text-center language-card h-100">
-                            <div class="language-code">{{ $language->symbol }}</div>
-                            <div class="language-name">{{ $language->name }}</div>
-                            <p class="tutor-info">
-                                <i class="bi bi-person"></i> {{ $language->teachers_count }} tutors available
-                            </p>
-
-                            <a href="{{ route('languages.teachers', $language->id) }}" class="view-tutors">
+                        <a href="{{ route('languages.teachers', $language->id) }}" class="view-tutors text-decoration-none">
+                            <div class="p-4 text-center language-card h-100">
+                                <div class="language-code">{{ $language->symbol }}</div>
+                                <div class="language-name">{{ $language->name }}</div>
+                                <p class="tutor-info">
+                                    <i class="bi bi-person"></i> {{ $language->teachers_count }} tutors available
+                                </p>
                                 View Tutors <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
             </div>

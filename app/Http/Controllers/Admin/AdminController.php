@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Applicant;
+use App\Models\Career;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -167,28 +169,28 @@ class AdminController extends Controller
     // Show the form to create a new user
     public function userCreate(): View
     {
-    return view('admin.content.user.create');
+        return view('admin.content.user.create');
     }
 
     // Store the newly created user
     public function userStore(Request $request): RedirectResponse
     {
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        'role' => 'required|in:student,teacher', // or whatever roles you support
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => 'required|in:student,teacher', // or whatever roles you support
+        ]);
 
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => $request->role,
-        'is_verified' => true, // default verified, adjust as needed
-    ]);
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'is_verified' => true, // default verified, adjust as needed
+        ]);
 
-    return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
     public function userEdit(User $user): View
@@ -206,27 +208,27 @@ class AdminController extends Controller
 
     public function userUpdate(Request $request, User $user): RedirectResponse
     {
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'role' => 'required|in:student,teacher',
-        'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'role' => 'required|in:student,teacher',
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-    $data = [
-        'name' => $request->name,
-        'email' => $request->email,
-        'role' => $request->role,
-    ];
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+        ];
 
-    // Only hash and update password if it's filled
-    if ($request->filled('password')) {
-        $data['password'] = Hash::make($request->password);
-    }
+        // Only hash and update password if it's filled
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
 
-    $user->update($data);
+        $user->update($data);
 
-    return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
     // public function userUpdate(Request $request, User $user): RedirectResponse
     // {
@@ -267,4 +269,126 @@ class AdminController extends Controller
     //     }
     //     return response()->json(['success' => true]);
     // }
+
+
+    /* ************************************************************************** */
+    /*                              CAREER MANAGEMENT                             */
+    /* ************************************************************************** */
+
+    /**
+     * Show the list of careers.
+     *
+     * @return View
+     */
+    public function careersIndex(): View
+    {
+        $careers = Career::all();
+        return view('admin.content.career.index', compact('careers'));
+    }
+
+    /**
+     * Show the list of careers.
+     *
+     * @return View
+     */
+    public function careerCreate(): View
+    {
+        $careers = Career::all();
+        return view('admin.content.career.create', compact('careers'));
+    }
+
+    public function careerStore(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'salary' => 'required|numeric|min:0',
+            'type' => 'required|in:full_time,part_time,contract',
+            'description' => 'required|string',
+            'is_active' => 'required|boolean',
+        ]);
+
+        Career::create($request->only([
+            'title',
+            'location',
+            'salary',
+            'type',
+            'description',
+            'is_active',
+        ]));
+
+        return redirect()->route('admin.careers.index')->with('success', 'Job added successfully!');
+    }
+
+    public function careerEdit(Career $career): View
+    {
+        return view('admin.content.career.edit', compact('career'));
+    }
+
+    public function careerUpdate(Request $request, Career $career): RedirectResponse
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'salary' => 'required|numeric|min:0',
+            'type' => 'required|in:full_time,part_time,contract',
+            'description' => 'required|string',
+            'is_active' => 'required|boolean',
+        ]);
+
+        $career->update($request->only([
+            'title',
+            'location',
+            'salary',
+            'type',
+            'description',
+            'is_active',
+        ]));
+
+        return redirect()->route('admin.careers.index')->with('success', 'Job updated successfully!');
+    }
+
+    public function careerDestroy(Career $career): RedirectResponse
+    {
+        $career->delete();
+        return redirect()->route('admin.careers.index')->with('success', 'Job deleted successfully!');
+    }
+
+    /* ************************************************************************** */
+    /*                            APPLICANT MANAGEMENT                            */
+    /* ************************************************************************** */
+    /**
+     * Show the list of careers.
+     *
+     * @return View
+     */
+    public function applicantsIndex(): View
+    {
+        $applicants = Applicant::with('career')->get();
+        // dd($applicants->toArray());
+        return view('admin.content.applicant.index', compact('applicants'));
+    }
+
+    public function applicantsEdit(Applicant $applicant): View
+    {
+        return view('admin.content.applicant.edit', compact('applicant'));
+    }
+
+    public function applicantsUpdate(Request $request, Applicant $applicant): RedirectResponse
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:pending,accepted,rejected',
+        ]);
+
+        $applicant->update([
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()->route('admin.applicants.index')->with('success', 'Applicant status updated successfully!');
+    }
+    public function applicantsDestroy(Applicant $applicant): RedirectResponse
+    {
+        $applicant->delete();
+        return redirect()->route('admin.applicants.index')->with('success', 'Applicant deleted successfully!');
+    }
 }
