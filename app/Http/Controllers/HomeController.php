@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Applicant;
+use App\Models\Career;
 use App\Models\GroupClass;
 use App\Models\Language;
 use App\Models\LessonPackage;
@@ -90,7 +92,7 @@ class HomeController extends Controller
     public function tutorBooking($id): View
     {
         $teacher = User::with([
-            'teacherSettings',        // <-- eager load
+            'teacherSettings',
             'lessonPackages',
             'groupClasses.days',
         ])
@@ -215,12 +217,10 @@ class HomeController extends Controller
      * @return View
      * 
      */
-    
-
     public function oneOnOneTutors(Request $request): View
-{   
-    $teacherLanguages = Teacher::select('teaches', 'speaks')->get();
-     $countries = [
+    {
+        $teacherLanguages = Teacher::select('teaches', 'speaks')->get();
+        $countries = [
             'Pakistan',
             'USA',
             'UK',
@@ -242,43 +242,43 @@ class HomeController extends Controller
             'Italy',
             'Spain'
         ];
-    $query = User::with('teacherProfile')->where('role', 'teacher');
+        $query = User::with('teacherProfile')->where('role', 'teacher');
 
-    if ($request->filled('learn_language')) {
-        $query->whereHas('teacherProfile', function ($q) use ($request) {
-            $q->where('teaches', 'LIKE', '%' . $request->learn_language . '%');
-        });
+        if ($request->filled('learn_language')) {
+            $query->whereHas('teacherProfile', function ($q) use ($request) {
+                $q->where('teaches', 'LIKE', '%' . $request->learn_language . '%');
+            });
+        }
+
+        if ($request->filled('speaks')) {
+            $query->whereHas('teacherProfile', function ($q) use ($request) {
+                $q->where('speaks', 'LIKE', '%' . $request->speaks . '%');
+            });
+        }
+
+        if ($request->filled('country')) {
+            $query->whereHas('teacherProfile', function ($q) use ($request) {
+                $q->where('country', $request->country);
+            });
+        }
+
+        if ($request->filled('name')) {
+            $query->where('name', 'LIKE', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->whereHas('teacherProfile', function ($q) use ($request) {
+                $q->whereBetween('hourly_rate', [(int)$request->min_price, (int)$request->max_price]);
+            });
+        }
+
+        $teachers = $query->get();
+
+        $languages = Language::all(); // If you have a languages table
+
+        return view('website.content.one-to-one', compact('teachers', 'languages', 'teacherLanguages', 'countries'));
+        //return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
     }
-
-    if ($request->filled('speaks')) {
-        $query->whereHas('teacherProfile', function ($q) use ($request) {
-            $q->where('speaks', 'LIKE', '%' . $request->speaks . '%');
-        });
-    }
-
-    if ($request->filled('country')) {
-        $query->whereHas('teacherProfile', function ($q) use ($request) {
-            $q->where('country', $request->country);
-        });
-    }
-
-    if ($request->filled('name')) {
-        $query->where('name', 'LIKE', '%' . $request->name . '%');
-    }
-
-    if ($request->filled('min_price') && $request->filled('max_price')) {
-        $query->whereHas('teacherProfile', function ($q) use ($request) {
-            $q->whereBetween('hourly_rate', [(int)$request->min_price, (int)$request->max_price]);
-        });
-    }
-
-    $teachers = $query->get();
-
-    $languages = Language::all(); // If you have a languages table
-    
-    return view('website.content.one-to-one', compact('teachers','languages','teacherLanguages','countries'));
-    //return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
-}
 
 
     public function groupLesson(): View
@@ -301,23 +301,42 @@ class HomeController extends Controller
 
     public function careers(): View
     {
-        return view('website.content.careers');
+        $careers = Career::where('is_active', true)->get();
+        // dd($careers->toArray());
+        return view('website.content.careers', compact('careers'));
     }
-     public function applyForm(): View
+
+    public function applyForm(Career $career): View
     {
-        return view('website.content.apply-form');
+        return view('website.content.apply-form', compact('career'));
     }
-     public function applyForm2(): View
+
+    public function submitApplication(Request $request)
     {
-        return view('website.content.apply-form2');
-    }
-     public function applyForm3(): View
-    {
-        return view('website.content.apply-form3');
+        $validated = $request->validate([
+            'career_id' => 'required|exists:careers,id',
+            'fullName' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'linkedin' => 'nullable|url',
+            'portfolio' => 'nullable|url',
+            'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',
+            'coverLetter' => 'required|string',
+            'whyFit' => 'required|string',
+            'expectedSalary' => 'nullable|string|max:255',
+        ]);
+
+        if ($request->hasFile('cv')) {
+            $cvPath = $request->file('cv')->store('cv_uploads', 'public');
+            $validated['cv_path'] = $cvPath;
+        }
+
+        Applicant::create($validated);
+
+        return redirect()->route('careers')->with('success', 'Your application has been submitted successfully.');
     }
     public function applyGeneral(): View
     {
         return view('website.content.apply-general');
     }
-
 }

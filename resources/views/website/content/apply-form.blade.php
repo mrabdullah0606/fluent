@@ -3,14 +3,19 @@
 @section('content')
     <main class="flex-grow">
         <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 hero-pattern-custom">
-            <div class="max-w-3xl mx-auto" style="opacity: 1; transform: none;"><button
-                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 mb-6 border-primary text-primary hover:bg-primary/10"><svg
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="mr-2 h-4 w-4">
-                        <path d="m12 19-7-7 7-7"></path>
-                        <path d="M19 12H5"></path>
-                    </svg> Back to Careers</button>
+            <div class="max-w-3xl mx-auto" style="opacity: 1; transform: none;">
+                <a href="{{ route('careers') }}">
+
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 mb-6 border-primary text-primary hover:bg-primary/10"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="mr-2 h-4 w-4">
+                            <path d="m12 19-7-7 7-7"></path>
+                            <path d="M19 12H5"></path>
+                        </svg> Back to Careers
+                    </button>
+                </a>
                 <div class="text-center mb-10 md:mb-12"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                         height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" class="h-16 w-16 mx-auto text-primary mb-4">
@@ -18,12 +23,15 @@
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                     </svg>
                     <h1 class="text-3xl md:text-4xl font-bold text-foreground">Apply for <span
-                            class="text-gradient-yellow-red">Senior Frontend Developer (React)</span></h1>
+                            class="text-gradient-yellow-red">{{ $career->title }}</span></h1>
                     <p class="mt-3 text-md text-muted-foreground max-w-xl mx-auto">We're excited to learn more about you!
                         Please fill out the form below.</p>
                 </div>
-                <form class="bg-white p-8 md:p-10 rounded-xl shadow-xl border border-primary/20 space-y-6 md:space-y-8"
+                <form method="POST" action="{{ route('apply.submit') }}" enctype="multipart/form-data"
+                    class="bg-white p-8 md:p-10 rounded-xl shadow-xl border border-primary/20 space-y-6 md:space-y-8"
                     style="opacity: 1; transform: none;">
+                    @csrf
+                    <input type="hidden" name="career_id" value="{{ $career->id }}">
                     <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
                         <div class="flex">
                             <div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -36,7 +44,7 @@
                                 </svg></div>
                             <div class="ml-3">
                                 <p class="text-sm text-yellow-700">You are applying for the position: <span
-                                        class="font-medium">Senior Frontend Developer (React)</span></p>
+                                        class="font-medium">{{ $career->title }}</span></p>
                             </div>
                         </div>
                     </div>
@@ -111,7 +119,8 @@
                                 <line x1="12" x2="12" y1="3" y2="15"></line>
                             </svg><input type="file"
                                 class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
-                                id="cv" name="cv" accept=".pdf,.doc,.docx" required=""></div>
+                                id="cv" name="cv" accept=".pdf,.doc,.docx" required="">
+                        </div>
                         <p class="text-xs text-muted-foreground mt-1">Accepted formats: PDF, DOC, DOCX. Max size: 5MB.</p>
                     </div>
                     <div><label
