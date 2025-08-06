@@ -24,9 +24,9 @@
                 <ul class="list-unstyled">
                     <li><a href="#" class="text-muted text-decoration-none">Why FluentAll?</a></li>
                     <li><a href="#" class="text-muted text-decoration-none">About FluentAll</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none" target="_blank">Be a Teacher <i
+                    <li><a href="{{route('become.tutor')}}" class="text-muted text-decoration-none" target="_blank">Be a Teacher <i
                                 class="bi bi-box-arrow-up-right ms-1"></i></a></li>
-                    <li><a href="#" class="text-muted text-decoration-none" target="_blank">We are hiring!
+                    <li><a href="{{route('careers')}}" class="text-muted text-decoration-none" target="_blank">We are hiring!
                             <i class="bi bi-box-arrow-up-right ms-1"></i></a></li>
                 </ul>
             </div>

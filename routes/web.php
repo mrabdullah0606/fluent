@@ -37,6 +37,12 @@ Route::get('/tutor/{id}', [HomeController::class, 'tutor'])->name('tutor');
 Route::get('/tutor-booking/{id}', [HomeController::class, 'tutorBooking'])->name('tutor.booking');
 Route::get('/one-on-one-tutors', [HomeController::class, 'oneOnOneTutors'])->name('one.on.one.tutors');
 Route::get('/group-lesson', [HomeController::class, 'groupLesson'])->name('group.lesson');
+Route::get('/become/tutor', [HomeController::class, 'becomeTutor'])->name('become.tutor');
+Route::get('/careers', [HomeController::class, 'careers'])->name('careers');
+Route::get('/apply/form', [HomeController::class, 'applyForm'])->name('apply.form');
+Route::get('/apply/form2', [HomeController::class, 'applyForm2'])->name('apply.form2');
+Route::get('/apply/form3', [HomeController::class, 'applyForm3'])->name('apply.form3');
+Route::get('/apply/general', [HomeController::class, 'applyGeneral'])->name('apply.general');
 Route::get('/public/availability/monthly/{teacherId}', [HomeController::class, 'monthlyAvailability']);
 Route::get('/public/availability/date/{teacherId}', [HomeController::class, 'dateAvailability']);
 Route::get('/switch-to-teacher', function () {

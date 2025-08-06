@@ -293,4 +293,31 @@ class HomeController extends Controller
     {
         return view('auth.admin.login');
     }
+
+    public function becomeTutor(): View
+    {
+        return view('website.content.become-tutor');
+    }
+
+    public function careers(): View
+    {
+        return view('website.content.careers');
+    }
+     public function applyForm(): View
+    {
+        return view('website.content.apply-form');
+    }
+     public function applyForm2(): View
+    {
+        return view('website.content.apply-form2');
+    }
+     public function applyForm3(): View
+    {
+        return view('website.content.apply-form3');
+    }
+    public function applyGeneral(): View
+    {
+        return view('website.content.apply-general');
+    }
+
 }
