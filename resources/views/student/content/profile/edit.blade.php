@@ -83,17 +83,14 @@
                     <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 mb-8"
                         style="opacity: 1; transform: none;">
                         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                            <div class="flex-shrink-0 relative">
-                                <span
-                                    class="relative flex shrink-0 overflow-hidden rounded-full w-28 h-28 border-4 border-primary">
-                                     @if($student->profile_image)
-                                    <img src="{{ asset('storage/'.$student->profile_image) }}" 
-                                    class="w-full h-full object-cover rounded-full">
-                                    @else
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ substr($student->name, 0, 2) }}</span>
-                                     @endif
-                                    </span>
+    <div class="flex-shrink-0 relative">
+        <span class="relative flex shrink-0 overflow-hidden rounded-full w-28 h-28 border-4 border-primary">
+            <img id="studentImagePreview"
+                 src="{{ $student && $student->profile_image 
+                        ? asset('storage/' . $student->profile_image) 
+                        : 'https://www.w3schools.com/howto/img_avatar.png' }}"
+                 class="w-full h-full object-cover rounded-full">
+        </span>
                                        
                                 <label
                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 absolute -bottom-2 -right-2 bg-secondary text-secondary-foreground p-1.5 rounded-full cursor-pointer hover:bg-secondary/90 transition-colors"
@@ -224,4 +221,17 @@
             </div>
         </div>
     </main>
+    {{-- Live Preview Script --}}
+<script>
+    document.getElementById('image-upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('studentImagePreview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 @endsection

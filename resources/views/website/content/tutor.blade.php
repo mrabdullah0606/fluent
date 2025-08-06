@@ -173,72 +173,87 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="md:col-span-1 space-y-8">
-                            <div class="bg-red-50 p-6 rounded-xl shadow-md border border-red-200"
-                                style="opacity: 1; transform: none;">
-                                <h2 class="text-2xl font-semibold text-red-700 mb-4 flex items-center"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-6 w-6 text-red-500">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg> Lesson Packages</h2>
-                                <div class="space-y-4">
-                                    <div
-                                        class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
-                                        <h3 class="font-semibold text-red-600 text-lg">5-Lesson Package</h3>
-                                        <p class="text-sm font-bold text-green-600">Save 5%</p>
-                                        <ul class="text-xs text-gray-500 space-y-1 my-2">
-                                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
-                                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Flexible scheduling</li>
-                                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
-                                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Personalized learning</li>
-                                        </ul><button
-                                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white">Select
-                                            Package</button>
-                                    </div>
-                                    <div
-                                        class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
-                                        <h3 class="font-semibold text-red-600 text-lg">10-Lesson Package</h3>
-                                        <p class="text-sm font-bold text-green-600">Save 10%</p>
-                                        <ul class="text-xs text-gray-500 space-y-1 my-2">
-                                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
-                                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Flexible scheduling</li>
-                                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
-                                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Personalized learning</li>
-                                        </ul><button
-                                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white">Select
-                                            Package</button>
-                                    </div>
-                                    <div
-                                        class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
+                       <div class="md:col-span-1 space-y-8">
+    <div class="bg-red-50 p-6 rounded-xl shadow-md border border-red-200" style="opacity: 1; transform: none;">
+        <h2 class="text-2xl font-semibold text-red-700 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-6 w-6 text-red-500">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg> 
+            Lesson Packages
+        </h2>
+        <div class="space-y-4">
+            @if($teacher->lessonPackages && $teacher->lessonPackages->where('is_active', true)->count() > 0)
+                @foreach($teacher->lessonPackages->where('is_active', true) as $package)
+                    @php
+                        // Calculate discount percentage (you can adjust this logic based on your needs)
+                        $basePrice = $teacher->hourly_rate ?? 50; // fallback to 50 if no hourly rate
+                        $totalRegularPrice = $basePrice * $package->number_of_lessons;
+                        $discountPercentage = $totalRegularPrice > 0 ? round((($totalRegularPrice - $package->price) / $totalRegularPrice) * 100) : 0;
+                    @endphp
+                    <div class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
+                        <h3 class="font-semibold text-red-600 text-lg">{{ $package->name }}</h3>
+                        @if($discountPercentage > 0)
+                            <p class="text-sm font-bold text-green-600">Save {{ $discountPercentage }}%</p>
+                        @endif
+                        <div class="text-xs text-gray-600 mb-2">
+                            <p><strong>{{ $package->number_of_lessons }}</strong> lessons</p>
+                            <p><strong>${{ number_format($package->price, 2) }}</strong> total</p>
+                            @if($package->duration_per_lesson)
+                                <p><strong>{{ $package->duration_per_lesson }}</strong> minutes per lesson</p>
+                            @endif
+                        </div>
+                        <ul class="text-xs text-gray-500 space-y-1 my-2">
+                            <li class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                Flexible scheduling
+                            </li>
+                            <li class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                Personalized learning
+                            </li>
+                        </ul>
+                        <button class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white"
+                            onclick="selectPackage({{ $package->id }}, '{{ $package->name }}', {{ $package->price }}, {{ $package->number_of_lessons }})">
+                            Select Package
+                        </button>
+                    </div>
+                @endforeach
+            @else
+                <div class="border border-red-300 p-4 rounded-lg bg-white text-center">
+                    <p class="text-gray-500 text-sm">No lesson packages available at the moment.</p>
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<script>
+function selectPackage(packageId, packageName, price, lessons) {
+    // You can customize this function based on your needs
+    // For example, redirect to checkout or open a modal
+    const url = `/student/checkout?type=package&value=${packageId}&price=${price}&lessons=${lessons}`;
+    window.location.href = url;
+    
+    // Or you could store the selection and show a form
+    // console.log('Selected package:', {packageId, packageName, price, lessons});
+}
+</script>
+<div
+                                        {{-- class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
                                         <h3 class="font-semibold text-red-600 text-lg">20-Lesson Package</h3>
                                         <p class="text-sm font-bold text-green-600">Save 20%</p>
                                         <ul class="text-xs text-gray-500 space-y-1 my-2">
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
-                                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                    width                                    ="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -254,7 +269,7 @@
                                         </ul><button
                                             class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white">Select
                                             Package</button>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

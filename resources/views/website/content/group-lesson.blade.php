@@ -21,13 +21,67 @@
                 <p class="text-md text-muted-foreground text-center mt-2 max-w-2xl mx-auto">Learn collaboratively with
                     expert tutors and peers from around the world.</p>
             </div>
+            <div class="mb-10 p-6 bg-white border border-primary/20 rounded-xl shadow-md"
+                style="opacity: 1; transform: none;">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                    <div>
+            <label class="text-sm font-medium text-foreground">Language</label>
+            <div class="mt-1">
+                <select name="learn_language" class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+                    <option value="">Select Language</option>
+                    <option value="">Select Language</option>
+                                    </select>
+            </div>
+            </div>
+                    <div><label
+                            class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium text-foreground"
+                            for="price-range-filter">Price Range: $0 - $250</label><span dir="ltr"
+                            data-orientation="horizontal" aria-disabled="false"
+                            class="relative flex w-full touch-none select-none items-center mt-2" id="price-range-filter"
+                            style="--radix-slider-thumb-transform: translateX(-50%);"><span data-orientation="horizontal"
+                                class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary/20"><span
+                                    data-orientation="horizontal" class="absolute h-full bg-primary"
+                                    style="left: 0%; right: 0%;"></span></span><span
+                                style="transform: var(--radix-slider-thumb-transform); position: absolute; left: calc(0% + 10px);"><span
+                                    role="slider" aria-valuemin="0" aria-valuemax="250" aria-orientation="horizontal"
+                                    data-orientation="horizontal" tabindex="0"
+                                    class="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                                    data-radix-collection-item="" aria-label="Minimum" aria-valuenow="0"
+                                    style=""></span></span><span
+                                style="transform: var(--radix-slider-thumb-transform); position: absolute; left: calc(100% - 10px);"><span
+                                    role="slider" aria-valuemin="0" aria-valuemax="250" aria-orientation="horizontal"
+                                    data-orientation="horizontal" tabindex="0"
+                                    class="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                                    data-radix-collection-item="" aria-label="Maximum" aria-valuenow="250"
+                                    style=""></span></span></span></div>
+                    <div>
+            <label class="text-sm font-medium text-foreground">Max Students</label>
+            <div class="mt-1">
+                <select name="learn_language" class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+                    <option value="">Ask Any</option>
+                    <option value="">Up to 2</option>
+                    <option value="">Up to 3</option>
+                    <option value="">Up to 4</option>
+                    <option value="">Up to 5</option>
+                    <option value="">Up to 6</option>
+                    <option value="">Up to 7</option>
+                    <option value="">Up to 8</option>
+                    <option value="">Up to 9</option>
+                                    </select>
+            </div>
+                </div>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 @foreach ($courses as $course)
+                    @php
+                        // Count enrolled students for this course
+                        $enrolledStudents = $course->enrollments ? $course->enrollments->count() : 0;
+                    @endphp
                     <div style="opacity: 1; transform: none;" class="course-card" data-course-id="{{ $course->id }}"
                         data-title="{{ $course->title }}" data-price="{{ $course->price_per_student }}"
                         data-teacher="{{ $course->teacher->name }}" data-weeks="{{ $course->lessons_per_week }}"
                         data-days="{{ implode(',', collect($course['days'])->pluck('day')->toArray()) }}"
-                        data-max-students="{{ $course->max_students }}" data-spots="5">
+                        data-max-students="{{ $course->max_students }}" data-spots="{{ $enrolledStudents }}">
                         <div
                             class="rounded-lg border bg-card text-card-foreground overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-primary/20 flex flex-col h-full">
                             <div class="flex flex-col space-y-1.5 p-0">
@@ -69,7 +123,8 @@
                                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                             class="h-3.5 w-3.5 mr-1.5 text-primary">
-                                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2">
+                                            <rect width="18" height="18" x="3" y="4" rx="2"
+                                                ry="2">
                                             </rect>
                                             <line x1="16" x2="16" y1="2" y2="6"></line>
                                             <line x1="8" x2="8" y1="2" y2="6"></line>
@@ -106,7 +161,7 @@
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <polyline points="12 6 12 12 16 14"></polyline>
                                         </svg>
-                                        Schedule: {{ $dayCount }} times a week, {{ $dayList }}
+                                        Schedule:{{ $dayCount }} times a week, {{ $dayList }}
                                     </div>
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -116,7 +171,7 @@
                                             <circle cx="9" cy="7" r="4"></circle>
                                             <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                        </svg> Spots: 5/{{ $course->max_students }}</div>
+                                        </svg> Spots: {{ $enrolledStudents }}/{{ $course->max_students }}</div>
                                 </div>
                                 <div class="pt-2">
                                     <h4 class="text-xs font-semibold text-primary mb-1">Key Features:</h4>
