@@ -152,11 +152,11 @@
                                     <polygon
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
-                                </svg>Number of lessons Taken</label>
+                                </svg>Languages I can speak</label>
                             <textarea
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
-                                id="number_of_lessons_taken" name="number_of_lessons_taken" placeholder="Enter number of lessons taken"
-                                rows="3">{{ old('number_of_lessons_taken', $student->number_of_lessons_taken ?? '') }}</textarea>
+                                id="langauages_i_can_speak" name="langauages_i_can_speak" placeholder="Enter Languages like English,spanish etc."
+                                rows="3">{{ old('langauages_i_can_speak', $student->langauages_i_can_speak ?? '') }}</textarea>
                         </div>
                         {{-- <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
                             style="opacity: 1; transform: none;"><label

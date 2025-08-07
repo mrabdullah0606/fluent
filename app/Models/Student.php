@@ -9,7 +9,7 @@ class Student extends Model
     protected $fillable = [
         'user_id',
         'description',
-        'number_of_lessons_taken',
+        'langauages_i_can_speak',
         'hobbies',
         'learning_goals',
         'profile_image',

@@ -136,7 +136,7 @@ public function updateProfile(Request $request)
     $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'nullable|string|max:255',
-        'number_of_lessons_taken' => 'nullable|numeric|min:0',
+        'langauages_i_can_speak' => 'nullable|numeric|min:0',
         'hobbies' => 'nullable|string|max:255',
         'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
@@ -151,7 +151,7 @@ public function updateProfile(Request $request)
     $data = [
         'user_id'                => $user->id,
         'description'            => $request->description,
-        'number_of_lessons_taken'=> $request->number_of_lessons_taken,
+        'langauages_i_can_speak'=> $request->langauages_i_can_speak,
         'hobbies'                => $request->hobbies,
     ];
 // dd($data);
