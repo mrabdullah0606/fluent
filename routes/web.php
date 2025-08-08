@@ -80,7 +80,8 @@ Route::prefix('student')->group(function () {
         Route::get('profile/edit', [StudentController::class, 'editProfile'])->name('student.profile.edit');
         Route::put('profile/update', [StudentController::class, 'updateProfile'])->name('student.profile.update');
         Route::get('add-reviews', [StudentController::class, 'addReviews'])->name('student.add.review');
-        Route::post('reviews/{teacher}', [StudentController::class, 'storeReview'])->name('student.reviews.store');
+        // Route::post('reviews/{teacher}', [StudentController::class, 'storeReview'])->name('student.reviews.store');
+        Route::post('reviews', [StudentController::class, 'reviewStore'])->name('student.reviews.store');
         Route::get('/find-tutor', [StudentController::class, 'findTutor'])->name('student.find.tutor');
         Route::get('/one-on-one-tutors', [StudentController::class, 'oneOnOneTutors'])->name('student.one.on.one.tutors');
         Route::get('/group-lesson', [StudentController::class, 'groupLesson'])->name('student.group.lesson');
@@ -96,7 +97,7 @@ Route::prefix('student')->group(function () {
         Route::get('zoom-meetings', [ZoomMeetingController::class, 'indexStudent'])->name('zoom.meetings.index');
         Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('zoom.meetings.store');
         /************************** Stripe *************************************************/
-        Route::get('/checkout', [HomeController::class, 'checkout'])->name('student.tutor.checkout');
+        Route::get('/checkout', [StudentController::class, 'checkout'])->name('student.tutor.checkout');
         Route::post('/create-checkout-session', [StripeController::class, 'create'])->name('student.stripe.checkout');
     });
 });
@@ -222,6 +223,12 @@ Route::prefix('admin')->group(function () {
             Route::get('edit/{applicant}', [AdminController::class, 'applicantsEdit'])->name('edit');
             Route::put('{applicant}', [AdminController::class, 'applicantsUpdate'])->name('update');
             Route::delete('{applicant}', [AdminController::class, 'applicantsDestroy'])->name('destroy');
+        });
+
+        Route::prefix('reviews')->name('admin.reviews.')->group(function () {
+            Route::get('/', [AdminController::class, 'reviewsIndex'])->name('index');
+            Route::patch('/{review}/toggle', [AdminController::class, 'approveReview'])->name('toggle');
+            Route::delete('/{review}', [AdminController::class, 'reviewsDestroy'])->name('destroy');
         });
         /* ******************************** Career Management End ******************************** */
     });

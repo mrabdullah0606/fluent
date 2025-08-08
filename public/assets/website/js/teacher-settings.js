@@ -8,13 +8,8 @@ class TeacherSettings {
     }
 
     init() {
-        // Initialize existing groups
         this.initializeExistingGroups();
-
-        // Bind event listeners
         this.bindEvents();
-
-        // Initialize form validation
         this.initFormValidation();
     }
 
@@ -24,14 +19,11 @@ class TeacherSettings {
     }
 
     bindEvents() {
-        // Add new group button
         if (this.addGroupBtn) {
             this.addGroupBtn.addEventListener("click", () =>
                 this.addNewGroup()
             );
         }
-
-        // Delete group buttons (event delegation)
         if (this.groupContainer) {
             this.groupContainer.addEventListener("click", (e) => {
                 if (e.target.closest(".delete-group-btn")) {
@@ -39,8 +31,6 @@ class TeacherSettings {
                 }
             });
         }
-
-        // Form submission
         const form = document.getElementById("settingsForm");
         if (form) {
             form.addEventListener("submit", (e) => this.handleFormSubmit(e));
@@ -50,30 +40,16 @@ class TeacherSettings {
     addNewGroup() {
         const templateGroup = document.querySelector(".group-container");
         if (!templateGroup) return;
-
         const newGroup = templateGroup.cloneNode(true);
-
-        // Update group counter and form names
         this.updateGroupFormNames(newGroup, this.groupCounter);
-
-        // Clear form values
         this.clearGroupForm(newGroup);
-
-        // Add delete button
         this.addDeleteButton(newGroup);
-
-        // Insert new group
         templateGroup.parentNode.insertBefore(
             newGroup,
             this.addGroupBtn.parentNode
         );
-
-        // Initialize the new group
         this.initGroup(newGroup);
-
-        // Animate in
         this.animateGroupIn(newGroup);
-
         this.groupCounter++;
     }
 
@@ -87,7 +63,6 @@ class TeacherSettings {
     }
 
     clearGroupForm(group) {
-        // Clear text inputs
         const textInputs = group.querySelectorAll(
             'input[type="text"], input[type="number"]'
         );
@@ -98,12 +73,8 @@ class TeacherSettings {
                 input.value = "";
             }
         });
-
-        // Reset selects to first option
         const selects = group.querySelectorAll("select");
         selects.forEach((select) => (select.selectedIndex = 0));
-
-        // Uncheck all day buttons
         const dayButtons = group.querySelectorAll(".day-btn");
         dayButtons.forEach((btn) => {
             btn.classList.remove("selected", "active");
@@ -119,7 +90,6 @@ class TeacherSettings {
             "btn btn-sm btn-danger position-absolute top-0 end-0 mt-2 me-5 delete-group-btn";
         deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
         deleteBtn.setAttribute("aria-label", "Delete group");
-
         group.insertBefore(deleteBtn, group.firstChild);
     }
 
@@ -131,11 +101,7 @@ class TeacherSettings {
             );
             return;
         }
-
-        // Animate out
         group.classList.add("slide-out");
-
-        // Remove after animation
         setTimeout(() => {
             group.remove();
         }, 300);
@@ -151,6 +117,7 @@ class TeacherSettings {
 
         this.bindDayButtons(daysContainer, lessonsPerWeekSelect);
         this.bindLessonsPerWeekChange(daysContainer, lessonsPerWeekSelect);
+        this.bindMaxStudentsValidation(groupElement);
     }
 
     bindDayButtons(daysContainer, lessonsPerWeekSelect) {
@@ -191,7 +158,6 @@ class TeacherSettings {
                 daysContainer.querySelectorAll(".day-btn.selected");
 
             if (selectedDays.length > maxLessons) {
-                // Remove excess selections
                 for (let i = maxLessons; i < selectedDays.length; i++) {
                     selectedDays[i].classList.remove("selected");
                     const checkbox = selectedDays[i].querySelector(
@@ -203,13 +169,60 @@ class TeacherSettings {
         });
     }
 
+    bindMaxStudentsValidation(groupElement) {
+        const maxStudentsInput = groupElement.querySelector(
+            '[name*="max_students"]'
+        );
+
+        if (maxStudentsInput) {
+            maxStudentsInput.addEventListener("input", (e) => {
+                const value = parseInt(e.target.value);
+
+                // Remove any existing validation classes
+                e.target.classList.remove("is-invalid", "is-valid");
+
+                if (isNaN(value) || value < 1) {
+                    e.target.classList.add("is-invalid");
+                    this.showAlert(
+                        "Max students must be at least 1.",
+                        "warning"
+                    );
+                } else if (value > 100) {
+                    e.target.classList.add("is-invalid");
+                    this.showAlert(
+                        "Max students cannot exceed 100.",
+                        "warning"
+                    );
+                } else {
+                    e.target.classList.add("is-valid");
+                }
+            });
+
+            // Also validate on blur
+            maxStudentsInput.addEventListener("blur", () => {
+                this.validateMaxStudentsField(maxStudentsInput);
+            });
+        }
+    }
+
+    validateMaxStudentsField(field) {
+        const value = parseInt(field.value);
+
+        if (isNaN(value) || value < 1 || value > 100) {
+            field.classList.add("is-invalid");
+            field.classList.remove("is-valid");
+            return false;
+        }
+
+        field.classList.remove("is-invalid");
+        field.classList.add("is-valid");
+        return true;
+    }
+
     animateGroupIn(group) {
         group.style.opacity = "0";
         group.style.transform = "translateY(-10px)";
-
-        // Force reflow
         group.offsetHeight;
-
         group.style.transition = "opacity 0.3s ease, transform 0.3s ease";
         group.style.opacity = "1";
         group.style.transform = "translateY(0)";
@@ -218,8 +231,6 @@ class TeacherSettings {
     initFormValidation() {
         const form = document.getElementById("settingsForm");
         if (!form) return;
-
-        // Add custom validation for group classes
         const groupContainers = form.querySelectorAll(".group-container");
         groupContainers.forEach((container) => {
             this.addGroupValidation(container);
@@ -231,7 +242,11 @@ class TeacherSettings {
 
         requiredFields.forEach((field) => {
             field.addEventListener("blur", () => {
-                this.validateField(field);
+                if (field.name.includes("max_students")) {
+                    this.validateMaxStudentsField(field);
+                } else {
+                    this.validateField(field);
+                }
             });
         });
     }
@@ -249,16 +264,21 @@ class TeacherSettings {
 
     handleFormSubmit(e) {
         let isValid = true;
-
-        // Validate all required fields
         const requiredFields = e.target.querySelectorAll("[required]");
+
         requiredFields.forEach((field) => {
-            if (!this.validateField(field)) {
+            let fieldValid;
+            if (field.name.includes("max_students")) {
+                fieldValid = this.validateMaxStudentsField(field);
+            } else {
+                fieldValid = this.validateField(field);
+            }
+
+            if (!fieldValid) {
                 isValid = false;
             }
         });
 
-        // Validate that each group has at least one day selected
         const groupContainers = e.target.querySelectorAll(".group-container");
         groupContainers.forEach((container) => {
             const selectedDays =
@@ -282,7 +302,6 @@ class TeacherSettings {
     }
 
     showAlert(message, type = "info") {
-        // Create alert element
         const alert = document.createElement("div");
         alert.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
         alert.style.cssText =
@@ -293,8 +312,6 @@ class TeacherSettings {
         `;
 
         document.body.appendChild(alert);
-
-        // Auto-remove after 5 seconds
         setTimeout(() => {
             if (alert.parentNode) {
                 alert.remove();
@@ -303,7 +320,6 @@ class TeacherSettings {
     }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
     new TeacherSettings();
 });

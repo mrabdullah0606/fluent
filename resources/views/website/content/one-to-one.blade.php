@@ -1,147 +1,155 @@
 @extends('website.master.master')
 @section('title', 'Find-Tutor - FluentAll')
 @section('content')
-<style>
-    .slider-container {
-      width: 300px;
-      position: relative;
-      /*margin: 18px;*/
-    }
+    <style>
+        .slider-container {
+            width: 300px;
+            position: relative;
+            /*margin: 18px;*/
+        }
 
-    .slider-track {
-      position: absolute;
-      height: 5px;
-      background: #ccc;
-      width: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1;
-      border-radius: 5px;
-    }
+        .slider-track {
+            position: absolute;
+            height: 5px;
+            background: #ccc;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+            border-radius: 5px;
+        }
 
-    .range {
-      position: absolute;
-      height: 5px;
-      background: orange;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
-      border-radius: 5px;
-    }
+        .range {
+            position: absolute;
+            height: 5px;
+            background: orange;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            border-radius: 5px;
+        }
 
-    input[type=range] {
-      -webkit-appearance: none;
-      position: absolute;
-      width: 100%;
-      pointer-events: none;
-      background: none;
-      z-index: 3;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+        input[type=range] {
+            -webkit-appearance: none;
+            position: absolute;
+            width: 100%;
+            pointer-events: none;
+            background: none;
+            z-index: 3;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 16px;
-      width: 16px;
-      border-radius: 50%;
-      background: blue;
-      cursor: pointer;
-      pointer-events: auto;
-      position: relative;
-      z-index: 4;
-    }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: blue;
+            cursor: pointer;
+            pointer-events: auto;
+            position: relative;
+            z-index: 4;
+        }
 
-    .range-values {
-      margin-bottom: 30px;
-      margin-top: -17px;
-    }
-  </style>
+        .range-values {
+            margin-bottom: 30px;
+            margin-top: -17px;
+        }
+    </style>
     <main class="flex-grow">
         <div class="container mx-auto px-4 md:px-6 py-8 md:py-12 bg-background">
             <h1 class="text-3xl md:text-4xl font-bold text-foreground text-center mb-8 md:mb-10"
                 style="opacity: 1; transform: none;"><span class="text-gradient-yellow-red">Find Your One-on-One Tutor</span>
             </h1>
-            <form method="GET" action="{{route('one.on.one.tutors')}}">
-            <div class="mb-8 p-4 md:p-6 border border-primary/20 bg-white rounded-xl shadow-lg" style="opacity: 1;">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
-            <!-- Language I Want to Learn -->
-            <div>
-            <label class="text-sm font-medium text-foreground">Language I Want to Learn</label>
-            <div class="mt-1">
-                <select name="learn_language" class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-                    <option value="">Select Language</option>
-                    @foreach($languages as $language)
-                    <option value="{{ $language->name }}" {{ request('learn_language') == $language->name ? 'selected' : '' }}>
-                        {{ $language->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-            </div>
-            <!-- Price Range (Dual Range Slider) -->
-            <div class="slider-container">
-            <div class="range-values">
-            Price Range: $<span id="min-val">0</span> - $<span id="max-val">75</span>
-            </div>
-            <div class="slider-track"></div>
-            <div class="range" id="range"></div>
-            <input type="range" id="minRange" min="0" max="75" value="0" step="1">
-            <input type="range" id="maxRange" min="0" max="75" value="75" step="1">
-            </div>
-            <!-- Tutor Speaks -->
-            <div>
-            <label class="text-sm font-medium text-foreground">Tutor Speaks</label>
-            <div class="mt-1">
-            <select name="speaks" class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-            <option value="">Select Language</option>
-            @foreach($languages as $language)
-            <option value="{{ $language->name }}" {{ request('learn_language') == $language->name ? 'selected' : '' }}>
-                {{ $language->name }}
-            </option>
-            @endforeach
-            </select>
-            </div>
-            </div>
-            <!-- Tutor From -->
-            <div>
-            <label class="text-sm font-medium text-foreground">Tutor From</label>
-            <div class="mt-1">
-             <select name="country" class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-                <option value="">Select Country</option>
-                @foreach($countries as $country)
-                <option value="{{ $country }}" {{ request('country') == $country ? 'selected' : '' }}>
-                    {{ $country }}
-                </option>
-                @endforeach
-            </select>
-            </div>
-            </div>
-            </div>
-            <!-- Search and Buttons -->
-            <div class="mt-6 flex flex-col sm:flex-row gap-4">
-            <div class="relative flex-grow">
-            <svg xmlns="http://www.w3.org/2000/svg"
-            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground"
-            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
-            </svg>
-            <input type="text" name="name" value="{{ request('name') }}"
-            class="pl-10 w-full h-10 rounded-md border bg-background px-3 py-2 text-sm border-input"
-            placeholder="Search by tutor name..." />
-            </div>
-            <button type="submit"
-            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-primary text-primary hover:bg-primary hover:text-white">
-            Apply Filters
-            </button>
-            <a href=""
-            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors border bg-background h-10 px-4 py-2 border-secondary text-secondary hover:bg-secondary hover:text-white">
-            Clear Filters
-            </a>
-            </div>
-            </div>
+            <form method="GET" action="{{ route('one.on.one.tutors') }}">
+                <div class="mb-8 p-4 md:p-6 border border-primary/20 bg-white rounded-xl shadow-lg" style="opacity: 1;">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
+                        <!-- Language I Want to Learn -->
+                        <div>
+                            <label class="text-sm font-medium text-foreground">Language I Want to Learn</label>
+                            <div class="mt-1">
+                                <select name="learn_language"
+                                    class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+                                    <option value="">Select Language</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{ $language->name }}"
+                                            {{ request('learn_language') == $language->name ? 'selected' : '' }}>
+                                            {{ $language->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Price Range (Dual Range Slider) -->
+                        <div class="slider-container">
+                            <div class="range-values">
+                                Price Range: $<span id="min-val">0</span> - $<span id="max-val">75</span>
+                            </div>
+                            <div class="slider-track"></div>
+                            <div class="range" id="range"></div>
+                            <input type="range" id="minRange" min="0" max="75" value="0"
+                                step="1">
+                            <input type="range" id="maxRange" min="0" max="75" value="75"
+                                step="1">
+                        </div>
+                        <!-- Tutor Speaks -->
+                        <div>
+                            <label class="text-sm font-medium text-foreground">Tutor Speaks</label>
+                            <div class="mt-1">
+                                <select name="speaks"
+                                    class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+                                    <option value="">Select Language</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{ $language->name }}"
+                                            {{ request('learn_language') == $language->name ? 'selected' : '' }}>
+                                            {{ $language->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Tutor From -->
+                        <div>
+                            <label class="text-sm font-medium text-foreground">Tutor From</label>
+                            <div class="mt-1">
+                                <select name="country"
+                                    class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+                                    <option value="">Select Country</option>
+                                    @foreach ($countries as $country)
+                                        <option value="{{ $country }}"
+                                            {{ request('country') == $country ? 'selected' : '' }}>
+                                            {{ $country }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Search and Buttons -->
+                    <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                        <div class="relative flex-grow">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground"
+                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.3-4.3"></path>
+                            </svg>
+                            <input type="text" name="name" value="{{ request('name') }}"
+                                class="pl-10 w-full h-10 rounded-md border bg-background px-3 py-2 text-sm border-input"
+                                placeholder="Search by tutor name..." />
+                        </div>
+                        <button type="submit"
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-primary text-primary hover:bg-primary hover:text-white">
+                            Apply Filters
+                        </button>
+                        <a href=""
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors border bg-background h-10 px-4 py-2 border-secondary text-secondary hover:bg-secondary hover:text-white">
+                            Clear Filters
+                        </a>
+                    </div>
+                </div>
             </form>
 
 
@@ -152,12 +160,11 @@
                         style="opacity: 1; transform: none;">
                         <div class="md:w-1/3 flex flex-col items-center text-center mb-4 md:mb-0">
                             @if ($teacher->teacherProfile && $teacher->teacherProfile->profile_image)
-                            <img
-                            class="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover mb-3 border-4 border-primary shadow-md"
-                            alt="{{ $teacher->name }}"
-                            src="{{ asset('storage/' . $teacher->teacherProfile->profile_image) }}">
+                                <img class="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover mb-3 border-4 border-primary shadow-md"
+                                    alt="{{ $teacher->name }}"
+                                    src="{{ asset('storage/' . $teacher->teacherProfile->profile_image) }}">
                             @else
-                            <div class="text-gray-500 text-sm">No image updated</div>
+                                <div class="text-gray-500 text-sm">No image updated</div>
                             @endif
 
                             <h3 class="text-xl font-bold text-foreground mb-1">{{ $teacher->name }}</h3>
@@ -176,23 +183,24 @@
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4 fill-current">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 fill-current">
                                     <polygon
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4 fill-current">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 fill-current">
                                     <polygon
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4" style="clip-path: inset(0px 50% 0px 0px);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"
+                                    style="clip-path: inset(0px 50% 0px 0px);">
                                     <polygon
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
@@ -200,9 +208,9 @@
                                 <span class="ml-1.5 text-muted-foreground text-xs">(120 reviews)</span>
                             </div>
                             <p class="text-secondary font-semibold text-md mb-0.5"><svg xmlns="http://www.w3.org/2000/svg"
-                                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    class="inline h-4 w-4 mr-0.5">
+                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="inline h-4 w-4 mr-0.5">
                                     <line x1="12" x2="12" y1="2" y2="22"></line>
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>{{ $teacher->teacherProfile->rate_per_hour ?? 'N/A' }}</p>
@@ -215,18 +223,29 @@
                             </button>
                         </div>
                         <div class="md:w-2/3">
-                            <p class="text-muted-foreground text-sm leading-relaxed mb-3 line-clamp-3">{{ $teacher->teacherProfile->headline ?? 'N/A' }}</p>
+                            <p class="text-muted-foreground text-sm leading-relaxed mb-3 line-clamp-3">
+                                {{ $teacher->teacherProfile->headline ?? 'N/A' }}</p>
                             <div class="text-xs space-y-1 mb-3">
-                                <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="inline h-3.5 w-3.5 mr-1 text-primary">
+                                <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="inline h-3.5 w-3.5 mr-1 text-primary">
                                         <path d="m5 8 6 6"></path>
                                         <path d="m4 14 6-6 2-3"></path>
                                         <path d="M2 5h12"></path>
                                         <path d="M7 2h1"></path>
                                         <path d="m22 22-5-10-5 10"></path>
                                         <path d="M14 18h6"></path>
-                                    </svg> Teaches: {{ $teacher->teacherProfile->teaches ?? 'N/A' }}</p>
+
+
+                                    </svg>
+
+                                    {{-- Teaches: {{ implode(', ', $teacherLanguages->teaches) ?: 'N/A' }} --}}
+                                    Teaches:
+                                    {{ !empty($teacher->teaches_names) ? implode(', ', $teacher->teaches_names) : 'N/A' }}
+
+
+                                </p>
                                 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
@@ -270,38 +289,38 @@
             </div>
         </div>
     </main>
- <script>
-  const minRange = document.getElementById('minRange');
-  const maxRange = document.getElementById('maxRange');
-  const range = document.getElementById('range');
-  const minValText = document.getElementById('min-val');
-  const maxValText = document.getElementById('max-val');
+    <script>
+        const minRange = document.getElementById('minRange');
+        const maxRange = document.getElementById('maxRange');
+        const range = document.getElementById('range');
+        const minValText = document.getElementById('min-val');
+        const maxValText = document.getElementById('max-val');
 
-  function updateRange() {
-    const min = parseInt(minRange.value);
-    const max = parseInt(maxRange.value);
+        function updateRange() {
+            const min = parseInt(minRange.value);
+            const max = parseInt(maxRange.value);
 
-    if (min > max - 1) {
-      minRange.value = max - 1;
-    }
-    if (max < min + 1) {
-      maxRange.value = min + 1;
-    }
+            if (min > max - 1) {
+                minRange.value = max - 1;
+            }
+            if (max < min + 1) {
+                maxRange.value = min + 1;
+            }
 
-    const percent1 = (minRange.value / 75) * 100;
-    const percent2 = (maxRange.value / 75) * 100;
+            const percent1 = (minRange.value / 75) * 100;
+            const percent2 = (maxRange.value / 75) * 100;
 
-    range.style.left = percent1 + "%";
-    range.style.width = (percent2 - percent1) + "%";
+            range.style.left = percent1 + "%";
+            range.style.width = (percent2 - percent1) + "%";
 
-    minValText.textContent = minRange.value;
-    maxValText.textContent = maxRange.value;
-  }
+            minValText.textContent = minRange.value;
+            maxValText.textContent = maxRange.value;
+        }
 
-  minRange.addEventListener('input', updateRange);
-  maxRange.addEventListener('input', updateRange);
+        minRange.addEventListener('input', updateRange);
+        maxRange.addEventListener('input', updateRange);
 
-  updateRange(); // Initialize
-</script>
+        updateRange(); // Initialize
+    </script>
 
 @endsection

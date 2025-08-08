@@ -261,29 +261,23 @@
                     <div class="time-picker-group mb-4">
                         <div class="row g-3">
                             <!-- Start Time -->
-                            <div class="col-6">
+                            <div class="col-12">
                                 <label class="form-label fw-medium">Start Time</label>
-                                <div class="d-flex gap-2">
-                                    <input type="time" class="form-control" id="startTime" value="08:00">
-                                    <select class="form-select" id="startAmPm" style="max-width: 80px;">
-                                        <option value="am">AM</option>
-                                        <option value="pm">PM</option>
-                                    </select>
-                                </div>
+                                <input type="time" class="form-control" id="startTime" value="08:00">
                             </div>
 
                             <!-- End Time -->
-                            <div class="col-6">
+                            <div class="col-12">
                                 <label class="form-label fw-medium">End Time</label>
-                                <div class="d-flex gap-2">
-                                    <input type="time" class="form-control" id="endTime" value="17:00">
-                                    <select class="form-select" id="endAmPm" style="max-width: 80px;">
-                                        <option value="am">AM</option>
-                                        <option value="pm" selected>PM</option>
-                                    </select>
-                                </div>
+                                <input type="time" class="form-control" id="endTime" value="17:00">
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Time Preview -->
+                    <div class="alert alert-info mb-3" id="timePreview">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <span id="previewText">Selected time: 8:00 AM to 5:00 PM</span>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
@@ -298,6 +292,7 @@
 
     <!-- Alert Container -->
     <div id="alertContainer"></div>
+
     <script>
         const API_BASE = '/teacher/availability';
         let currentDate = new Date();
@@ -306,6 +301,7 @@
         let monthlyAvailabilities = {};
         let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
         let modalInstance = null;
+
         if (currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear()) {
             selectedDate = today.getDate();
         }
@@ -317,6 +313,7 @@
 
         const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+        // Fixed modal functions
         function openAddTimeSlotsModal() {
             try {
                 const modalElement = document.getElementById('addTimeSlotsModal');
@@ -366,8 +363,6 @@
                     modalElement.setAttribute('aria-hidden', 'true');
                     modalElement.removeAttribute('aria-modal');
                 }
-
-                // Reset form
                 resetModalForm();
             } catch (error) {
                 console.error('Error cleaning up modal:', error);
@@ -378,19 +373,26 @@
             try {
                 const startTime = document.getElementById('startTime');
                 const endTime = document.getElementById('endTime');
-                const startAmPm = document.getElementById('startAmPm');
-                const endAmPm = document.getElementById('endAmPm');
                 const addBtn = document.getElementById('addSlotsBtn');
 
-                if (startTime) startTime.value = '08:00';
-                if (endTime) endTime.value = '17:00';
-                if (startAmPm) startAmPm.value = 'am';
-                if (endAmPm) endAmPm.value = 'pm';
+                if (startTime) {
+                    startTime.value = '08:00';
+                    startTime.removeEventListener('change', updateTimePreview);
+                    startTime.addEventListener('change', updateTimePreview);
+                }
+                if (endTime) {
+                    endTime.value = '17:00';
+                    endTime.removeEventListener('change', updateTimePreview);
+                    endTime.addEventListener('change', updateTimePreview);
+                }
 
                 if (addBtn) {
                     addBtn.innerHTML = '<i class="fas fa-plus me-2"></i>Add to Calendar';
                     addBtn.disabled = false;
                 }
+
+                // Update preview with default values
+                updateTimePreview();
             } catch (error) {
                 console.error('Error resetting form:', error);
             }
@@ -406,12 +408,12 @@
 
             const alertId = 'alert-' + Date.now();
             const alertHTML = `
-                <div class="alert alert-${type} alert-dismissible fade show alert-floating" role="alert" id="${alertId}">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
+            <div class="alert alert-${type} alert-dismissible fade show alert-floating" role="alert" id="${alertId}">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
 
             alertContainer.insertAdjacentHTML('beforeend', alertHTML);
 
@@ -428,6 +430,52 @@
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+
+        // Function to format time for display (24-hour to 12-hour)
+        function formatTimeForDisplay(time24) {
+            if (!time24) return '';
+
+            try {
+                const [hours, minutes] = time24.split(':');
+                let hour = parseInt(hours);
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+
+                if (hour === 0) {
+                    hour = 12;
+                } else if (hour > 12) {
+                    hour = hour - 12;
+                }
+
+                return `${hour}:${minutes} ${ampm}`;
+            } catch (error) {
+                console.error('Error formatting time:', error);
+                return time24;
+            }
+        }
+
+        // Function to update time preview
+        function updateTimePreview() {
+            try {
+                const startTimeInput = document.getElementById('startTime');
+                const endTimeInput = document.getElementById('endTime');
+                const previewText = document.getElementById('previewText');
+
+                if (!startTimeInput || !endTimeInput || !previewText) {
+                    return;
+                }
+
+                const startTime = startTimeInput.value;
+                const endTime = endTimeInput.value;
+
+                if (startTime && endTime) {
+                    const startDisplay = formatTimeForDisplay(startTime);
+                    const endDisplay = formatTimeForDisplay(endTime);
+                    previewText.textContent = `Selected time: ${startDisplay} to ${endDisplay}`;
+                }
+            } catch (error) {
+                console.error('Error updating preview:', error);
+            }
         }
 
         // Real API Functions
@@ -466,7 +514,6 @@
                         const errorData = JSON.parse(errorText);
                         errorMessage = errorData.message || errorData.error || errorMessage;
 
-                        // Handle validation errors
                         if (errorData.errors) {
                             const validationErrors = Object.values(errorData.errors).flat();
                             errorMessage = validationErrors.join(', ');
@@ -497,7 +544,6 @@
                 currentMonthElement.textContent = `${monthNames[month]} ${year}`;
             }
 
-            // Load monthly availabilities
             await loadMonthlyAvailabilities(year, month + 1);
 
             const firstDay = new Date(year, month, 1).getDay();
@@ -522,7 +568,6 @@
                         const hasAvailability = monthlyAvailabilities[dateKey] && monthlyAvailabilities[dateKey]
                             .length > 0;
 
-                        // Check if date is in the past
                         const currentDateObj = new Date(year, month, dayCount);
                         const todayObj = new Date();
                         todayObj.setHours(0, 0, 0, 0);
@@ -581,7 +626,6 @@
                 return;
             }
 
-            // Check if the selected date is in the past
             const selectedDateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), date);
             const todayObj = new Date();
             todayObj.setHours(0, 0, 0, 0);
@@ -626,7 +670,6 @@
                 return;
             }
 
-            // Get or create loader and no slots message elements
             let loader = document.getElementById('slotsLoader');
             let noSlotsMessage = document.getElementById('noSlotsMessage');
 
@@ -636,10 +679,10 @@
                 loader.className = 'text-center py-4';
                 loader.style.display = 'none';
                 loader.innerHTML = `
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                `;
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            `;
                 container.appendChild(loader);
             }
 
@@ -652,7 +695,6 @@
                 container.appendChild(noSlotsMessage);
             }
 
-            // Clear container except for loader and no slots message
             Array.from(container.children).forEach(child => {
                 if (child.id !== 'slotsLoader' && child.id !== 'noSlotsMessage') {
                     child.remove();
@@ -674,7 +716,6 @@
 
                 console.log('Slots response:', response);
 
-                // Handle different response structures
                 let slots = [];
                 if (response.slots) {
                     slots = response.slots;
@@ -691,12 +732,10 @@
                     return;
                 }
 
-                // Create slots container
                 const slotsWrapper = document.createElement('div');
                 slotsWrapper.className = 'time-slots-wrapper';
 
                 slots.forEach((slot, index) => {
-                    // Handle different slot data structures
                     const slotId = slot.id || slot.slot_id || index;
                     const isAvailable = slot.is_available !== undefined ? slot.is_available :
                         slot.available !== undefined ? slot.available : true;
@@ -713,14 +752,14 @@
                         `time-slot d-flex justify-content-between align-items-center ${!isAvailable ? 'opacity-50' : ''}`;
                     slotElement.id = `slot-${slotId}`;
                     slotElement.innerHTML = `
-                        <div class="d-flex align-items-center">
-                            <i class="${statusIcon} me-2"></i>
-                            <span class="fw-medium">${timeRange}${statusText}</span>
-                        </div>
-                        <button class="btn-remove" onclick="removeTimeSlot(${slotId})" title="Remove this time slot">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    `;
+                    <div class="d-flex align-items-center">
+                        <i class="${statusIcon} me-2"></i>
+                        <span class="fw-medium">${timeRange}${statusText}</span>
+                    </div>
+                    <button class="btn-remove" onclick="removeTimeSlot(${slotId})" title="Remove this time slot">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
 
                     slotsWrapper.appendChild(slotElement);
                 });
@@ -736,94 +775,7 @@
             }
         }
 
-        // async function addTimeSlots() {
-        //     const addBtn = document.getElementById('addSlotsBtn');
-        //     if (!addBtn) {
-        //         console.error('Add slots button not found');
-        //         return;
-        //     }
-
-        //     const originalText = addBtn.innerHTML;
-
-        //     try {
-        //         addBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
-        //         addBtn.disabled = true;
-
-        //         const startTime = document.getElementById('startTime')?.value;
-        //         const endTime = document.getElementById('endTime')?.value;
-        //         const startAmPm = document.getElementById('startAmPm')?.value;
-        //         const endAmPm = document.getElementById('endAmPm')?.value;
-
-        //         if (!startTime || !endTime || !startAmPm || !endAmPm) {
-        //             throw new Error('Please fill in all time fields');
-        //         }
-
-        //         // Validate time range
-        //         const startHour = parseInt(startTime.split(':')[0]);
-        //         const endHour = parseInt(endTime.split(':')[0]);
-
-        //         // Convert to 24-hour format for comparison
-        //         let start24 = startHour;
-        //         let end24 = endHour;
-
-        //         if (startAmPm === 'pm' && startHour !== 12) start24 += 12;
-        //         if (startAmPm === 'am' && startHour === 12) start24 = 0;
-        //         if (endAmPm === 'pm' && endHour !== 12) end24 += 12;
-        //         if (endAmPm === 'am' && endHour === 12) end24 = 0;
-
-        //         if (start24 >= end24) {
-        //             throw new Error('End time must be after start time');
-        //         }
-
-        //         const selectedDateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), selectedDate);
-        //         const dateString = formatDate(selectedDateObj);
-
-        //         console.log('Submitting time slots:', {
-        //             date: dateString,
-        //             start_time: startTime,
-        //             end_time: endTime,
-        //             start_ampm: startAmPm,
-        //             end_ampm: endAmPm
-        //         });
-
-        //         const response = await apiRequest(`${API_BASE}/store`, {
-        //             method: 'POST',
-        //             body: JSON.stringify({
-        //                 date: dateString,
-        //                 start_time: startTime,
-        //                 end_time: endTime,
-        //                 start_ampm: startAmPm,
-        //                 end_ampm: endAmPm
-        //             })
-        //         });
-
-        //         console.log('Add slots response:', response);
-
-        //         // Handle different response structures
-        //         let slotsAdded = response.slots_added || response.count || response.data?.length || 0;
-        //         if (response.message && response.message.includes('added')) {
-        //             slotsAdded = 'multiple';
-        //         }
-
-        //         showAlert(`Successfully added ${slotsAdded} time slots!`, 'success');
-
-        //         // Close modal properly
-        //         closeModal();
-
-        //         // Refresh displays with a small delay to ensure modal is closed
-        //         setTimeout(async () => {
-        //             await displayTimeSlots();
-        //             await generateCalendar();
-        //         }, 300);
-
-        //     } catch (error) {
-        //         console.error('Error adding time slots:', error);
-        //         showAlert('Error adding time slots: ' + error.message, 'danger');
-        //     } finally {
-        //         addBtn.innerHTML = originalText;
-        //         addBtn.disabled = false;
-        //     }
-        // }
+        // Fixed addTimeSlots function
         async function addTimeSlots() {
             const addBtn = document.getElementById('addSlotsBtn');
             if (!addBtn) {
@@ -837,41 +789,27 @@
                 addBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
                 addBtn.disabled = true;
 
-                // Get values from the form fields
                 const startTimeInput = document.getElementById('startTime');
                 const endTimeInput = document.getElementById('endTime');
-                const startAmPmSelect = document.getElementById('startAmPm');
-                const endAmPmSelect = document.getElementById('endAmPm');
 
-                // Check if all elements exist before getting their values
-                if (!startTimeInput || !endTimeInput || !startAmPmSelect || !endAmPmSelect) {
-                    throw new Error('One or more time input fields are missing from the DOM.');
+                if (!startTimeInput || !endTimeInput) {
+                    throw new Error('Time input fields are missing from the DOM.');
                 }
 
                 const startTime = startTimeInput.value;
                 const endTime = endTimeInput.value;
-                const startAmPm = startAmPmSelect.value;
-                const endAmPm = endAmPmSelect.value;
 
-                if (!startTime || !endTime || !startAmPm || !endAmPm) {
-                    // This check is a fallback, in case the elements exist but values are empty.
+                if (!startTime || !endTime) {
                     throw new Error('Please ensure all time fields are filled in.');
                 }
 
+                console.log('Form values:', {
+                    startTime,
+                    endTime
+                });
+
                 // Validate time range
-                const startHour = parseInt(startTime.split(':')[0]);
-                const endHour = parseInt(endTime.split(':')[0]);
-
-                // Convert to 24-hour format for comparison
-                let start24 = startHour;
-                let end24 = endHour;
-
-                if (startAmPm === 'pm' && startHour !== 12) start24 += 12;
-                if (startAmPm === 'am' && startHour === 12) start24 = 0; // Midnight case
-                if (endAmPm === 'pm' && endHour !== 12) end24 += 12;
-                if (endAmPm === 'am' && endHour === 12) end24 = 0; // Midnight case for end time
-
-                if (start24 >= end24) {
+                if (startTime >= endTime) {
                     throw new Error('End time must be after start time');
                 }
 
@@ -881,9 +819,7 @@
                 console.log('Submitting time slots:', {
                     date: dateString,
                     start_time: startTime,
-                    end_time: endTime,
-                    start_ampm: startAmPm,
-                    end_ampm: endAmPm
+                    end_time: endTime
                 });
 
                 const response = await apiRequest(`${API_BASE}/store`, {
@@ -891,9 +827,7 @@
                     body: JSON.stringify({
                         date: dateString,
                         start_time: startTime,
-                        end_time: endTime,
-                        start_ampm: startAmPm,
-                        end_ampm: endAmPm
+                        end_time: endTime
                     })
                 });
 
@@ -915,12 +849,10 @@
                 console.error('Error adding time slots:', error);
                 showAlert('Error adding time slots: ' + error.message, 'danger');
             } finally {
-                // Ensure the button is re-enabled and text is restored even if an error occurs
                 addBtn.innerHTML = originalText;
                 addBtn.disabled = false;
             }
         }
-
 
         async function removeTimeSlot(slotId) {
             if (!confirm('Are you sure you want to remove this time slot?')) {
@@ -947,7 +879,7 @@
             const monthName = monthNames[selectedDateObj.getMonth()];
 
             if (!confirm(
-                    `Are you sure you want to mark ${dayName}, ${monthName} ${selectedDate} as unavailable? This will remove all existing time slots for this day.`
+                    `Are you sure you want to mark ${dayName}, ${monthName} ${selectedDate} as unavailable? This will permanently remove all existing time slots for this day.`
                 )) {
                 return;
             }
@@ -955,14 +887,19 @@
             try {
                 const dateString = formatDate(selectedDateObj);
 
-                await apiRequest(`${API_BASE}/mark-unavailable`, {
+                const response = await apiRequest(`${API_BASE}/mark-unavailable`, {
                     method: 'POST',
                     body: JSON.stringify({
                         date: dateString
                     })
                 });
 
-                showAlert('Day marked as unavailable successfully!', 'success');
+                let message = 'Day marked as unavailable successfully!';
+                if (response.deleted_slots && response.deleted_slots > 0) {
+                    message += ` Removed ${response.deleted_slots} time slot${response.deleted_slots > 1 ? 's' : ''}.`;
+                }
+
+                showAlert(message, 'success');
                 await displayTimeSlots();
                 await generateCalendar();
             } catch (error) {
@@ -976,7 +913,6 @@
             console.log('DOM Content Loaded - Initializing calendar...');
 
             try {
-                // Ensure we start with today's date
                 const today = new Date();
                 currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
                 selectedDate = today.getDate();
@@ -993,7 +929,7 @@
             }
         });
 
-        // Handle modal events to prevent blank screen issues
+        // Handle modal events
         document.addEventListener('hidden.bs.modal', function(event) {
             if (event.target.id === 'addTimeSlotsModal') {
                 cleanupModal();
@@ -1010,7 +946,7 @@
             }
         });
 
-        // Prevent form submission on enter key in modal
+        // Handle enter key in modal
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
                 const modal = document.getElementById('addTimeSlotsModal');

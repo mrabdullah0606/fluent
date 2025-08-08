@@ -71,8 +71,15 @@
                     {{-- Languages You Teach --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
                         <label for="teaches" class="block text-lg font-semibold mb-2">Languages You Teach</label>
-                        <input type="text" id="teaches" name="teaches" class="form-control rounded-md"
-                            placeholder="E.g., English, Spanish" value="{{ old('teaches', $teacher?->teaches) }}">
+                        <select name="teaches[]" id="teaches" class="form-control rounded-md" multiple>
+                            @foreach ($languages as $language)
+                                <option value="{{ $language->id }}"
+                                    {{ in_array($language->id, old('teaches', $teacher?->teaches ?? [])) ? 'selected' : '' }}>
+                                    {{ ucfirst($language->name) }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="text-sm text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple languages</p>
                     </div>
 
                     {{-- Languages You Speak --}}

@@ -13,7 +13,8 @@
                                 class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400"><span
                                     class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white">EP</span></span>
                             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $teacher->name }}</h1>
-                            <p class="text-yellow-600 text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}
+                            <p class="text-yellow-600 text-md mt-1">
+                                {{ $teacher?->teacherProfile?->headline ?? 'No headline added yet' }}
                             </p>
                             <div class="flex items-center mt-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -35,7 +36,7 @@
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
                                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                         <circle cx="12" cy="10" r="3"></circle>
-                                    </svg> From: {{ $teacher?->country ?? 'N/A' }}</div>
+                                    </svg> From: {{ $teacher?->teacherProfile?->country ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -46,7 +47,14 @@
                                         <path d="M7 2h1"></path>
                                         <path d="m22 22-5-10-5 10"></path>
                                         <path d="M14 18h6"></path>
-                                    </svg> Teaches: {{ $teacher?->teaches ?? 'N/A' }}</div>
+                                        @php
+                                            use App\Models\Language;
+                                            $languageNames = Language::whereIn('id', (array) $teacher->teaches)
+                                                ->pluck('name')
+                                                ->toArray();
+                                        @endphp
+
+                                    </svg> Teaches: {{ implode(', ', $languageNames) ?: 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700 col-span-2 sm:col-span-1"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -56,21 +64,21 @@
                                         <path
                                             d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                                         </path>
-                                    </svg> Speaks: {{ $teacher?->speaks ?? 'N/A' }}</div>
+                                    </svg> Speaks: {{ $teacher?->teacherProfile?->speaks ?? 'N/A' }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
                                         <circle cx="12" cy="8" r="6"></circle>
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                    </svg> Experience:{{ $teacher?->experience ?? 'N/A' }}</div>
+                                    </svg> Experience:{{ $teacher?->teacherProfile?->experience ?? 'N/A' }} years</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
                                         <line x1="12" x2="12" y1="2" y2="22"></line>
                                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg>${{ $teacher?->rate_per_hour ?? '0' }}/hour</div>
+                                    </svg>${{ $duration60Rate ?? '0' }}/hour</div>
                             </div>
                             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
                                 <a href="{{ route('tutor.booking', ['id' => $teacher->id]) }}">
@@ -130,7 +138,7 @@
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg> About Me</h2>
                                 <p class="text-gray-600 leading-relaxed whitespace-pre-line">
-                                    {{ $teacher?->about_me ?? 'No information provided yet.' }}
+                                    {{ $teacher?->teacherProfile?->about_me ?? 'No information provided yet.' }}
                                 </p>
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"
@@ -173,82 +181,142 @@
                                 </p>
                             </div>
                         </div>
-                       <div class="md:col-span-1 space-y-8">
-    <div class="bg-red-50 p-6 rounded-xl shadow-md border border-red-200" style="opacity: 1; transform: none;">
-        <h2 class="text-2xl font-semibold text-red-700 mb-4 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-6 w-6 text-red-500">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg> 
-            Lesson Packages
-        </h2>
-        <div class="space-y-4">
-            @if($teacher->lessonPackages && $teacher->lessonPackages->where('is_active', true)->count() > 0)
-                @foreach($teacher->lessonPackages->where('is_active', true) as $package)
-                    @php
-                        // Calculate discount percentage (you can adjust this logic based on your needs)
-                        $basePrice = $teacher->hourly_rate ?? 50; // fallback to 50 if no hourly rate
-                        $totalRegularPrice = $basePrice * $package->number_of_lessons;
-                        $discountPercentage = $totalRegularPrice > 0 ? round((($totalRegularPrice - $package->price) / $totalRegularPrice) * 100) : 0;
-                    @endphp
-                    <div class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
-                        <h3 class="font-semibold text-red-600 text-lg">{{ $package->name }}</h3>
-                        @if($discountPercentage > 0)
-                            <p class="text-sm font-bold text-green-600">Save {{ $discountPercentage }}%</p>
-                        @endif
-                        <div class="text-xs text-gray-600 mb-2">
-                            <p><strong>{{ $package->number_of_lessons }}</strong> lessons</p>
-                            <p><strong>${{ number_format($package->price, 2) }}</strong> total</p>
-                            @if($package->duration_per_lesson)
-                                <p><strong>{{ $package->duration_per_lesson }}</strong> minutes per lesson</p>
-                            @endif
-                        </div>
-                        <ul class="text-xs text-gray-500 space-y-1 my-2">
-                            <li class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg>
-                                Flexible scheduling
-                            </li>
-                            <li class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg>
-                                Personalized learning
-                            </li>
-                        </ul>
-                        <button class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white"
-                            onclick="selectPackage({{ $package->id }}, '{{ $package->name }}', {{ $package->price }}, {{ $package->number_of_lessons }})">
-                            Select Package
-                        </button>
-                    </div>
-                @endforeach
-            @else
-                <div class="border border-red-300 p-4 rounded-lg bg-white text-center">
-                    <p class="text-gray-500 text-sm">No lesson packages available at the moment.</p>
-                </div>
-            @endif
-        </div>
-    </div>
-</div>
+                        <div class="md:col-span-1 space-y-8">
+                            <div class="bg-red-50 p-6 rounded-xl shadow-md border border-red-200"
+                                style="opacity: 1; transform: none;">
+                                <h2 class="text-2xl font-semibold text-red-700 mb-4 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-6 w-6 text-red-500">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                    Lesson Packages
+                                </h2>
+                                <div class="space-y-4">
+                                    @if ($teacher->lessonPackages && $teacher->lessonPackages->where('is_active', true)->count() > 0)
+                                        @foreach ($teacher->lessonPackages->where('is_active', true) as $package)
+                                            @php
+                                                $discountMap = [
+                                                    1 => 5,
+                                                    2 => 10,
+                                                    3 => 20,
+                                                ];
+                                                $discountPercentage = $discountMap[$package->package_number] ?? 0;
+                                                $originalPrice = (float) $package->price;
+                                                $discountedPrice = $originalPrice;
 
-<script>
-function selectPackage(packageId, packageName, price, lessons) {
-    // You can customize this function based on your needs
-    // For example, redirect to checkout or open a modal
-    const url = `/student/checkout?type=package&value=${packageId}&price=${price}&lessons=${lessons}`;
-    window.location.href = url;
-    
-    // Or you could store the selection and show a form
-    // console.log('Selected package:', {packageId, packageName, price, lessons});
-}
-</script>
-<div
-                                        {{-- class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
+                                                if ($discountPercentage > 0) {
+                                                    $discountedPrice =
+                                                        $originalPrice - ($originalPrice * $discountPercentage) / 100;
+                                                }
+                                            @endphp
+                                            <div
+                                                class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
+                                                <h3 class="font-semibold text-red-600 text-lg">{{ $package->name }}</h3>
+
+                                                @if ($discountPercentage > 0)
+                                                    <p class="text-sm font-bold text-green-600">Save
+                                                        {{ $discountPercentage }}%</p>
+                                                @endif
+
+                                                <div class="text-xs text-gray-600 mb-2">
+                                                    <p><strong>{{ $package->number_of_lessons }}</strong> lessons</p>
+                                                    <p>
+                                                        <style>
+                                                            .original-price {
+                                                                text-decoration-line: line-through;
+                                                                color: #888;
+                                                            }
+                                                        </style>
+                                                        @if ($discountPercentage > 0)
+                                                            <span class="text-green-600 font-bold text-base">
+                                                                ${{ number_format($discountedPrice, 2) }}
+                                                            </span>
+                                                            <span
+                                                                class="line-through text-red-500 text-sm ml-2 original-price">
+                                                                ${{ number_format($originalPrice, 2) }}
+                                                            </span>
+                                                        @else
+                                                            <span
+                                                                class="font-semibold text-black text-base line-through original-price">
+                                                                ${{ number_format($originalPrice, 2) }}
+                                                            </span>
+                                                        @endif
+                                                    </p>
+
+                                                    @if ($package->duration_per_lesson)
+                                                        <p><strong>{{ $package->duration_per_lesson }}</strong> minutes per
+                                                            lesson</p>
+                                                    @endif
+                                                </div>
+
+                                                <ul class="text-xs text-gray-500 space-y-1 my-2">
+                                                    <li class="flex items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
+                                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                        </svg>
+                                                        Flexible scheduling
+                                                    </li>
+                                                    <li class="flex items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
+                                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                        </svg>
+                                                        Personalized learning
+                                                    </li>
+                                                </ul>
+
+                                                <button
+                                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white"
+                                                    onclick="selectPackage({{ $package->id }}, '{{ $package->name }}', {{ $discountedPrice }}, {{ $package->number_of_lessons }}, {{ $originalPrice }}, {{ $discountPercentage }})">
+                                                    Select Package
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="border border-red-300 p-4 rounded-lg bg-white text-center">
+                                            <p class="text-gray-500 text-sm">No lesson packages available at the moment.
+                                            </p>
+                                        </div>
+                                    @endif
+                                </div>
+
+                            </div>
+                        </div>
+
+                        {{-- <script>
+                            function selectPackage(packageId, packageName, price, lessons) {
+                                const url = `/student/checkout?type=package&value=${packageId}&price=${price}&lessons=${lessons}`;
+                                window.location.href = url;
+
+                                // Or you could store the selection and show a form
+                                // console.log('Selected package:', {packageId, packageName, price, lessons});
+                            }
+                        </script> --}}
+                        <script>
+                            function selectPackage(packageId, packageName, discountedPrice, lessons, originalPrice = 0, discountPercent = 0) {
+                                const url = `/student/checkout?type=package` +
+                                    `&value=${packageId}` +
+                                    `&price=${discountedPrice}` +
+                                    `&lessons=${lessons}` +
+                                    `&original_price=${originalPrice}` +
+                                    `&discount_percent=${discountPercent}`;
+
+                                window.location.href = url;
+                            }
+                        </script>
+
+                        {{-- <div  class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
                                         <h3 class="font-semibold text-red-600 text-lg">20-Lesson Package</h3>
                                         <p class="text-sm font-bold text-green-600">Save 20%</p>
                                         <ul class="text-xs text-gray-500 space-y-1 my-2">
@@ -270,125 +338,260 @@ function selectPackage(packageId, packageName, price, lessons) {
                                             class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white">Select
                                             Package</button>
                                     </div> --}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-yellow-50 p-6 md:p-8 rounded-xl shadow-md border border-yellow-200 mt-12"
-                        style="opacity: 1; transform: none;">
-                        <h2 class="text-2xl md:text-3xl font-semibold text-yellow-700 mb-6 flex items-center"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="mr-3 h-7 w-7 text-yellow-500">
-                                <polygon
-                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                </polygon>
-                            </svg> Student Reviews (120)</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white p-4 rounded-lg border border-yellow-300"
-                                style="opacity: 1; transform: none;">
-                                <div class="flex justify-between items-start">
-                                    <div class="flex items-center"><span
-                                            class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">J</span></span>
-                                        <div>
-                                            <p class="font-semibold text-gray-800">John D.</p>
-                                            <p class="text-xs text-gray-500">June 1, 2025</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg></div>
-                                </div>
-                                <p class="text-sm text-gray-600 italic mt-3">"Elena is fantastic!"</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg border border-yellow-300"
-                                style="opacity: 1; transform: none;">
-                                <div class="flex justify-between items-start">
-                                    <div class="flex items-center"><span
-                                            class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">A</span></span>
-                                        <div>
-                                            <p class="font-semibold text-gray-800">Anna S.</p>
-                                            <p class="text-xs text-gray-500">May 29, 2025</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-500 fill-yellow-500">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="h-4 w-4 text-yellow-200 fill-yellow-200">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                            </polygon>
-                                        </svg></div>
-                                </div>
-                                <p class="text-sm text-gray-600 italic mt-3">"Good for Russian basics."</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <div class="bg-yellow-50 p-6 md:p-8 rounded-xl shadow-md border border-yellow-200 mt-12"
+            style="opacity: 1; transform: none;">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-semibold text-yellow-700 mb-6 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="mr-3 h-7 w-7 text-yellow-500">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg> Student Reviews ({{ $reviewsCount }})
+                    </h2>
+                </div>
+                <div>
+                    @auth
+                        <button data-bs-toggle="modal" data-bs-target="#writeReviewModal"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors 
+                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                   disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full 
+                   bg-yellow-500 hover:bg-yellow-600 text-white">
+                            Write a Review
+                        </button>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors 
+                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                   disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full 
+                   bg-gray-400 hover:bg-gray-500 text-white">
+                            Login to Write a Review
+                        </a>
+                    @endauth
+                </div>
+            </div>
+
+            {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @foreach ($reviews as $review)
+                    <div class="bg-white p-4 rounded-lg border border-yellow-300" style="opacity: 1; transform: none;">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center"><span
+                                    class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
+                                        class="flex h-full w-full items-center justify-center rounded-full bg-muted">J</span></span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">{{ $review->student->name }}</p>
+                                    <p class="text-xs text-gray-500">{{ $review->created_at->format('F j, Y') }}</p>
+                                </div>
+                            </div>
+                            @php
+                                $rating = $review->rating; // integer from DB, 1–5
+                            @endphp
+
+                            <div class="flex items-center">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="{{ $i <= $rating ? 'currentColor' : 'none' }}"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="h-4 w-4 {{ $i <= $rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300' }}">
+                                        <polygon
+                                            points="12 2 15.09 8.26 22 9.27 
+                             17 14.14 18.18 21.02 
+                             12 17.77 5.82 21.02 
+                             7 14.14 2 9.27 
+                             8.91 8.26 12 2">
+                                        </polygon>
+                                    </svg>
+                                @endfor
+                            </div>
+
+                        </div>
+                        <p class="text-sm text-gray-600 italic mt-3">"{{ $review->comment }}"</p>
+                    </div>
+                @endforeach
+
+            </div> --}}
+            <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                <div class="carousel-inner">
+
+                    @foreach ($reviews->chunk(2) as $chunkIndex => $reviewChunk)
+                        <div class="carousel-item {{ $chunkIndex === 0 ? 'active' : '' }}">
+                            <div class="row justify-content-center">
+                                @foreach ($reviewChunk as $review)
+                                    <div class="col-md-6 mb-3">
+                                        <div class="bg-white p-4 rounded-lg border border-yellow-300 h-100">
+                                            <div class="flex justify-between items-start">
+                                                <div class="flex items-center">
+                                                    <span
+                                                        class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3">
+                                                        <span
+                                                            class="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                                                            {{ strtoupper(substr($review->student->name, 0, 1)) }}
+                                                        </span>
+                                                    </span>
+                                                    <div>
+                                                        <p class="font-semibold text-gray-800">
+                                                            {{ $review->student->name }}</p>
+                                                        <p class="text-xs text-gray-500">
+                                                            {{ $review->created_at->format('F j, Y') }}</p>
+                                                    </div>
+                                                </div>
+
+                                                @php $rating = $review->rating; @endphp
+                                                <div class="flex items-center">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" viewBox="0 0 24 24"
+                                                            fill="{{ $i <= $rating ? 'currentColor' : 'none' }}"
+                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            class="h-4 w-4 {{ $i <= $rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300' }}">
+                                                            <polygon
+                                                                points="12 2 15.09 8.26 22 9.27 
+                                                                 17 14.14 18.18 21.02 
+                                                                 12 17.77 5.82 21.02 
+                                                                 7 14.14 2 9.27 
+                                                                 8.91 8.26 12 2" />
+                                                        </svg>
+                                                    @endfor
+                                                </div>
+                                            </div>
+
+                                            <p class="text-sm text-gray-600 italic mt-3">"{{ $review->comment }}"</p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+
+                </div>
+
+                <!-- Carousel controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-warning rounded-circle p-2" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#reviewsCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-warning rounded-circle p-2" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Write Review Modal -->
+        <!-- Write Review Modal -->
+        <div class="modal fade" id="writeReviewModal" tabindex="-1" aria-labelledby="writeReviewLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-yellow-500 text-white">
+                        <h5 class="modal-title" id="writeReviewLabel">Write a Review</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="reviewForm">
+                            <input type="hidden" id="teacherId" value="{{ $teacher->id }}">
+                            <input type="hidden" id="reviewRating" value="0">
+
+                            <div class="mb-3">
+                                <label class="form-label">Your Rating</label>
+                                <div id="starContainer" class="text-warning fs-4">
+                                    <i class="fa-regular fa-star" data-value="1"></i>
+                                    <i class="fa-regular fa-star" data-value="2"></i>
+                                    <i class="fa-regular fa-star" data-value="3"></i>
+                                    <i class="fa-regular fa-star" data-value="4"></i>
+                                    <i class="fa-regular fa-star" data-value="5"></i>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Comment</label>
+                                <textarea class="form-control" id="reviewComment" rows="3" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-warning w-100">Submit Review</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const stars = document.querySelectorAll("#starContainer i");
+                const ratingInput = document.getElementById("reviewRating");
+
+                stars.forEach(star => {
+                    star.addEventListener("click", function() {
+                        let value = this.getAttribute("data-value");
+                        ratingInput.value = value;
+
+                        stars.forEach(s => {
+                            if (s.getAttribute("data-value") <= value) {
+                                s.classList.remove("fa-regular");
+                                s.classList.add("fa-solid");
+                            } else {
+                                s.classList.remove("fa-solid");
+                                s.classList.add("fa-regular");
+                            }
+                        });
+                    });
+                });
+
+                // Handle form submit with AJAX
+                document.getElementById("reviewForm").addEventListener("submit", function(e) {
+                    e.preventDefault();
+
+                    fetch("{{ route('student.reviews.store') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            },
+                            body: JSON.stringify({
+                                teacher_id: document.getElementById("teacherId").value,
+                                rating: ratingInput.value,
+                                comment: document.getElementById("reviewComment").value
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                alert(data.success);
+                                document.getElementById("reviewForm").reset();
+                                ratingInput.value = 0;
+                                stars.forEach(s => s.classList.replace("fa-solid", "fa-regular"));
+                                var modal = bootstrap.Modal.getInstance(document.getElementById(
+                                    "writeReviewModal"));
+                                modal.hide();
+                            }
+                        })
+                        .catch(err => console.error(err));
+                });
+            });
+        </script>
+
+
+
+        </div>
+        </div>
         </div>
     </main>
 @endsection

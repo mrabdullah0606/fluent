@@ -7,6 +7,7 @@ use App\Models\Career;
 use App\Models\GroupClass;
 use App\Models\Language;
 use App\Models\LessonPackage;
+use App\Models\Review;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,19 +20,39 @@ class HomeController extends Controller
      *
      * @return View
      */
-    function index(): View
+    // function index(): View
+    // {
+    //     $languages = Language::withCount('teachers')->get();
+    //     return view('website.content.index', compact('languages'));
+    // }
+    public function index()
     {
-        $languages = Language::withCount('teachers')->get();
+        $languages = Language::all()->map(function ($language) {
+            $teacherCount = Teacher::whereJsonContains('teaches', (string) $language->id)->count();
+            $language->teachers_count = $teacherCount;
+            return $language;
+        });
+
         return view('website.content.index', compact('languages'));
     }
 
 
+    // public function showByLanguage($languageId): View
+    // {
+    //     $language = Language::findOrFail($languageId);
+
+    //     $teachers = Teacher::with('user')
+    //         ->where('language_id', $languageId)
+    //         ->get();
+
+    //     return view('website.content.language', compact('language', 'teachers'));
+    // }
     public function showByLanguage($languageId): View
     {
         $language = Language::findOrFail($languageId);
 
         $teachers = Teacher::with('user')
-            ->where('language_id', $languageId)
+            ->whereJsonContains('teaches', (string) $languageId)
             ->get();
 
         return view('website.content.language', compact('language', 'teachers'));
@@ -84,9 +105,18 @@ class HomeController extends Controller
 
     public function tutor($id): View
     {
-        $teacher = User::where('id', $id)->where('role', 'teacher')->firstOrFail();
-
-        return view('website.content.tutor', compact('teacher'));
+        $teacher = User::with('teacherSettings', 'teacherProfile')->where('id', $id)->where('role', 'teacher')->firstOrFail();
+        $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
+        // $reviews = Review::where('teacher_id', $id)->with('student')->get();
+        $reviews = Review::with('student')
+            ->where('teacher_id', $teacher->id)
+            ->where('is_approved', true) // ✅ only approved
+            ->latest()
+            ->get();
+        $reviewsCount = $reviews->count();
+        // dd($teacher->toArray(), $duration60Rate);
+        // dd($reviews->toArray());
+        return view('website.content.tutor', compact('teacher', 'duration60Rate', 'reviews', 'reviewsCount'));
     }
 
     public function tutorBooking($id): View
@@ -95,10 +125,12 @@ class HomeController extends Controller
             'teacherSettings',
             'lessonPackages',
             'groupClasses.days',
+            'bookingRules',
         ])
             ->where('id', $id)
             ->where('role', 'teacher')
             ->firstOrFail();
+        // dd($teacher->toArray());
         session(['tutor_id' => $teacher->id]); // store in session
         return view('website.content.tutor-booking', compact('teacher'));
     }
@@ -134,12 +166,15 @@ class HomeController extends Controller
 
     // public function checkout(Request $request)
     // {
-    //     $type = $request->input('type'); // 'duration' or 'package'
-    //     $value = $request->input('value'); // duration in mins OR package_id
-    //     $price = $request->input('price'); // submitted price (optional fallback)
-
+    //     //dd('dd');
+    //     $type = $request->input('type'); // 'duration', 'package', or 'group'
+    //     $value = $request->input('value'); // duration in mins, package_id, or course_id
+    //     $price = $request->input('price'); // fallback price (optional)
+    //     $tutorId = session('tutor_id');
+    //     //dd($tutorId);
     //     $summary = '';
     //     $calculatedPrice = (float) $price;
+    //     $fee = 0;
 
     //     if ($type === 'duration') {
     //         $summary = "{$value}-Minute Session";
@@ -149,67 +184,64 @@ class HomeController extends Controller
     //         $summary = "{$package->number_of_lessons}-Lesson Package";
     //         $calculatedPrice = $package->price;
     //         $fee = round($calculatedPrice * 0.03, 2);
+    //     } elseif ($type === 'group') {
+    //         // Group course checkout
+    //         $courseId = $value;
+    //         $course = GroupClass::with('teacher')->findOrFail($courseId);
+
+    //         $summary = "Group Class: {$course->title} by {$course->teacher->name}";
+    //         $calculatedPrice = $course->price_per_student;
+    //         $fee = round($calculatedPrice * 0.03, 2);
     //     }
 
     //     $total = round($calculatedPrice + $fee, 2);
 
-
-    //     return view('website.content.checkout', compact('summary', 'calculatedPrice', 'fee', 'total'));
+    //     return view('website.content.checkout', compact('type', 'summary', 'calculatedPrice', 'fee', 'total'));
     // }
-    public function checkout(Request $request)
-    {
-        //dd('dd');
-        $type = $request->input('type'); // 'duration', 'package', or 'group'
-        $value = $request->input('value'); // duration in mins, package_id, or course_id
-        $price = $request->input('price'); // fallback price (optional)
-        $tutorId = session('tutor_id');
-        //dd($tutorId);
-        $summary = '';
-        $calculatedPrice = (float) $price;
-        $fee = 0;
 
-        if ($type === 'duration') {
-            $summary = "{$value}-Minute Session";
-            $fee = round($calculatedPrice * 0.03, 2);
-        } elseif ($type === 'package') {
-            $package = LessonPackage::find($value);
-            $summary = "{$package->number_of_lessons}-Lesson Package";
-            $calculatedPrice = $package->price;
-            $fee = round($calculatedPrice * 0.03, 2);
-        } elseif ($type === 'group') {
-            // Group course checkout
-            $courseId = $value;
-            $course = GroupClass::with('teacher')->findOrFail($courseId);
-
-            $summary = "Group Class: {$course->title} by {$course->teacher->name}";
-            $calculatedPrice = $course->price_per_student;
-            $fee = round($calculatedPrice * 0.03, 2);
-        }
-
-        $total = round($calculatedPrice + $fee, 2);
-
-        return view('website.content.checkout', compact('type', 'summary', 'calculatedPrice', 'fee', 'total'));
-    }
-
-
-    // public function tutorBooking($id): View
+    // public function checkout(Request $request)
     // {
-    //     // $teacher = User::where('id', $id)->where('role', 'teacher')->firstOrFail();
-    //     $teacher = User::where('id', $id)
-    //         ->where('role', 'teacher')
-    //         ->with([
-    //             'lessonPackages' => function ($q) {
-    //                 $q->where('is_active', true);
-    //             },
-    //             'teacherSettings',
-    //             'groupClasses.days' => function ($q) {
-    //                 $q->orderBy('day'); // optional: if you want to show Monday to Sunday
-    //             }
-    //         ])
-    //         ->firstOrFail();
-    //     // dd($teacher->toArray());
-    //     return view('website.content.tutor-booking', compact('teacher'));
+    //     $type = $request->input('type'); // 'duration', 'package', or 'group'
+    //     $value = $request->input('value'); // duration in mins, package_id, or course_id
+    //     $price = $request->input('price'); // discounted price
+    //     $originalPrice = $request->input('original_price'); // original price
+    //     $discountPercent = $request->input('discount_percent'); // discount %
+
+    //     $tutorId = session('tutor_id');
+    //     $summary = '';
+    //     $calculatedPrice = (float) $price;
+    //     $fee = 0;
+
+    //     if ($type === 'duration') {
+    //         $summary = "{$value}-Minute Session";
+    //         $fee = round($calculatedPrice * 0.03, 2);
+    //     } elseif ($type === 'package') {
+    //         $package = LessonPackage::find($value);
+    //         $summary = "{$package->number_of_lessons}-Lesson Package";
+    //         $calculatedPrice = $package->price;
+    //         $fee = round($calculatedPrice * 0.03, 2);
+    //     } elseif ($type === 'group') {
+    //         $courseId = $value;
+    //         $course = GroupClass::with('teacher')->findOrFail($courseId);
+
+    //         $summary = "Group Class: {$course->title} by {$course->teacher->name}";
+    //         $calculatedPrice = $course->price_per_student;
+    //         $fee = round($calculatedPrice * 0.03, 2);
+    //     }
+
+    //     $total = round($calculatedPrice + $fee, 2);
+
+    //     return view('website.content.checkout', compact(
+    //         'type',
+    //         'summary',
+    //         'calculatedPrice',
+    //         'fee',
+    //         'total',
+    //         'originalPrice',
+    //         'discountPercent'
+    //     ));
     // }
+
 
     /**
      * Find Tutor page.
@@ -217,9 +249,70 @@ class HomeController extends Controller
      * @return View
      * 
      */
+    // public function oneOnOneTutors(Request $request): View
+    // {
+    //     $teacherLanguages = Teacher::select('teaches', 'speaks')->get();
+    //     $countries = [
+    //         'Pakistan',
+    //         'USA',
+    //         'UK',
+    //         'Canada',
+    //         'India',
+    //         'France',
+    //         'Germany',
+    //         'Saudi Arabia',
+    //         'UAE',
+    //         'Australia',
+    //         'Japan',
+    //         'China',
+    //         'Bangladesh',
+    //         'Nepal',
+    //         'Turkey',
+    //         'South Africa',
+    //         'Malaysia',
+    //         'Indonesia',
+    //         'Italy',
+    //         'Spain'
+    //     ];
+    //     $query = User::with('teacherProfile')->where('role', 'teacher');
+
+    //     if ($request->filled('learn_language')) {
+    //         $query->whereHas('teacherProfile', function ($q) use ($request) {
+    //             $q->where('teaches', 'LIKE', '%' . $request->learn_language . '%');
+    //         });
+    //     }
+
+    //     if ($request->filled('speaks')) {
+    //         $query->whereHas('teacherProfile', function ($q) use ($request) {
+    //             $q->where('speaks', 'LIKE', '%' . $request->speaks . '%');
+    //         });
+    //     }
+
+    //     if ($request->filled('country')) {
+    //         $query->whereHas('teacherProfile', function ($q) use ($request) {
+    //             $q->where('country', $request->country);
+    //         });
+    //     }
+
+    //     if ($request->filled('name')) {
+    //         $query->where('name', 'LIKE', '%' . $request->name . '%');
+    //     }
+
+    //     if ($request->filled('min_price') && $request->filled('max_price')) {
+    //         $query->whereHas('teacherProfile', function ($q) use ($request) {
+    //             $q->whereBetween('hourly_rate', [(int)$request->min_price, (int)$request->max_price]);
+    //         });
+    //     }
+
+    //     $teachers = $query->get();
+
+    //     $languages = Language::all(); // If you have a languages table
+    //     dd($teacherLanguages->toArray());
+    //     return view('website.content.one-to-one', compact('teachers', 'languages', 'teacherLanguages', 'countries'));
+    //     //return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
+    // }
     public function oneOnOneTutors(Request $request): View
     {
-        $teacherLanguages = Teacher::select('teaches', 'speaks')->get();
         $countries = [
             'Pakistan',
             'USA',
@@ -242,6 +335,7 @@ class HomeController extends Controller
             'Italy',
             'Spain'
         ];
+
         $query = User::with('teacherProfile')->where('role', 'teacher');
 
         if ($request->filled('learn_language')) {
@@ -272,13 +366,31 @@ class HomeController extends Controller
             });
         }
 
-        $teachers = $query->get();
+        $teachers = $query->get()->map(function ($teacher) {
+            // Default value
+            $teacher->teaches_names = [];
 
-        $languages = Language::all(); // If you have a languages table
+            if ($teacher->teacherProfile && $teacher->teacherProfile->teaches) {
+                // Convert JSON to array if stored as JSON string
+                $teachesIds = is_array($teacher->teacherProfile->teaches)
+                    ? $teacher->teacherProfile->teaches
+                    : json_decode($teacher->teacherProfile->teaches, true);
 
-        return view('website.content.one-to-one', compact('teachers', 'languages', 'teacherLanguages', 'countries'));
-        //return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
+                if (!empty($teachesIds)) {
+                    $teacher->teaches_names = Language::whereIn('id', $teachesIds)->pluck('name')->toArray();
+                }
+            }
+
+            return $teacher;
+        });
+
+
+
+        $languages = Language::all();
+
+        return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
     }
+
 
 
     public function groupLesson(): View

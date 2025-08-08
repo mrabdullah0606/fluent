@@ -260,16 +260,18 @@
     <main class="flex-grow">
         <div class="min-h-screen bg-gray-50 py-8 md:py-12">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-                <button
-                    class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background hover:text-accent-foreground h-10 px-4 py-2 mb-6 border-primary text-primary hover:bg-primary/10">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="mr-2 h-4 w-4">
-                        <path d="m12 19-7-7 7-7"></path>
-                        <path d="M19 12H5"></path>
-                    </svg>
-                    <a href="{{ url()->previous() }}">Back</a>
-                </button>
+                <a href="{{ url()->previous() }}">
+                    <button
+                        class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background hover:text-accent-foreground h-10 px-4 py-2 mb-6 border-primary text-primary hover:bg-primary/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="mr-2 h-4 w-4">
+                            <path d="m12 19-7-7 7-7"></path>
+                            <path d="M19 12H5"></path>
+                        </svg>
+                        Back
+                    </button>
+                </a>
 
                 <div class="text-center mb-8">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -446,25 +448,31 @@
                         </div>
                     </div>
 
-                    <div class="lg:col-span-5" style="opacity: 1;">
-                        <form id="checkoutForm" action="{{ route('student.tutor.checkout') }}" method="GET">
-                            <input type="hidden" name="type" id="checkoutType">
-                            <input type="hidden" name="value" id="checkoutValue">
-                            <input type="hidden" name="price" id="checkoutPrice">
-                            <input type="hidden" name="slot_id" id="checkoutSlotId">
-                            <input type="hidden" name="selected_date" id="checkoutSelectedDate">
-                            <button type="submit" id="checkoutButton" disabled
-                                class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 w-full btn-red text-lg py-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="mr-2 h-5 w-5">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg>
-                                Confirm &amp; Proceed to Checkout
-                            </button>
-                        </form>
-                    </div>
+                    @if (!($teacher->bookingRules->accepting_new_students ?? false))
+                        <div class="lg:col-span-5 text-center">
+                            <p class="text-sm text-red-500">This tutor does not allow bookings at this time.</p>
+                        </div>
+                    @else
+                        <div class="lg:col-span-5" style="opacity: 1;">
+                            <form id="checkoutForm" action="{{ route('student.tutor.checkout') }}" method="GET">
+                                <input type="hidden" name="type" id="checkoutType">
+                                <input type="hidden" name="value" id="checkoutValue">
+                                <input type="hidden" name="price" id="checkoutPrice">
+                                <input type="hidden" name="slot_id" id="checkoutSlotId">
+                                <input type="hidden" name="selected_date" id="checkoutSelectedDate">
+                                <button type="submit" id="checkoutButton" disabled
+                                    class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 w-full btn-red text-lg py-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="mr-2 h-5 w-5">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                    Confirm &amp; Proceed to Checkout
+                                </button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

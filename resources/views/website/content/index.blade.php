@@ -24,7 +24,7 @@
             <div class="mt-4 text-center">
                 <i class="bi bi-chevron-down text-warning fs-2 move-icon"></i>
             </div>
-        </div>
+        </div> 
     </div>
     <div class="container-fluid" style="background-color:#f8f9fa;">
         <div class="container py-5">

@@ -39,15 +39,10 @@
 
                 <div class="col-6 col-md-3">
                     <label class="form-label small" for="group_{{ $index }}_max">Max Students</label>
-                    <select class="form-select" name="groups[{{ $index }}][max_students]"
-                        id="group_{{ $index }}_max" required>
-                        <option value="20"
-                            {{ old('groups.' . $index . '.max_students', $group['max_students'] ?? 20) == 20 ? 'selected' : '' }}>
-                            20</option>
-                        <option value="30"
-                            {{ old('groups.' . $index . '.max_students', $group['max_students'] ?? 20) == 30 ? 'selected' : '' }}>
-                            30</option>
-                    </select>
+                    <input type="number" class="form-control" name="groups[{{ $index }}][max_students]"
+                        id="group_{{ $index }}_max" min="1" max="100"
+                        placeholder="Enter max students"
+                        value="{{ old('groups.' . $index . '.max_students', $group['max_students'] ?? '') }}" required>
                 </div>
 
                 <div class="col-6 col-md-3">
@@ -105,10 +100,8 @@
                 </div>
                 <div class="col-6 col-md-3">
                     <label class="form-label small">Max Students</label>
-                    <select class="form-select" name="groups[0][max_students]" required>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                    </select>
+                    <input type="number" class="form-control" name="groups[0][max_students]" min="1"
+                        max="100" placeholder="Enter max students" required>
                 </div>
                 <div class="col-6 col-md-3">
                     <label class="form-label small">Price per Student ($)</label>

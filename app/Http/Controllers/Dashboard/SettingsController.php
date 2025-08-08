@@ -16,20 +16,14 @@ class SettingsController extends Controller
     public function index()
     {
         $teacher = Auth::user();
-
-        // Get existing settings
         $settings = TeacherSetting::where('teacher_id', $teacher->id)
             ->pluck('value', 'key')
             ->toArray();
-
-        // Get existing packages
         $packages = LessonPackage::where('teacher_id', $teacher->id)
             ->orderBy('id')
             ->get()
             ->keyBy('package_number')
             ->toArray();
-
-        // Get existing groups
         $groups = GroupClass::where('teacher_id', $teacher->id)
             ->with('days')
             ->get()
@@ -55,13 +49,8 @@ class SettingsController extends Controller
 
             $teacher = Auth::user();
 
-            // Update individual lesson pricing
             $this->updateIndividualPricing($teacher->id, $request->validated());
-
-            // Update lesson packages
             $this->updateLessonPackages($teacher->id, $request->validated());
-
-            // Update group classes
             $this->updateGroupClasses($teacher->id, $request->validated());
 
             DB::commit();
@@ -98,7 +87,6 @@ class SettingsController extends Controller
             return;
         }
 
-        // Delete existing packages
         LessonPackage::where('teacher_id', $teacherId)->delete();
 
         foreach ($data['packages'] as $packageNumber => $packageData) {
@@ -121,23 +109,25 @@ class SettingsController extends Controller
         if (!isset($data['groups'])) {
             return;
         }
-
-        // Delete existing groups and their days
         GroupClass::where('teacher_id', $teacherId)->delete();
-
         foreach ($data['groups'] as $groupData) {
             if (!empty($groupData['title'])) {
+                $maxStudents = isset($groupData['max_students']) ? (int) $groupData['max_students'] : 1;
+                if ($maxStudents < 1) {
+                    $maxStudents = 1;
+                } elseif ($maxStudents > 100) {
+                    $maxStudents = 100;
+                }
+
                 $group = GroupClass::create([
                     'teacher_id' => $teacherId,
                     'title' => $groupData['title'],
                     'duration_per_class' => $groupData['duration_per_class'],
                     'lessons_per_week' => $groupData['lessons_per_week'],
-                    'max_students' => $groupData['max_students'],
+                    'max_students' => $maxStudents, // Use validated value
                     'price_per_student' => $groupData['price_per_student'],
                     'is_active' => isset($groupData['is_active']) ? 1 : 0,
                 ]);
-
-                // Save selected days
                 if (isset($groupData['days']) && is_array($groupData['days'])) {
                     foreach ($groupData['days'] as $day) {
                         $group->days()->create(['day' => $day]);

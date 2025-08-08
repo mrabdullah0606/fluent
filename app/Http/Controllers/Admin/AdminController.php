@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\Career;
 use App\Models\Language;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -390,5 +391,44 @@ class AdminController extends Controller
     {
         $applicant->delete();
         return redirect()->route('admin.applicants.index')->with('success', 'Applicant deleted successfully!');
+    }
+
+
+    /* ********************************* REVIEW ********************************* */
+    public function reviewsIndex()
+    {
+        $reviews = Review::with('student', 'teacher')->get();
+        return view('admin.content.review', compact('reviews'));
+    }
+
+    public function approveReview(Request $request, Review $review)
+    {
+        try {
+            $validated = $request->validate([
+                'is_approved' => 'required|boolean'
+            ]);
+
+            $review->update([
+                'is_approved' => $validated['is_approved']
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Review approval status updated successfully.'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error updating review approval: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update review status: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function reviewsDestroy(Review $review)
+    {
+        $review->delete();
+        return redirect()->back()->with('success', 'Review deleted successfully.');
     }
 }

@@ -109,65 +109,67 @@ class TeacherController extends Controller
         $languages = Language::all();
         return view('teacher.content.profile.edit', compact('user', 'teacher', 'languages'));
     }
-  public function updateProfile(Request $request)
-{
-    $request->validate([
-        'headline'        => 'nullable|string|max:255',
-        'about_me'        => 'nullable|string',
-        'teaches'         => 'nullable|string|max:255',
-        'speaks'          => 'nullable|string|max:255',
-        'country'         => 'nullable|string|max:255',
-        'rate_per_hour'   => 'nullable|numeric|min:0',
-        'hobbies'         => 'nullable|string|max:255',
-        'certifications'  => 'nullable|string|max:255',
-        'experience'      => 'nullable|string|max:255',
-        'teaching_style'  => 'nullable|string|max:255',
-        'profile_image'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'intro_video'     => 'nullable|mimetypes:video/mp4,video/x-m4v,video/quicktime,video/webm|max:51200',
-    ]);
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'name'            => 'required|string|max:255',
+            'headline'        => 'nullable|string|max:255',
+            'about_me'        => 'nullable|string',
+            'teaches'         => 'nullable|array', // Changed to array
+            'teaches.*'       => 'exists:languages,id', // Validate each language ID
+            'speaks'          => 'nullable|string|max:255',
+            'country'         => 'nullable|string|max:255',
+            'rate_per_hour'   => 'nullable|numeric|min:0',
+            'hobbies'         => 'nullable|string|max:255',
+            'certifications'  => 'nullable|string|max:255',
+            'experience'      => 'nullable|string|max:255',
+            'teaching_style'  => 'nullable|string|max:255',
+            'profile_image'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'intro_video'     => 'nullable|mimetypes:video/mp4,video/x-m4v,video/quicktime,video/webm|max:51200',
+        ]);
 
         $user = auth()->user();
         $user->name = $request->name;
         $user->save();
 
-    $teacher = $user->teacherProfile; // Eloquent relation
+        $teacher = $user->teacherProfile;
 
-    $data = [
-        'user_id'        => $user->id,
-        'headline'       => $request->headline,
-        'about_me'       => $request->about_me,
-        'teaches'        => $request->teaches,
-        'speaks'         => $request->speaks,
-        'country'        => $request->country,
-        'rate_per_hour'  => $request->rate_per_hour,
-        'hobbies'        => $request->hobbies,
-        'certifications' => $request->certifications,
-        'experience'     => $request->experience,
-        'teaching_style' => $request->teaching_style,
-    ];
+        $data = [
+            'user_id'        => $user->id,
+            'headline'       => $request->headline,
+            'about_me'       => $request->about_me,
+            'teaches'        => $request->teaches, // Store as array (will be cast to JSON)
+            'speaks'         => $request->speaks,
+            'country'        => $request->country,
+            'rate_per_hour'  => $request->rate_per_hour,
+            'hobbies'        => $request->hobbies,
+            'certifications' => $request->certifications,
+            'experience'     => $request->experience,
+            'teaching_style' => $request->teaching_style,
+        ];
 
-    // ==== Image Upload ====
-    if ($request->hasFile('profile_image')) {
-        $data['profile_image'] = $request->file('profile_image')->store('teacher_images', 'public');
-    } elseif ($teacher) {
-        $data['profile_image'] = $teacher->profile_image;
+        // Image Upload
+        if ($request->hasFile('profile_image')) {
+            $data['profile_image'] = $request->file('profile_image')->store('teacher_images', 'public');
+        } elseif ($teacher) {
+            $data['profile_image'] = $teacher->profile_image;
+        }
+
+        // Video Upload
+        if ($request->hasFile('intro_video')) {
+            $data['intro_video'] = $request->file('intro_video')->store('teacher_videos', 'public');
+        } elseif ($teacher) {
+            $data['intro_video'] = $teacher->intro_video;
+        }
+
+        if ($teacher) {
+            $teacher->update($data);
+        } else {
+            \App\Models\Teacher::create($data);
+        }
+
+        return redirect()->back()->with('success', 'Profile saved successfully.');
     }
-
-    // ==== Video Upload ====
-    if ($request->hasFile('intro_video')) {
-        $data['intro_video'] = $request->file('intro_video')->store('teacher_videos', 'public');
-    } elseif ($teacher) {
-        $data['intro_video'] = $teacher->intro_video;
-    }
-
-    if ($teacher) {
-        $teacher->update($data);
-    } else {
-        \App\Models\Teacher::create($data);
-    }
-
-    return redirect()->back()->with('success', 'Profile saved successfully.');
-}
 
 
 

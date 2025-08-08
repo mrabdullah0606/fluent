@@ -21,14 +21,14 @@ return new class extends Migration
             $table->string('experience')->nullable();
             $table->string('teaching_style')->nullable();
             $table->string('about_me')->nullable();
-            $table->string('teaches')->nullable();
+            $table->json('teaches')->nullable();
             $table->string('speaks')->nullable();
             $table->string('country')->nullable();
             $table->decimal('rate_per_hour', 8, 2)->nullable();
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
             $table->timestamps();
-             $table->string('profile_image')->nullable();
-             $table->string('intro_video')->nullable();;
+            $table->string('profile_image')->nullable();
+            $table->string('intro_video')->nullable();;
         });
     }
 

@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->hasMany(GroupClass::class, 'teacher_id');
     }
 
+    public function bookingRules()
+    {
+        return $this->hasOne(BookingRule::class, 'teacher_id');
+    }
+
 
     // Chat relationships
     public function sentMessages()

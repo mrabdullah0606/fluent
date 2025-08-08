@@ -12,7 +12,7 @@ class RedirectLoginToTeacher
     {
         // Redirect only GET requests to /login
         if ($request->is('login') && $request->method() === 'GET') {
-            return redirect('/teacher/login');
+            return redirect('/student/login');
         }
         // Redirect only GET requests to /register
         if ($request->is('register') && $request->method() === 'GET') {

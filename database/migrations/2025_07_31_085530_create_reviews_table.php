@@ -13,14 +13,18 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('teacher_id')->constrained()->onDelete('cascade');
-            $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->tinyInteger('rating')->unsigned(); // 1 to 5
+            $table->foreignId('teacher_id')
+                ->constrained('users')
+                ->onDelete('cascade');
+            $table->foreignId('student_id')
+                ->constrained('users')
+                ->onDelete('cascade');
+            $table->tinyInteger('rating')->unsigned();
             $table->text('comment');
-            $table->boolean('is_approved')->default(false); // for admin approval
+            $table->boolean('is_approved')->default(false);
             $table->timestamps();
 
-            $table->unique(['teacher_id', 'student_id']); // One review per teacher per student
+            $table->unique(['teacher_id', 'student_id']);
         });
     }
 

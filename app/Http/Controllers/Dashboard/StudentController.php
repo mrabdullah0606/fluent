@@ -9,6 +9,7 @@ use App\Models\Language;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Models\GroupClass;
+use App\Models\LessonPackage;
 use App\Models\ZoomMeeting;
 use App\Models\Payment;
 use App\Models\Review;
@@ -21,54 +22,54 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class StudentController extends Controller
-{   
-     public function index(): Response
 {
-    $student = auth()->user();
+    public function index(): Response
+    {
+        $student = auth()->user();
 
-    // Get all payments made by this student
-    $payments = Payment::where('student_id', $student->id)->get();
+        // Get all payments made by this student
+        $payments = Payment::where('student_id', $student->id)->get();
 
-    $meetingDetails = [];
+        $meetingDetails = [];
 
-    foreach ($payments as $payment) {
-        // Fetch the meetings created by the same teacher and with same meeting_type
-        $zoomMeetings = ZoomMeeting::where('teacher_id', $payment->teacher_id)
-            ->where('meeting_type', $payment->type)
-            ->get();
+        foreach ($payments as $payment) {
+            // Fetch the meetings created by the same teacher and with same meeting_type
+            $zoomMeetings = ZoomMeeting::where('teacher_id', $payment->teacher_id)
+                ->where('meeting_type', $payment->type)
+                ->get();
 
-        foreach ($zoomMeetings as $meeting) {
-            if ($payment->type === 'duration') {
-                $meetingDetails[] = [
-                    'meeting_type' => $payment->type,
-                    'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
-                    'topic' => $meeting->topic,
-                    'start_time' => $meeting->start_time,
-                    'duration' => $meeting->duration,
-                    'join_url' => $meeting->join_url,
-                ];
-            }
+            foreach ($zoomMeetings as $meeting) {
+                if ($payment->type === 'duration') {
+                    $meetingDetails[] = [
+                        'meeting_type' => $payment->type,
+                        'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
+                        'topic' => $meeting->topic,
+                        'start_time' => $meeting->start_time,
+                        'duration' => $meeting->duration,
+                        'join_url' => $meeting->join_url,
+                    ];
+                }
 
-            if ($payment->type === 'group') {
-                // Get the group class title based on teacher_id
-                $groupClass = \App\Models\GroupClass::where('teacher_id', $payment->teacher_id)->first();
-                $groupName = $groupClass ? $groupClass->title : 'Group Class';
+                if ($payment->type === 'group') {
+                    // Get the group class title based on teacher_id
+                    $groupClass = \App\Models\GroupClass::where('teacher_id', $payment->teacher_id)->first();
+                    $groupName = $groupClass ? $groupClass->title : 'Group Class';
 
-                $meetingDetails[] = [
-                    'meeting_type' => $payment->type,
-                    'group_name' => $groupName,
-                    'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
-                    'topic' => $meeting->topic,
-                    'start_time' => $meeting->start_time,
-                    'duration' => $meeting->duration,
-                    'join_url' => $meeting->join_url,
-                ];
+                    $meetingDetails[] = [
+                        'meeting_type' => $payment->type,
+                        'group_name' => $groupName,
+                        'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
+                        'topic' => $meeting->topic,
+                        'start_time' => $meeting->start_time,
+                        'duration' => $meeting->duration,
+                        'join_url' => $meeting->join_url,
+                    ];
+                }
             }
         }
-    }
 
-    return response()->view('student.content.dashboard', compact('student', 'meetingDetails'));
-}
+        return response()->view('student.content.dashboard', compact('student', 'meetingDetails'));
+    }
 
 
     // public function index(): Response
@@ -79,9 +80,9 @@ class StudentController extends Controller
 
     public function addReviews()
     {
-    //$teacher = Teacher::first(); // You can fetch based on logic or selection
-    //return view('student.content.reviews.create', compact('teacher'));
-    return view('student.content.reviews.create'); // Make sure the file is located at /resources/views/student/add-review.blade.php
+        //$teacher = Teacher::first(); // You can fetch based on logic or selection
+        //return view('student.content.reviews.create', compact('teacher'));
+        return view('student.content.reviews.create'); // Make sure the file is located at /resources/views/student/add-review.blade.php
     }
 
     // public function storeReview(Request $request, Teacher $teacher)
@@ -115,6 +116,7 @@ class StudentController extends Controller
 
         return redirect()->back()->with('success', 'Review submitted successfully and is pending approval.');
     }
+
     public function editProfile(): View
     {
         $student = auth()->user(); // logged-in student
@@ -122,59 +124,59 @@ class StudentController extends Controller
 
         return view('student.content.profile.edit', compact('student', 'languages'));
     }
-//     public function publicProfile()
-// {
-//     $student = auth()->user();
-//     return view('student.content.profile.public', compact('student'));
-// }
+    //     public function publicProfile()
+    // {
+    //     $student = auth()->user();
+    //     return view('student.content.profile.public', compact('student'));
+    // }
 
 
-public function updateProfile(Request $request)
-{
-    $user = auth()->user(); // Single variable for user
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user(); // Single variable for user
 
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string|max:255',
-        'langauages_i_can_speak' => 'nullable|numeric|min:0',
-        'hobbies' => 'nullable|string|max:255',
-        'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'langauages_i_can_speak' => 'nullable|numeric|min:0',
+            'hobbies' => 'nullable|string|max:255',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-    // Update User table
-    $user->name = $request->name;
-    $user->save();
+        // Update User table
+        $user->name = $request->name;
+        $user->save();
 
-    // Get related Student profile
-    $studentProfile = $user->studentProfile; // assuming relation: hasOne(Student::class)
+        // Get related Student profile
+        $studentProfile = $user->studentProfile; // assuming relation: hasOne(Student::class)
 
-    $data = [
-        'user_id'                => $user->id,
-        'description'            => $request->description,
-        'langauages_i_can_speak'=> $request->langauages_i_can_speak,
-        'hobbies'                => $request->hobbies,
-    ];
-// dd($data);
+        $data = [
+            'user_id'                => $user->id,
+            'description'            => $request->description,
+            'langauages_i_can_speak' => $request->langauages_i_can_speak,
+            'hobbies'                => $request->hobbies,
+        ];
+        // dd($data);
 
-    // Handle Profile Image
-    if ($request->hasFile('profile_image')) {
-        $imagePath = $request->file('profile_image')->store('student_images', 'public');
-        $data['profile_image'] = $imagePath;
-    } elseif ($studentProfile) {
-        // Keep old image if exists
-        $data['profile_image'] = $studentProfile->profile_image;
+        // Handle Profile Image
+        if ($request->hasFile('profile_image')) {
+            $imagePath = $request->file('profile_image')->store('student_images', 'public');
+            $data['profile_image'] = $imagePath;
+        } elseif ($studentProfile) {
+            // Keep old image if exists
+            $data['profile_image'] = $studentProfile->profile_image;
+        }
+
+        // Update or Create Student Profile
+        if ($studentProfile) {
+            $studentProfile->update($data);
+        } else {
+            \App\Models\Student::create($data);
+        }
+
+        return redirect()->route('student.profile.edit')
+            ->with('success', 'Profile updated successfully!');
     }
-
-    // Update or Create Student Profile
-    if ($studentProfile) {
-        $studentProfile->update($data);
-    } else {
-        \App\Models\Student::create($data);
-    }
-
-    return redirect()->route('student.profile.edit')
-        ->with('success', 'Profile updated successfully!');
-}
 
     function publicProfile(): View
     {
@@ -184,14 +186,16 @@ public function updateProfile(Request $request)
         return view('student.content.profile.public', compact('student', 'languages'));
     }
 
-     public function checkout(Request $request)
+    public function checkout(Request $request)
     {
-        $type = $request->input('type'); // 'duration', 'package', or 'group'
-        $value = $request->input('value'); // duration in mins, package_id, or course_id
-        $price = $request->input('price'); // fallback price (optional)
+        $type = $request->input('type');
+        $value = $request->input('value');
+        $price = $request->input('price');
 
         $summary = '';
-        $calculatedPrice = (float) $price;
+        $calculatedPrice = (float) $price; // Use the passed price (which is discounted)
+        $originalPrice = (float) $request->input('original_price', 0);
+        $discountPercent = (int) $request->input('discount_percent', 0);
         $fee = 0;
 
         if ($type === 'duration') {
@@ -200,13 +204,11 @@ public function updateProfile(Request $request)
         } elseif ($type === 'package') {
             $package = LessonPackage::find($value);
             $summary = "{$package->number_of_lessons}-Lesson Package";
-            $calculatedPrice = $package->price;
+            // Don't override $calculatedPrice - it already contains the discounted price
             $fee = round($calculatedPrice * 0.03, 2);
         } elseif ($type === 'group') {
-            // Group course checkout
             $courseId = $value;
             $course = GroupClass::with('teacher')->findOrFail($courseId);
-
             $summary = "Group Class: {$course->title} by {$course->teacher->name}";
             $calculatedPrice = $course->price_per_student;
             $fee = round($calculatedPrice * 0.03, 2);
@@ -214,17 +216,25 @@ public function updateProfile(Request $request)
 
         $total = round($calculatedPrice + $fee, 2);
 
-        return view('website.content.checkout', compact('type', 'summary', 'calculatedPrice', 'fee', 'total'));
+        return view('student.content.checkout', compact(
+            'type',
+            'summary',
+            'calculatedPrice',
+            'fee',
+            'total',
+            'originalPrice',
+            'discountPercent'
+        ));
     }
 
 
-       public function findTutor(): View
+    public function findTutor(): View
     {
         //dd('test');
         return view('student.content.find-tutor');
     }
 
-     public function oneOnOneTutors(): View
+    public function oneOnOneTutors(): View
     {
         $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
         // dd($teachers->toArray());
@@ -240,4 +250,36 @@ public function updateProfile(Request $request)
     }
 
 
+    /* ************************************************************************** */
+    /*                                   review                                   */
+    /* ************************************************************************** */
+    public function reviewStore(Request $request)
+    {
+        $request->validate([
+            'teacher_id' => 'required|exists:users,id',
+            'rating'     => 'required|integer|min:1|max:5',
+            'comment'    => 'required|string|max:1000',
+        ]);
+
+        // Check if review already exists
+        $exists = Review::where('teacher_id', $request->teacher_id)
+            ->where('student_id', Auth::id())
+            ->exists();
+        if ($exists) {
+            return response()->json(['error' => 'You have already reviewed this teacher.'], 422);
+        }
+
+        $review = Review::create([
+            'teacher_id' => $request->teacher_id,
+            'student_id' => Auth::id(),
+            'rating'     => $request->rating,
+            'comment'    => $request->comment,
+            'is_approved' => false
+        ]);
+
+        return response()->json([
+            'success' => 'Review submitted successfully and is pending approval.',
+            'review'  => $review
+        ]);
+    }
 }
