@@ -431,4 +431,10 @@ class AdminController extends Controller
         $review->delete();
         return redirect()->back()->with('success', 'Review deleted successfully.');
     }
+
+
+    public function customerSupportIndex(): View
+    {
+        return view('admin.content.customer-support');
+    }
 }

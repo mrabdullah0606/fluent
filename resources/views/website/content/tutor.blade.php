@@ -180,6 +180,25 @@
                                     {{ $teacher?->certifications ?? 'No Certifications provided yet.' }}
                                 </p>
                             </div>
+                            <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="mr-2 h-6 w-6 text-yellow-500">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                    </svg> Intro:</h2>
+                                @if ($teacher?->teacherProfile?->intro_video)
+                                    <video class="w-full rounded-md border border-gray-300 mb-3" controls>
+                                        <source src="{{ asset('storage/' . $teacher->teacherProfile->intro_video) }}"
+                                            type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                @else
+                                    <p class="text-gray-600">No introduction video available.</p>
+                                @endif
+                            </div>
                         </div>
                         <div class="md:col-span-1 space-y-8">
                             <div class="bg-red-50 p-6 rounded-xl shadow-md border border-red-200"

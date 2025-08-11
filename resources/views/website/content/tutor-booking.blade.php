@@ -1,5 +1,5 @@
 @extends('website.master.master')
-@section('title', 'Find-Tutor - FluentAll')
+@section('title', 'Book-Tutor - FluentAll')
 @section('content')
     <style>
         .calendar-container {
@@ -203,7 +203,6 @@
             color: #e5e7eb !important;
         }
 
-        /* Enhanced Package Selection Highlighting */
         .package-option {
             transition: all 0.3s ease;
         }
@@ -485,8 +484,8 @@
                 this.selectedDate = null;
                 this.selectedSlot = null;
                 this.today = new Date();
-                this.availabilities = {}; // Store monthly availability data
-                this.currentSlots = []; // Store current date's slots
+                this.availabilities = {};
+                this.currentSlots = [];
 
                 this.monthNames = [
                     'January', 'February', 'March', 'April', 'May', 'June',
@@ -512,7 +511,6 @@
                     this.nextMonth();
                 });
 
-                // Bind slot selection events
                 document.addEventListener('click', (e) => {
                     if (e.target.classList.contains('time-slot-btn')) {
                         this.selectTimeSlot(e.target);
@@ -536,36 +534,32 @@
 
             async selectDate(date) {
                 this.selectedDate = new Date(date);
-                this.selectedSlot = null; // Clear selected slot when date changes
+                this.selectedSlot = null;
                 this.render();
                 await this.loadDateAvailability(date);
                 this.updateCheckoutButton();
             }
 
             selectTimeSlot(slotElement) {
-                // Remove previous selection with enhanced visual feedback
                 document.querySelectorAll('.time-slot-btn').forEach(btn => {
                     btn.classList.remove('selected');
                 });
 
-                // Add selection to clicked slot with enhanced visual feedback
                 slotElement.classList.add('selected');
 
-                // Store selected slot data
                 this.selectedSlot = {
                     id: slotElement.dataset.slotId,
                     time: slotElement.textContent.trim(),
                     date: this.formatDate(this.selectedDate)
                 };
 
-                // Update UI
                 this.updateSelectedTimeDisplay();
                 this.updateCheckoutButton();
             }
 
             async loadMonthlyAvailability() {
                 const year = this.currentDate.getFullYear();
-                const month = this.currentDate.getMonth() + 1; // JavaScript months are 0-indexed
+                const month = this.currentDate.getMonth() + 1;
 
                 try {
                     const response = await fetch(
@@ -582,7 +576,6 @@
             async loadDateAvailability(date) {
                 const formattedDate = this.formatDate(date);
 
-                // Show loading state
                 this.showSlotsLoader(true);
 
                 try {
@@ -638,7 +631,6 @@
             }
 
             isDateDisabled(date) {
-                // Disable past dates
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 return date < today || !this.hasAvailability(date);
@@ -685,8 +677,6 @@
                     dayButton.className = 'day-button';
                     dayButton.textContent = date.getDate();
                     dayButton.type = 'button';
-
-                    // Add classes based on date properties
                     if (!this.isSameMonth(date)) {
                         dayButton.classList.add('outside');
                     }
@@ -700,19 +690,15 @@
                         dayButton.setAttribute('aria-selected', 'true');
                     }
 
-                    // Check if date is disabled or has availability
                     if (this.isDateDisabled(date)) {
                         dayButton.classList.add('disabled');
                         dayButton.disabled = true;
                     } else if (this.hasAvailability(date)) {
                         dayButton.classList.add('has-availability');
-                        // Add a small indicator for available dates
                         const indicator = document.createElement('div');
                         indicator.className = 'availability-indicator';
                         dayButton.appendChild(indicator);
                     }
-
-                    // Add click event only for enabled dates
                     if (!this.isDateDisabled(date)) {
                         dayButton.addEventListener('click', () => {
                             this.selectDate(date);
@@ -778,20 +764,25 @@
                 const checkoutButton = document.getElementById('checkoutButton');
                 const slotIdInput = document.getElementById('checkoutSlotId');
                 const selectedDateInput = document.getElementById('checkoutSelectedDate');
+                const durationSelected = document.querySelector('input[name="duration"]:checked');
+                const packageSelected = document.querySelector('input[name="lesson_package"]:checked');
 
-                // Check if we have both date and slot selected, plus duration/package
-                const hasDurationOrPackage = document.querySelector('input[name="duration"]:checked') ||
-                    document.querySelector('input[name="lesson_package"]:checked');
+                let canCheckout = false;
 
-                if (this.selectedDate && this.selectedSlot && hasDurationOrPackage) {
-                    checkoutButton.disabled = false;
+                if (packageSelected) {
+                    canCheckout = true;
+                    slotIdInput.value = '';
+                    selectedDateInput.value = '';
+                } else if (durationSelected && this.selectedDate && this.selectedSlot) {
+                    canCheckout = true;
                     slotIdInput.value = this.selectedSlot.id;
                     selectedDateInput.value = this.selectedSlot.date;
                 } else {
-                    checkoutButton.disabled = true;
+                    canCheckout = false;
                     slotIdInput.value = '';
                     selectedDateInput.value = '';
                 }
+                checkoutButton.disabled = !canCheckout;
             }
 
             showSlotsLoader(show) {
@@ -828,23 +819,15 @@
                 alertDiv.textContent = message;
 
                 alertContainer.appendChild(alertDiv);
-
-                // Auto remove after 5 seconds
                 setTimeout(() => {
                     alertDiv.remove();
                 }, 5000);
             }
         }
 
-        // Enhanced initialization with teacher ID
         document.addEventListener('DOMContentLoaded', () => {
-            // Get teacher ID from the page (you can pass this from Blade)
             const teacherId = {{ $teacher->id }};
-
-            // Initialize booking calendar
             const calendar = new BookingCalendar(teacherId);
-
-            // Keep existing duration/package selection logic
             const durationPrices = @json($durationPrices);
             const packagePrices = @json($teacher->lessonPackages->pluck('price', 'id'));
 
@@ -857,46 +840,35 @@
             const checkoutValue = document.getElementById('checkoutValue');
             const checkoutPrice = document.getElementById('checkoutPrice');
 
-            // Enhanced Duration Selection with visual feedback
+            packageInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const packageId = this.value;
+                    const price = packagePrices[packageId];
+                    durationInputs.forEach(dur => dur.checked = false);
+                    const packageLabel = this.closest('label').querySelector('h4').textContent;
+                    selectedDurationElem.textContent = packageLabel;
+                    selectedPriceElem.textContent = price ? `${price}` : 'N/A';
+                    checkoutType.value = 'package';
+                    checkoutValue.value = packageId;
+                    checkoutPrice.value = price ?? 0;
+                    calendar.updateSelectedTimeDisplay();
+                    calendar.updateCheckoutButton();
+                });
+            });
+
             durationInputs.forEach(input => {
                 input.addEventListener('change', function() {
                     const minutes = this.value;
                     const key = `duration_${minutes}`;
                     const price = durationPrices[key];
-
-                    // Clear package selection
                     packageInputs.forEach(pkg => pkg.checked = false);
-
                     const label = minutes === '120' ? '2 hours' : minutes + ' minutes';
                     selectedDurationElem.textContent = label;
                     selectedPriceElem.textContent = price ? `${price}` : 'N/A';
-
                     checkoutType.value = 'duration';
                     checkoutValue.value = minutes;
                     checkoutPrice.value = price ?? 0;
-
-                    // Update checkout button state
-                    calendar.updateCheckoutButton();
-                });
-            });
-
-            // Enhanced Package Selection with visual feedback
-            packageInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const packageId = this.value;
-                    const price = packagePrices[packageId];
-
-                    durationInputs.forEach(dur => dur.checked = false);
-
-                    const packageLabel = this.closest('label').querySelector('h4').textContent;
-                    selectedDurationElem.textContent = packageLabel;
-                    selectedPriceElem.textContent = price ? `${price}` : 'N/A';
-
-                    checkoutType.value = 'package';
-                    checkoutValue.value = packageId;
-                    checkoutPrice.value = price ?? 0;
-
-                    // Update checkout button state
+                    calendar.updateSelectedTimeDisplay();
                     calendar.updateCheckoutButton();
                 });
             });

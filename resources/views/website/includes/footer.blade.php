@@ -59,8 +59,26 @@
     </div>
 
     <!-- Floating Chat Button -->
-    <button class="btn btn-warning rounded-circle shadow position-fixed bottom-0 end-0 m-4"
+    {{-- <button class="btn btn-warning rounded-circle shadow position-fixed bottom-0 end-0 m-4"
         style="width:60px; height:60px;">
         <i class="bi bi-chat-dots fs-4 text-dark"></i>
-    </button>
+    </button> --}}
+
+
+    <div id='tawk_684fef7c6b65fa190ea70353'></div>
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {},
+            Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"),
+                s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/684fef7c6b65fa190ea70353/1j2c9ckp2';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
 </footer>

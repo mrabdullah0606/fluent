@@ -21,10 +21,10 @@
         class="nav-link {{ request()->routeIs('admin.careers.*') ? 'active' : '' }}">
         <i class="bi bi-briefcase-fill me-2"></i> Careers Management
     </a>
-    
-    <a href="" class="nav-link"><i class="bi bi-calendar3 me-2"></i> Calendar</a>
-    <a href="" class="nav-link"><i class="bi bi-chat-left-text me-2"></i> Messages</a>
-    <a href="" class="nav-link"><i class="bi bi-eye me-2"></i> Profile</a>
+
+    <a href="{{ route('admin.customer.support') }}" class="nav-link"><i class="bi bi-chat-left-text me-2"></i> Customer
+        Support</a>
+    {{-- <a href="" class="nav-link"><i class="bi bi-eye me-2"></i> Profile</a> --}}
     <a href="javascript:void(0);" class="nav-link text-danger"
         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <i class="bi bi-box-arrow-right me-2"></i> Logout

@@ -231,6 +231,12 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{review}', [AdminController::class, 'reviewsDestroy'])->name('destroy');
         });
         /* ******************************** Career Management End ******************************** */
+
+        /* ******************************** Customer Support ******************************** */
+        Route::prefix('customer-support')->name('admin.customer.')->group(function () {
+            Route::get('/', [AdminController::class, 'customerSupportIndex'])->name('support');
+        });
+        /* ******************************** Customer Support End ******************************** */
     });
 });
 
