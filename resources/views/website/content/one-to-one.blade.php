@@ -213,7 +213,9 @@
                                     stroke-linejoin="round" class="inline h-4 w-4 mr-0.5">
                                     <line x1="12" x2="12" y1="2" y2="22"></line>
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>{{ $teacher->teacherProfile->rate_per_hour ?? 'N/A' }}</p>
+                                </svg>
+                                {{ $teacher->duration_60 ?? 'N/A' }}/hour
+                            </p>
                             <p class="text-primary font-semibold text-sm mb-2">Trial: $5</p>
                             <button
                                 class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 btn-red w-full text-sm py-2">

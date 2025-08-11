@@ -336,7 +336,7 @@ class HomeController extends Controller
             'Spain'
         ];
 
-        $query = User::with('teacherProfile')->where('role', 'teacher');
+        $query = User::with('teacherProfile', 'teacherSettings')->where('role', 'teacher');
 
         if ($request->filled('learn_language')) {
             $query->whereHas('teacherProfile', function ($q) use ($request) {
@@ -367,11 +367,8 @@ class HomeController extends Controller
         }
 
         $teachers = $query->get()->map(function ($teacher) {
-            // Default value
             $teacher->teaches_names = [];
-
             if ($teacher->teacherProfile && $teacher->teacherProfile->teaches) {
-                // Convert JSON to array if stored as JSON string
                 $teachesIds = is_array($teacher->teacherProfile->teaches)
                     ? $teacher->teacherProfile->teaches
                     : json_decode($teacher->teacherProfile->teaches, true);
@@ -380,17 +377,26 @@ class HomeController extends Controller
                     $teacher->teaches_names = Language::whereIn('id', $teachesIds)->pluck('name')->toArray();
                 }
             }
+            $teacher->duration_60 = null;
+            $settings = $teacher->teacherSettings ?? $teacher->teacher_settings ?? null;
+            if ($settings && (is_array($settings) || is_countable($settings)) && count($settings) > 0) {
+                foreach ($settings as $setting) {
+                    if (!$setting) continue;
+                    $key = is_array($setting) ? ($setting['key'] ?? null) : ($setting->key ?? null);
+                    $value = is_array($setting) ? ($setting['value'] ?? null) : ($setting->value ?? null);
+
+                    if ($key === 'duration_60') {
+                        $teacher->duration_60 = $value;
+                        break;
+                    }
+                }
+            }
 
             return $teacher;
         });
-
-
-
         $languages = Language::all();
-
         return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
     }
-
 
 
     public function groupLesson(): View
