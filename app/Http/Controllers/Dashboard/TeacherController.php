@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\ZoomMeeting;
 use App\Models\Payment;
 use App\Models\GroupClass; // assuming you have this model
+use App\Models\TeacherWallet;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -31,6 +32,8 @@ class TeacherController extends Controller
     {
         $teacher = auth()->user();
 
+        $wallet = TeacherWallet::where('teacher_id', $teacher->id)->first();
+        // dd($wallet);
         // Get all Zoom meetings by this teacher, ordered by start_time
         $zoomMeetings = ZoomMeeting::with('group')
             ->where('teacher_id', $teacher->id)
@@ -99,7 +102,7 @@ class TeacherController extends Controller
         \Log::info('Visible Meetings: ' . count($visibleMeetings));
         \Log::info('Hidden Meetings: ' . count($hiddenMeetings));
 
-        return response()->view('teacher.content.dashboard', compact('teacher', 'visibleMeetings', 'hiddenMeetings'));
+        return response()->view('teacher.content.dashboard', compact('teacher', 'visibleMeetings', 'hiddenMeetings', 'wallet'));
     }
 
     public function editProfile(): View

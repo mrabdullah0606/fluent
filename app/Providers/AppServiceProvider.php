@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\WalletService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
@@ -12,7 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(WalletService::class, function ($app) {
+            return new WalletService();
+        });
     }
 
     /**
@@ -21,6 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-          Schema::defaultStringLength(191);
+        Schema::defaultStringLength(191);
     }
 }

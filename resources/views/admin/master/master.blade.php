@@ -32,12 +32,6 @@
     </div>
 @endif
 
-
-    @push('styles')
-        <style>
-
-        </style>
-    @endpush
     <div class="container-fluid">
         <!-- Dashboard Layout Wrapper -->
         <div class="dashboard-container">

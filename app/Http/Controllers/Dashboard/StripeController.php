@@ -1,6 +1,7 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers\Dashboard;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
@@ -8,112 +9,111 @@ use App\Models\Payment;
 use Stripe\Checkout\Session;
 
 class StripeController extends Controller
-{       
+{
     public function create(Request $request)
-{   
-    $tutorId = session('tutor_id');
-    \Stripe\Stripe::setApiKey('sk_test_51R1qO3PJIQTNOZWvvlzloOaq4XLLUKuv2lFl0xrjJ7I2lBeKrBFmEXA6T5uXoRGD1cDS6e1BsVTaNPycW9wfxlHl00fcCmlT4H');
+    {
+        $tutorId = session('tutor_id');
+        \Stripe\Stripe::setApiKey('sk_test_51R1qO3PJIQTNOZWvvlzloOaq4XLLUKuv2lFl0xrjJ7I2lBeKrBFmEXA6T5uXoRGD1cDS6e1BsVTaNPycW9wfxlHl00fcCmlT4H');
 
-    $summary = $request->summary;
-    $basePrice = $request->calculated_price;
-    $fee = $request->fee;
-    $total = $request->total;
-    $paymentMethod = $request->payment;
-    $type = $request->type;
-    //dd($request->all());
-    if ($paymentMethod === 'demo') {
-        return redirect()->route('find.tutor')->with('success', 'Simulated payment successful.');
+        $summary = $request->summary;
+        $basePrice = $request->calculated_price;
+        $fee = $request->fee;
+        $total = $request->total;
+        $paymentMethod = $request->payment;
+        $type = $request->type;
+        //dd($request->all());
+        if ($paymentMethod === 'demo') {
+            return redirect()->route('find.tutor')->with('success', 'Simulated payment successful.');
+        }
+
+        // Stripe expects amounts in cents
+        $lineItems = [[
+            'price_data' => [
+                'currency' => 'usd',
+                'product_data' => [
+                    'name' => $summary,
+                ],
+                'unit_amount' => $total * 100,
+            ],
+            'quantity' => 1,
+        ]];
+
+        $checkoutSession = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            'success_url' => route('student.dashboard'),
+            'cancel_url' => route('student.public.profile'),
+        ]);
+        $this->recordPayment($request); // Record demo payment
+        return redirect($checkoutSession->url);
     }
 
-    // Stripe expects amounts in cents
-    $lineItems = [[
-        'price_data' => [
-            'currency' => 'usd',
-            'product_data' => [
-                'name' => $summary,
-            ],
-            'unit_amount' => $total * 100,
-        ],
-        'quantity' => 1,
-    ]];
+    private function recordPayment(Request $request, $status = 'successful')
+    {
+        Payment::create([
+            'student_id'     => auth()->id(),
+            'teacher_id'     => session('tutor_id'), // replace with dynamic if needed
+            'summary'        => $request->input('summary'),
+            'base_price'     => $request->input('calculated_price'),
+            'fee'            => $request->input('fee'),
+            'total'          => $request->input('total'),
+            'type'           => $request->input('type'),
+            'payment_method' => $request->input('payment'),
+            'status'         => $status,
+        ]);
+    }
 
-    $checkoutSession = \Stripe\Checkout\Session::create([
-        'payment_method_types' => ['card'],
-        'line_items' => $lineItems,
-        'mode' => 'payment',
-        'success_url' => route('student.dashboard'),
-        'cancel_url' => route('student.public.profile'),
-    ]);
-    $this->recordPayment($request); // Record demo payment
-    return redirect($checkoutSession->url);
-}
+    public function handleStripePayment(Request $request)
+    {
+        $studentId = auth()->id();
+        //$courseId = $request->input('course_id'); // pass from form or route
 
-private function recordPayment(Request $request, $status = 'successful')
-{
-    Payment::create([
-        'student_id'     => auth()->id(),
-        'teacher_id'     => session('tutor_id'), // replace with dynamic if needed
-        'summary'        => $request->input('summary'),
-        'base_price'     => $request->input('calculated_price'),
-        'fee'            => $request->input('fee'),
-        'total'          => $request->input('total'),
-        'type'           => $request->input('type'),
-        'payment_method' => $request->input('payment'),
-        'status'         => $status,
-    ]);
-}
+        Payment::create([
+            'student_id'     => $studentId,
+            'teacher_id'     => session('tutor_id'), // replace with dynamic if needed
+            'summary'        => $request->input('summary'),
+            'base_price'     => $request->input('calculated_price'),
+            'fee'            => $request->input('fee'),
+            'total'          => $request->input('total'),
+            'type'           => $request->input('type'),
+            'payment_method' => $request->input('payment'), // stripe or demo
+            'status'         => 'successful', // update accordingly
+        ]);
 
-public function handleStripePayment(Request $request)
-{
-    // Example values, update according to your logic
-    $studentId = auth()->id(); // or get from session
-    //$courseId = $request->input('course_id'); // pass from form or route
-
-    Payment::create([
-        'student_id'     => $studentId,
-        'teacher_id'     => session('tutor_id'), // replace with dynamic if needed
-        'summary'        => $request->input('summary'),
-        'base_price'     => $request->input('calculated_price'),
-        'fee'            => $request->input('fee'),
-        'total'          => $request->input('total'),
-        'type'           => $request->input('type'),
-        'payment_method' => $request->input('payment'), // stripe or demo
-        'status'         => 'successful', // update accordingly
-    ]);
-
-    return redirect()->route('student.dashboard')->with('success', 'Payment recorded successfully.');
-}
+        return redirect()->route('student.dashboard')->with('success', 'Payment recorded successfully.');
+    }
 
 
-//     public function create(Request $request)
-//     {
-//         \Stripe\Stripe::setApiKey('sk_test_51R1qO3PJIQTNOZWvvlzloOaq4XLLUKuv2lFl0xrjJ7I2lBeKrBFmEXA6T5uXoRGD1cDS6e1BsVTaNPycW9wfxlHl00fcCmlT4H');
+    //     public function create(Request $request)
+    //     {
+    //         \Stripe\Stripe::setApiKey('sk_test_51R1qO3PJIQTNOZWvvlzloOaq4XLLUKuv2lFl0xrjJ7I2lBeKrBFmEXA6T5uXoRGD1cDS6e1BsVTaNPycW9wfxlHl00fcCmlT4H');
 
-//         $orderItems = json_decode($request->order_items, true);
-//     $amount = $request->amount; // Should already be in cents
+    //         $orderItems = json_decode($request->order_items, true);
+    //     $amount = $request->amount; // Should already be in cents
 
-//     $lineItems = array_map(function ($item) {
-//         return [
-//             'price_data' => [
-//                 'currency' => 'usd',
-//                 'product_data' => [
-//                     'name' => $item['name'],
-//                 ],
-//             'unit_amount' => $item['price'], // Must be in cents
-//         ],
-//         'quantity' => $item['quantity'],
-//     ];
-// }, $orderItems);
+    //     $lineItems = array_map(function ($item) {
+    //         return [
+    //             'price_data' => [
+    //                 'currency' => 'usd',
+    //                 'product_data' => [
+    //                     'name' => $item['name'],
+    //                 ],
+    //             'unit_amount' => $item['price'], // Must be in cents
+    //         ],
+    //         'quantity' => $item['quantity'],
+    //     ];
+    // }, $orderItems);
 
-//     $checkoutSession = \Stripe\Checkout\Session::create([
-//         'payment_method_types' => ['card'],
-//         'line_items' => $lineItems,
-//         'mode' => 'payment',
-//         'success_url' => route('find.tutor'),
-//         'cancel_url' => route('student.public.profile'),
-//     ]);
+    //     $checkoutSession = \Stripe\Checkout\Session::create([
+    //         'payment_method_types' => ['card'],
+    //         'line_items' => $lineItems,
+    //         'mode' => 'payment',
+    //         'success_url' => route('find.tutor'),
+    //         'cancel_url' => route('student.public.profile'),
+    //     ]);
 
-//     return redirect($checkoutSession->url);
-// }
+    //     return redirect($checkoutSession->url);
+    // }
 
 }

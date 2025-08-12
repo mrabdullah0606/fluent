@@ -24,6 +24,9 @@
 
     <a href="{{ route('admin.customer.support') }}" class="nav-link"><i class="bi bi-chat-left-text me-2"></i> Customer
         Support</a>
+
+    <a href="{{ route('admin.wallet.withdrawals.index') }}" class="nav-link"><i class="bi bi-wallet me-2"></i>
+        Withdrawals Management</a>
     {{-- <a href="" class="nav-link"><i class="bi bi-eye me-2"></i> Profile</a> --}}
     <a href="javascript:void(0);" class="nav-link text-danger"
         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

@@ -16,6 +16,18 @@
                     </svg> My Wallet
                 </h1>
 
+                {{-- Success/Error Messages --}}
+                @if(session('success'))
+                    <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 {{-- Balance Card --}}
                 <div class="mb-8">
                     <div class="rounded-lg border bg-gradient-to-r from-primary to-yellow-500 text-white shadow-lg">
@@ -23,8 +35,18 @@
                             <h3 class="tracking-tight text-lg font-medium">Available Balance</h3>
                         </div>
                         <div class="p-6 pt-0">
-                            <p class="text-5xl font-bold">${{-- {{ number_format($balance, 2) }} --}}</p>
+                            <p class="text-5xl font-bold">${{ number_format($wallet->balance, 2) }}</p>
                             <p class="opacity-80 mt-1">Ready for withdrawal</p>
+                            <div class="mt-4 grid grid-cols-2 gap-4 text-sm opacity-90">
+                                <div>
+                                    <p class="text-xs uppercase tracking-wider">Total Earned</p>
+                                    <p class="text-xl font-semibold">${{ number_format($wallet->total_earned, 2) }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs uppercase tracking-wider">Total Withdrawn</p>
+                                    <p class="text-xl font-semibold">${{ number_format($wallet->total_withdrawn, 2) }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -45,11 +67,61 @@
                                 Choose your preferred method to withdraw your earnings.
                                 You can only withdraw using your connected payment method.
                             </p>
+                            
+                            @if(!$paymentSettings || !$paymentSettings->is_verified)
+                                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+                                    <strong>Warning:</strong> Please configure and verify your payment settings first.
+                                </div>
+                            @endif
+
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <button class="btn-primary" onclick="openModal()">Withdraw via PayPal</button>
-                                <button class="btn-primary" disabled>Withdraw via Payoneer</button>
-                                <button class="btn-primary" disabled>Withdraw via Wise</button>
+                                <button 
+                                    class="btn-primary {{ ($paymentSettings && $paymentSettings->paypal_email) ? '' : 'opacity-50 cursor-not-allowed' }}" 
+                                    onclick="{{ ($paymentSettings && $paymentSettings->paypal_email) ? 'openModal(\'paypal\')' : '' }}"
+                                    {{ ($paymentSettings && $paymentSettings->paypal_email) ? '' : 'disabled' }}>
+                                    Withdraw via PayPal
+                                    @if($paymentSettings && $paymentSettings->paypal_email)
+                                        <span class="block text-xs opacity-75">{{ $paymentSettings->paypal_email }}</span>
+                                    @endif
+                                </button>
+                                
+                                <button 
+                                    class="btn-primary {{ ($paymentSettings && $paymentSettings->payoneer_id) ? '' : 'opacity-50 cursor-not-allowed' }}"
+                                    onclick="{{ ($paymentSettings && $paymentSettings->payoneer_id) ? 'openModal(\'payoneer\')' : '' }}"
+                                    {{ ($paymentSettings && $paymentSettings->payoneer_id) ? '' : 'disabled' }}>
+                                    Withdraw via Payoneer
+                                </button>
+                                
+                                <button 
+                                    class="btn-primary {{ ($paymentSettings && $paymentSettings->wise_account) ? '' : 'opacity-50 cursor-not-allowed' }}"
+                                    onclick="{{ ($paymentSettings && $paymentSettings->wise_account) ? 'openModal(\'wise\')' : '' }}"
+                                    {{ ($paymentSettings && $paymentSettings->wise_account) ? '' : 'disabled' }}>
+                                    Withdraw via Wise
+                                </button>
                             </div>
+
+                            {{-- Recent Withdrawal Requests --}}
+                            @if($wallet->withdrawalRequests()->latest()->limit(3)->exists())
+                                <div class="mt-8">
+                                    <h4 class="text-lg font-semibold mb-3">Recent Withdrawal Requests</h4>
+                                    <div class="space-y-2">
+                                        @foreach($wallet->withdrawalRequests()->latest()->limit(3)->get() as $withdrawal)
+                                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                                <div>
+                                                    <p class="font-medium">${{ number_format($withdrawal->amount, 2) }} via {{ ucfirst($withdrawal->method) }}</p>
+                                                    <p class="text-sm text-gray-600">{{ $withdrawal->created_at->format('M j, Y g:i A') }}</p>
+                                                </div>
+                                                <span class="px-2 py-1 text-xs rounded-full
+                                                    {{ $withdrawal->status === 'completed' ? 'bg-green-100 text-green-800' : 
+                                                       ($withdrawal->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                                        'bg-red-100 text-red-800') }}">
+                                                    {{ ucfirst($withdrawal->status) }}
+                                                </span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -65,29 +137,57 @@
                                             <th class="p-2 border">Description</th>
                                             <th class="p-2 border">Type</th>
                                             <th class="p-2 border">Amount</th>
+                                            <th class="p-2 border">Balance</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($transactions as $txn) --}}
-                                        <tr>
+                                        @forelse($transactions as $txn)
+                                        <tr class="hover:bg-gray-50">
                                             <td class="p-2 border">
-                                                {{-- {{ \Carbon\Carbon::parse($txn->date)->format('F jS, Y') }} --}}
-                                                12-4-12
+                                                {{ $txn->created_at->format('M j, Y') }}
+                                                <br>
+                                                <small class="text-gray-500">{{ $txn->created_at->format('g:i A') }}</small>
                                             </td>
-                                            <td class="p-2 border">{{-- {{ $txn->description }} --}}lesson amount</td>
                                             <td class="p-2 border">
-                                                <span {{-- class="{{ $txn->type == 'Credit' ? 'text-green-600' : 'text-red-600' }}" --}}>
-                                                    {{-- {{ $txn->type }} --}}debit
+                                                {{ $txn->description }}
+                                                @if($txn->payment_id)
+                                                    <br><small class="text-blue-600">Payment #{{ $txn->payment_id }}</small>
+                                                @endif
+                                                @if($txn->withdrawal_id)
+                                                    <br><small class="text-purple-600">Withdrawal #{{ $txn->withdrawal_id }}</small>
+                                                @endif
+                                            </td>
+                                            <td class="p-2 border">
+                                                <span class="px-2 py-1 text-xs rounded-full {{ $txn->type == 'credit' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                    {{ ucfirst($txn->type) }}
                                                 </span>
+                                                <br>
+                                                <small class="text-gray-500">{{ ucfirst($txn->category) }}</small>
                                             </td>
-                                            <td {{-- class="p-2 border font-bold {{ $txn->type == 'Credit' ? 'text-green-600' : 'text-red-600' }}" --}}>
-                                                {{-- ${{ number_format($txn->amount, 2) }} --}}100
+                                            <td class="p-2 border font-bold {{ $txn->type == 'credit' ? 'text-green-600' : 'text-red-600' }}">
+                                                {{ $txn->type == 'credit' ? '+' : '-' }}${{ number_format($txn->amount, 2) }}
+                                            </td>
+                                            <td class="p-2 border text-gray-600">
+                                                ${{ number_format($txn->balance_after, 2) }}
                                             </td>
                                         </tr>
-                                        {{-- @endforeach --}}
+                                        @empty
+                                        <tr>
+                                            <td colspan="5" class="p-4 text-center text-gray-500">
+                                                No transactions found
+                                            </td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
+                            
+                            {{-- Pagination --}}
+                            @if($transactions->hasPages())
+                                <div class="mt-4">
+                                    {{ $transactions->links() }}
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -95,34 +195,164 @@
                     <div id="settings-tab" class="tab-content hidden">
                         <div class="rounded-lg border bg-white shadow-sm p-6">
                             <h3 class="text-2xl font-semibold mb-4">Payment Settings</h3>
-                            <p class="text-muted-foreground">Update or manage your connected accounts (e.g., PayPal email,
-                                Payoneer ID).</p>
-                            {{-- Example settings --}}
-                            <ul class="mt-4 space-y-2 text-sm">
-                                <li><strong>PayPal Email:</strong> itsabdullah@gmail.com{{-- {{ $user->paypal_email ?? 'Not Set' }} --}}</li>
-                                <li><strong>Payoneer ID:</strong> {{-- {{ $user->payoneer_id ?? 'Not Set' }} --}}</li>
-                                <li><strong>Wise Account:</strong> {{-- {{ $user->wise_account ?? 'Not Set' }} --}}</li>
-                            </ul>
+                            
+                            @if(!$paymentSettings)
+                                <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
+                                    <strong>Setup Required:</strong> Configure your payment methods to start receiving withdrawals.
+                                </div>
+                            @endif
+
+                            <form action="{{ route('teacher.wallet.payment-settings') }}" method="POST" class="space-y-6">
+                                @csrf
+                                
+                                {{-- PayPal Settings --}}
+                                <div class="border rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="text-lg font-medium">PayPal</h4>
+                                        @if($paymentSettings && $paymentSettings->paypal_email && $paymentSettings->is_verified)
+                                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Verified</span>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <label for="paypal_email" class="block text-sm font-medium mb-1">PayPal Email</label>
+                                        <input 
+                                            type="email" 
+                                            name="paypal_email" 
+                                            id="paypal_email" 
+                                            value="{{ $paymentSettings->paypal_email ?? old('paypal_email') }}"
+                                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-500"
+                                            placeholder="your-paypal@email.com"
+                                        >
+                                        @error('paypal_email')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Payoneer Settings --}}
+                                <div class="border rounded-lg p-4">
+                                    <h4 class="text-lg font-medium mb-3">Payoneer</h4>
+                                    <div>
+                                        <label for="payoneer_id" class="block text-sm font-medium mb-1">Payoneer ID</label>
+                                        <input 
+                                            type="text" 
+                                            name="payoneer_id" 
+                                            id="payoneer_id" 
+                                            value="{{ $paymentSettings->payoneer_id ?? old('payoneer_id') }}"
+                                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-500"
+                                            placeholder="Enter your Payoneer ID"
+                                        >
+                                        @error('payoneer_id')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Wise Settings --}}
+                                <div class="border rounded-lg p-4">
+                                    <h4 class="text-lg font-medium mb-3">Wise (formerly TransferWise)</h4>
+                                    <div>
+                                        <label for="wise_account" class="block text-sm font-medium mb-1">Wise Account Email</label>
+                                        <input 
+                                            type="email" 
+                                            name="wise_account" 
+                                            id="wise_account" 
+                                            value="{{ $paymentSettings->wise_account ?? old('wise_account') }}"
+                                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-500"
+                                            placeholder="your-wise@email.com"
+                                        >
+                                        @error('wise_account')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Preferred Method --}}
+                                <div class="border rounded-lg p-4">
+                                    <h4 class="text-lg font-medium mb-3">Preferred Withdrawal Method</h4>
+                                    <select 
+                                        name="preferred_method" 
+                                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-500"
+                                    >
+                                        <option value="paypal" {{ ($paymentSettings && $paymentSettings->preferred_method == 'paypal') ? 'selected' : '' }}>PayPal</option>
+                                        <option value="payoneer" {{ ($paymentSettings && $paymentSettings->preferred_method == 'payoneer') ? 'selected' : '' }}>Payoneer</option>
+                                        <option value="wise" {{ ($paymentSettings && $paymentSettings->preferred_method == 'wise') ? 'selected' : '' }}>Wise</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex justify-end">
+                                    <button type="submit" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90">
+                                        Save Settings
+                                    </button>
+                                </div>
+                            </form>
+
+                            {{-- Current Settings Display --}}
+                            @if($paymentSettings)
+                                <div class="mt-8 pt-6 border-t">
+                                    <h4 class="text-lg font-semibold mb-3">Current Settings</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">PayPal Email:</span>
+                                            <span>{{ $paymentSettings->paypal_email ?? 'Not Set' }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">Payoneer ID:</span>
+                                            <span>{{ $paymentSettings->payoneer_id ?? 'Not Set' }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">Wise Account:</span>
+                                            <span>{{ $paymentSettings->wise_account ?? 'Not Set' }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">Preferred Method:</span>
+                                            <span>{{ ucfirst($paymentSettings->preferred_method) }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">Verification Status:</span>
+                                            <span class="{{ $paymentSettings->is_verified ? 'text-green-600' : 'text-red-600' }}">
+                                                {{ $paymentSettings->is_verified ? 'Verified' : 'Pending Verification' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Modal -->
+
+        <!-- Withdrawal Modal -->
         <div id="withdrawModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
             <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
-                <h2 class="text-xl font-semibold mb-2">Withdraw to PayPal</h2>
-                <p class="text-sm text-muted-foreground mb-4">Enter the amount you'd like to withdraw. <br>Available:
-                    <strong>{{-- ${{ number_format($balance, 2) }} --}}</strong>
+                <h2 class="text-xl font-semibold mb-2">Withdraw Funds</h2>
+                <p class="text-sm text-muted-foreground mb-4">
+                    Enter the amount you'd like to withdraw via <span id="withdrawal-method"></span>
+                    <br>Available: <strong>${{ number_format($wallet->balance, 2) }}</strong>
                 </p>
 
-                <form action="#" method="POST">
+                <form action="{{ route('teacher.wallet.withdraw') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="method" id="withdrawal-method-input">
+                    
                     <div class="mb-4">
-                        <label for="amount" class="block text-sm font-medium mb-1">Amount</label>
-                        <input type="number" name="amount" id="amount" step="0.01" min="1" max=""
+                        <label for="amount" class="block text-sm font-medium mb-1">Amount ($)</label>
+                        <input 
+                            type="number" 
+                            name="amount" 
+                            id="amount" 
+                            step="0.01" 
+                            min="1" 
+                            max="{{ $wallet->balance }}"
                             class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-500"
-                            required>
+                            required
+                        >
+                        <small class="text-gray-500">Minimum withdrawal: $1.00</small>
+                    </div>
+
+                    <div id="account-info" class="mb-4 p-3 bg-gray-50 rounded">
+                        <!-- Account info will be populated by JavaScript -->
                     </div>
 
                     <div class="flex justify-end space-x-2 mt-4">
@@ -139,11 +369,13 @@
                 </button>
             </div>
         </div>
-
     </main>
 
-    {{-- JS to handle tabs --}}
+    {{-- JavaScript --}}
     <script>
+        // Payment settings data for JavaScript
+        const paymentSettings = @json($paymentSettings);
+        
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
@@ -152,16 +384,48 @@
             event.target.classList.add('active-tab');
         }
 
-        function openModal() {
-            document.getElementById('withdrawModal').classList.remove('hidden');
+        function openModal(method) {
+            const modal = document.getElementById('withdrawModal');
+            const methodSpan = document.getElementById('withdrawal-method');
+            const methodInput = document.getElementById('withdrawal-method-input');
+            const accountInfo = document.getElementById('account-info');
+            
+            methodSpan.textContent = method.charAt(0).toUpperCase() + method.slice(1);
+            methodInput.value = method;
+            
+            // Show account information
+            let accountHtml = '';
+            if (paymentSettings) {
+                switch(method) {
+                    case 'paypal':
+                        accountHtml = `<strong>PayPal Account:</strong> ${paymentSettings.paypal_email || 'Not configured'}`;
+                        break;
+                    case 'payoneer':
+                        accountHtml = `<strong>Payoneer ID:</strong> ${paymentSettings.payoneer_id || 'Not configured'}`;
+                        break;
+                    case 'wise':
+                        accountHtml = `<strong>Wise Account:</strong> ${paymentSettings.wise_account || 'Not configured'}`;
+                        break;
+                }
+            }
+            accountInfo.innerHTML = accountHtml;
+            
+            modal.classList.remove('hidden');
         }
 
         function closeModal() {
             document.getElementById('withdrawModal').classList.add('hidden');
         }
+
+        // Close modal on outside click
+        document.getElementById('withdrawModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 
-    {{-- Some tailwind helpers --}}
+    {{-- Styles --}}
     <style>
         .tab-btn {
             padding: 0.5rem 1rem;
@@ -177,7 +441,11 @@
         }
 
         .btn-primary {
-            @apply inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 w-full bg-primary/10 text-primary hover:bg-primary/20 border border-primary;
+            @apply inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 w-full bg-primary/10 text-primary hover:bg-primary/20 border border-primary transition-colors;
+        }
+
+        .btn-primary:disabled {
+            @apply cursor-not-allowed opacity-50;
         }
     </style>
 @endsection

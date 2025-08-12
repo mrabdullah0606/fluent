@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminWalletController;
 use App\Http\Controllers\Auth\StudentAuthController;
 use App\Http\Controllers\Auth\TeacherAuthController;
 use App\Http\Controllers\Dashboard\AvailabilityController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ZoomMeetingController;
 use App\Http\Controllers\Dashboard\StripeController;
+use App\Http\Controllers\Dashboard\WalletController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -122,7 +124,7 @@ Route::prefix('teacher')->group(function () {
         Route::get('calendar', [TeacherController::class, 'calendar'])->name('teacher.calendar');
         Route::get('bookings', [TeacherController::class, 'bookings'])->name('teacher.bookings');
         Route::post('bookings/update', [TeacherController::class, 'updateBookingRules'])->name('teacher.bookings.update');
-        Route::get('wallet', [TeacherController::class, 'wallet'])->name('teacher.wallet');
+        // Route::get('wallet', [TeacherController::class, 'wallet'])->name('teacher.wallet');
 
 
         // Route::get('settings', [TeacherController::class, 'settings'])->name('teacher.settings');
@@ -163,6 +165,13 @@ Route::prefix('teacher')->group(function () {
             Route::delete('/{id}', [AvailabilityController::class, 'destroy'])->name('destroy');
             Route::post('/mark-unavailable', [AvailabilityController::class, 'markDayUnavailable'])->name('mark-unavailable');
             Route::get('/monthly', [AvailabilityController::class, 'getMonthlyAvailability'])->name('monthly');
+        });
+        /* ****************************** Wallet Management ****************************** */
+        Route::prefix('wallet')->name('teacher.wallet.')->group(function () {
+            Route::get('/', [WalletController::class, 'index'])->name('index');
+            Route::post('/withdraw', [WalletController::class, 'withdraw'])->name('withdraw');
+            Route::post('/payment-settings', [WalletController::class, 'updatePaymentSettings'])->name('payment-settings');
+            Route::get('/transactions', [WalletController::class, 'transactions'])->name('transactions');
         });
     });
 });
@@ -237,6 +246,14 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [AdminController::class, 'customerSupportIndex'])->name('support');
         });
         /* ******************************** Customer Support End ******************************** */
+
+        /* ******************************** Wallet Management ******************************** */
+        Route::prefix('wallet')->name('admin.wallet.')->group(function () {
+            Route::get('/withdrawals', [AdminWalletController::class, 'withdrawals'])->name('withdrawals.index');
+            Route::get('/withdrawals/{id}', [AdminWalletController::class, 'showWithdrawal'])->name('withdrawals.show');
+            Route::post('/withdrawals/{id}/approve', [AdminWalletController::class, 'approveWithdrawal'])->name('withdrawals.approve');
+            Route::post('/withdrawals/{id}/reject', [AdminWalletController::class, 'rejectWithdrawal'])->name('withdrawals.reject');
+        });
     });
 });
 

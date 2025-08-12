@@ -39,7 +39,7 @@
                              class="bi bi-camera-video me-1"></i> Lessons</a>
                  </li>
                  <li class="nav-item me-3">
-                     <a class="nav-link d-flex align-items-center" href="{{ route('teacher.public.profile') }}">
+                     <a class="nav-link d-flex align-items-center" href="{{ route('teacher.profile.edit') }}">
                          <i class="bi bi-eye me-1"></i> Profile
                      </a>
                  </li>
@@ -58,10 +58,10 @@
                          T
                      </div>
                      <ul class="dropdown-menu dropdown-menu-end">
-                         <li><a class="dropdown-item" href="{{ route('teacher.profile.edit') }}">My Profile</a></li>
+                         <li><a class="dropdown-item" href="{{ route('teacher.public.profile') }}">My Profile</a></li>
                          <li><a class="dropdown-item" href="{{ route('teacher.settings.index') }}">Lesson Settings</a>
                          </li>
-                         <li><a class="dropdown-item" href="{{ route('teacher.wallet') }}">Wallet</a></li>
+                         <li><a class="dropdown-item" href="{{ route('teacher.wallet.index') }}">Wallet</a></li>
                          <li>
                              <hr class="dropdown-divider">
                          </li>

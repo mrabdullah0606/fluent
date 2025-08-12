@@ -186,6 +186,46 @@ class StudentController extends Controller
         return view('student.content.profile.public', compact('student', 'languages'));
     }
 
+    // public function checkout(Request $request)
+    // {
+    //     $type = $request->input('type');
+    //     $value = $request->input('value');
+    //     $price = $request->input('price');
+
+    //     $summary = '';
+    //     $calculatedPrice = (float) $price; // Use the passed price (which is discounted)
+    //     $originalPrice = (float) $request->input('original_price', 0);
+    //     $discountPercent = (int) $request->input('discount_percent', 0);
+    //     $fee = 0;
+
+    //     if ($type === 'duration') {
+    //         $summary = "{$value}-Minute Session";
+    //         $fee = round($calculatedPrice * 0.03, 2);
+    //     } elseif ($type === 'package') {
+    //         $package = LessonPackage::find($value);
+    //         $summary = "{$package->number_of_lessons}-Lesson Package";
+    //         // Don't override $calculatedPrice - it already contains the discounted price
+    //         $fee = round($calculatedPrice * 0.03, 2);
+    //     } elseif ($type === 'group') {
+    //         $courseId = $value;
+    //         $course = GroupClass::with('teacher')->findOrFail($courseId);
+    //         $summary = "Group Class: {$course->title} by {$course->teacher->name}";
+    //         $calculatedPrice = $course->price_per_student;
+    //         $fee = round($calculatedPrice * 0.03, 2);
+    //     }
+
+    //     $total = round($calculatedPrice + $fee, 2);
+
+    //     return view('student.content.checkout', compact(
+    //         'type',
+    //         'summary',
+    //         'calculatedPrice',
+    //         'fee',
+    //         'total',
+    //         'originalPrice',
+    //         'discountPercent'
+    //     ));
+    // }
     public function checkout(Request $request)
     {
         $type = $request->input('type');
@@ -197,24 +237,45 @@ class StudentController extends Controller
         $originalPrice = (float) $request->input('original_price', 0);
         $discountPercent = (int) $request->input('discount_percent', 0);
         $fee = 0;
+        $teacherId = null; // Initialize teacher ID
 
         if ($type === 'duration') {
             $summary = "{$value}-Minute Session";
             $fee = round($calculatedPrice * 0.03, 2);
+            // Get teacher ID from session or request
+            $teacherId = $request->input('teacher_id') ?? session('tutor_id');
         } elseif ($type === 'package') {
             $package = LessonPackage::find($value);
             $summary = "{$package->number_of_lessons}-Lesson Package";
-            // Don't override $calculatedPrice - it already contains the discounted price
             $fee = round($calculatedPrice * 0.03, 2);
+            // Get teacher ID from package
+            $teacherId = $package->teacher_id ?? $request->input('teacher_id') ?? session('tutor_id');
         } elseif ($type === 'group') {
             $courseId = $value;
             $course = GroupClass::with('teacher')->findOrFail($courseId);
             $summary = "Group Class: {$course->title} by {$course->teacher->name}";
             $calculatedPrice = $course->price_per_student;
             $fee = round($calculatedPrice * 0.03, 2);
+            // Get teacher ID from course
+            $teacherId = $course->teacher_id;
         }
 
         $total = round($calculatedPrice + $fee, 2);
+
+        // Store all necessary data in session for payment processing
+        session([
+            'checkout_data' => [
+                'type' => $type,
+                'value' => $value,
+                'teacher_id' => $teacherId,
+                'summary' => $summary,
+                'calculated_price' => $calculatedPrice,
+                'original_price' => $originalPrice,
+                'discount_percent' => $discountPercent,
+                'fee' => $fee,
+                'total' => $total
+            ]
+        ]);
 
         return view('student.content.checkout', compact(
             'type',
@@ -223,7 +284,8 @@ class StudentController extends Controller
             'fee',
             'total',
             'originalPrice',
-            'discountPercent'
+            'discountPercent',
+            'teacherId' // Pass teacher ID to view
         ));
     }
 

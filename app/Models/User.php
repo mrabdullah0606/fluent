@@ -189,4 +189,25 @@ class User extends Authenticatable
                 ];
             });
     }
+
+
+    public function teacherWallet()
+    {
+        return $this->hasOne(TeacherWallet::class, 'teacher_id');
+    }
+
+    public function paymentSettings()
+    {
+        return $this->hasOne(TeacherPaymentSetting::class, 'teacher_id');
+    }
+
+    public function walletTransactions()
+    {
+        return $this->hasMany(WalletTransaction::class, 'teacher_id');
+    }
+
+    public function withdrawalRequests()
+    {
+        return $this->hasMany(WithdrawalRequest::class, 'teacher_id');
+    }
 }

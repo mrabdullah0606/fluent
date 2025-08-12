@@ -25,8 +25,9 @@
                                 </svg>
                             </div>
                             <div class="p-6 pt-0">
-                                <div class="text-2xl font-bold">$2,435.50</div>
-                                <p class="text-xs text-muted-foreground">+ $120.00 since last withdrawal</p>
+                                <div class="text-2xl font-bold">${{ $wallet->balance ?? 0 }}</div>
+                                <p class="text-xs text-muted-foreground">+ ${{ $wallet->total_withdrawn ?? 0 }} total
+                                    withdrawal</p>
                             </div>
                         </div>
                     </div>
