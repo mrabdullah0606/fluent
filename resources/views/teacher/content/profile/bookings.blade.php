@@ -233,7 +233,5 @@
             style="width:60px; height:60px;">
             <i class="bi bi-chat-dots fs-4 text-dark"></i>
         </button>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </main>
 @endsection

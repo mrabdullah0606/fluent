@@ -58,6 +58,14 @@ class AdminController extends Controller
     {
         return response()->view('admin.content.dashboard');
     }
+    
+    /**
+     * Show the admin dashboard.
+     */
+    public function testEmbed(): Response
+    {
+        return response()->view('admin.content.test-embed');
+    }
 
     /* *************************** LANGUAGE MANAGEMENT ************************** */
     /**

@@ -1,6 +1,7 @@
 @extends('website.master.master')
 @section('title', 'Home - FluentAll')
 @section('content')
+ 
     <div class="container d-flex justify-content-center align-items-center min-vh-100 text-center">
         <div>
             <!-- Image -->
@@ -289,4 +290,6 @@
             </div>
         </div>
     </div>
+   
+
 @endsection

@@ -1,0 +1,116 @@
+<div style="opacity: 1; transform: none;">
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 mb-8 md:flex items-center">
+        <div class="md:w-1/3 flex flex-col items-center md:items-start text-center md:text-left mb-6 md:mb-0">
+            
+            {{-- Profile Image --}}
+            <span class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-primary">
+                @if($teacher && $teacher->profile_image)
+                    <img src="{{ asset('storage/'.$teacher->profile_image) }}" 
+                         class="w-full h-full object-cover rounded-full">
+                @else
+                    <span class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-primary text-white">
+                        {{ strtoupper(substr($user->name,0,2)) }}
+                    </span>
+                @endif
+            </span>
+
+            {{-- Teacher Name --}}
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $user->name }}</h1>
+
+            {{-- Headline --}}
+            <p class="text-primary text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}</p>
+
+            {{-- Static Rating --}}
+            <div class="flex items-center mt-2 text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                    </polygon>
+                </svg>
+                <span class="font-semibold">4.9</span>
+                <span class="ml-1">(180 reviews)</span>
+            </div>
+
+            {{-- Status --}}
+            <div
+                class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors
+                border-transparent mt-3 bg-green-500 hover:bg-green-600 text-white">
+                Active Now
+            </div>
+        </div>
+
+        {{-- Right Section --}}
+        <div class="md:w-2/3 md:pl-8 space-y-4">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+
+                {{-- Country --}}
+                <div class="flex items-center text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                         class="h-5 w-5 mr-2 text-primary">
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg> 
+                    From: {{ $teacher?->country ?? 'N/A' }}
+                </div>
+
+                {{-- Teaches --}}
+                <div class="flex items-center text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                         class="h-5 w-5 mr-2 text-primary">
+                        <path d="m5 8 6 6"></path>
+                        <path d="m4 14 6-6 2-3"></path>
+                        <path d="M2 5h12"></path>
+                        <path d="M7 2h1"></path>
+                        <path d="m22 22-5-10-5 10"></path>
+                        <path d="M14 18h6"></path>
+                    </svg> 
+                    Teaches: {{ $teacher?->teaches ?? 'N/A' }}
+                </div>
+
+                {{-- Speaks --}}
+                <div class="flex items-center text-gray-700 col-span-2 sm:col-span-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                         class="h-5 w-5 mr-2 text-primary">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" x2="22" y1="12" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg> 
+                    Speaks: {{ $teacher?->speaks ?? 'N/A' }}
+                </div>
+
+                {{-- Experience --}}
+                <div class="flex items-center text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                         class="h-5 w-5 mr-2 text-primary">
+                        <circle cx="12" cy="8" r="6"></circle>
+                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                    </svg> 
+                    Experience: {{ $teacher?->experience ?? 'N/A' }}
+                </div>
+
+                {{-- Rate --}}
+                <div class="flex items-center text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                         class="h-5 w-5 mr-2 text-primary">
+                        <line x1="12" x2="12" y1="2" y2="22"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg> 
+                    Rate: ${{ $teacher?->rate_per_hour ?? '0' }}/hour
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
