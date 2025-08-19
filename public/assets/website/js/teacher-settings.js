@@ -84,6 +84,26 @@ class TeacherSettings {
             const newName = name.replace(/groups\[\d+\]/, `groups[${index}]`);
             input.setAttribute("name", newName);
         });
+
+        // Update IDs for form elements
+        const elementsWithIds = group.querySelectorAll('[id*="group_"]');
+        elementsWithIds.forEach((element) => {
+            const id = element.getAttribute("id");
+            if (id) {
+                const newId = id.replace(/group_\d+/, `group_${index}`);
+                element.setAttribute("id", newId);
+            }
+        });
+
+        // Update labels' for attributes
+        const labels = group.querySelectorAll('label[for*="group_"]');
+        labels.forEach((label) => {
+            const forAttr = label.getAttribute("for");
+            if (forAttr) {
+                const newFor = forAttr.replace(/group_\d+/, `group_${index}`);
+                label.setAttribute("for", newFor);
+            }
+        });
     }
 
     clearGroupForm(group) {
@@ -97,6 +117,12 @@ class TeacherSettings {
             } else {
                 input.value = "";
             }
+        });
+
+        // Clear textarea (description)
+        const textareas = group.querySelectorAll("textarea");
+        textareas.forEach((textarea) => {
+            textarea.value = "";
         });
 
         // Reset selects to first option
@@ -151,6 +177,48 @@ class TeacherSettings {
 
         this.bindDayButtons(daysContainer, lessonsPerWeekSelect);
         this.bindLessonsPerWeekChange(daysContainer, lessonsPerWeekSelect);
+        this.initDescriptionCounter(groupElement);
+    }
+
+    initDescriptionCounter(groupElement) {
+        const textarea = groupElement.querySelector(
+            'textarea[name*="description"]'
+        );
+        if (!textarea) return;
+
+        // Add character counter
+        const counterDiv = document.createElement("div");
+        counterDiv.className = "form-text text-muted small text-end mt-1";
+        counterDiv.innerHTML =
+            '<span class="char-count">0</span>/500 characters';
+
+        const helpText = textarea.parentNode.querySelector(".form-text");
+        if (helpText) {
+            helpText.parentNode.insertBefore(counterDiv, helpText.nextSibling);
+        }
+
+        const updateCounter = () => {
+            const count = textarea.value.length;
+            const counter = counterDiv.querySelector(".char-count");
+            counter.textContent = count;
+
+            if (count > 450) {
+                counter.style.color = "#dc3545"; // Red
+            } else if (count > 400) {
+                counter.style.color = "#fd7e14"; // Orange
+            } else {
+                counter.style.color = "#6c757d"; // Gray
+            }
+        };
+
+        textarea.addEventListener("input", updateCounter);
+        textarea.addEventListener("paste", () => setTimeout(updateCounter, 10));
+
+        // Set max length
+        textarea.setAttribute("maxlength", "500");
+
+        // Initial count
+        updateCounter();
     }
 
     bindDayButtons(daysContainer, lessonsPerWeekSelect) {
@@ -234,6 +302,16 @@ class TeacherSettings {
                 this.validateField(field);
             });
         });
+
+        // Add validation for description length
+        const descriptionField = container.querySelector(
+            'textarea[name*="description"]'
+        );
+        if (descriptionField) {
+            descriptionField.addEventListener("blur", () => {
+                this.validateDescriptionField(descriptionField);
+            });
+        }
     }
 
     validateField(field) {
@@ -247,6 +325,24 @@ class TeacherSettings {
         return true;
     }
 
+    validateDescriptionField(field) {
+        const maxLength = 500;
+        if (field.value.length > maxLength) {
+            field.classList.add("is-invalid");
+            this.showAlert(
+                `Description must be ${maxLength} characters or less.`,
+                "warning"
+            );
+            return false;
+        }
+
+        field.classList.remove("is-invalid");
+        if (field.value.trim()) {
+            field.classList.add("is-valid");
+        }
+        return true;
+    }
+
     handleFormSubmit(e) {
         let isValid = true;
 
@@ -254,6 +350,16 @@ class TeacherSettings {
         const requiredFields = e.target.querySelectorAll("[required]");
         requiredFields.forEach((field) => {
             if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        // Validate description fields
+        const descriptionFields = e.target.querySelectorAll(
+            'textarea[name*="description"]'
+        );
+        descriptionFields.forEach((field) => {
+            if (!this.validateDescriptionField(field)) {
                 isValid = false;
             }
         });

@@ -12,6 +12,7 @@ class GroupClass extends Model
     protected $fillable = [
         'teacher_id',
         'title',
+        'description',
         'duration_per_class',
         'lessons_per_week',
         'max_students',

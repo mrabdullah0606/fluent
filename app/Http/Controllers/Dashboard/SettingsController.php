@@ -30,6 +30,7 @@ class SettingsController extends Controller
             ->map(function ($group) {
                 return [
                     'title' => $group->title,
+                    'description' => $group->description, // Add description field
                     'duration_per_class' => $group->duration_per_class,
                     'lessons_per_week' => $group->lessons_per_week,
                     'max_students' => $group->max_students,
@@ -109,7 +110,9 @@ class SettingsController extends Controller
         if (!isset($data['groups'])) {
             return;
         }
+
         GroupClass::where('teacher_id', $teacherId)->delete();
+
         foreach ($data['groups'] as $groupData) {
             if (!empty($groupData['title'])) {
                 $maxStudents = isset($groupData['max_students']) ? (int) $groupData['max_students'] : 1;
@@ -119,15 +122,29 @@ class SettingsController extends Controller
                     $maxStudents = 100;
                 }
 
+                // Clean and validate description
+                $description = null;
+                if (isset($groupData['description']) && !empty(trim($groupData['description']))) {
+                    $description = trim($groupData['description']);
+                    // Limit description to 500 characters
+                    if (strlen($description) > 500) {
+                        $description = substr($description, 0, 500);
+                    }
+                    // Optional: Strip HTML tags for security
+                    $description = strip_tags($description);
+                }
+
                 $group = GroupClass::create([
                     'teacher_id' => $teacherId,
                     'title' => $groupData['title'],
+                    'description' => $description, // Add description field
                     'duration_per_class' => $groupData['duration_per_class'],
                     'lessons_per_week' => $groupData['lessons_per_week'],
                     'max_students' => $maxStudents, // Use validated value
                     'price_per_student' => $groupData['price_per_student'],
                     'is_active' => isset($groupData['is_active']) ? 1 : 0,
                 ]);
+
                 if (isset($groupData['days']) && is_array($groupData['days'])) {
                     foreach ($groupData['days'] as $day) {
                         $group->days()->create(['day' => $day]);

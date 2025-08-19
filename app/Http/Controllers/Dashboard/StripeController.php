@@ -59,7 +59,7 @@ class StripeController extends Controller
             'fee'            => $request->input('fee'),
             'total'          => $request->input('total'),
             'type'           => $request->input('type'),
-            'payment_method' => $request->input('payment'),
+            'payment_method' => 'stripe',
             'status'         => $status,
         ]);
     }

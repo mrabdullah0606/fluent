@@ -129,13 +129,6 @@
                     <!-- Search and Buttons -->
                     <div class="mt-6 flex flex-col sm:flex-row gap-4">
                         <div class="relative flex-grow">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground"
-                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.3-4.3"></path>
-                            </svg>
                             <input type="text" name="name" value="{{ request('name') }}"
                                 class="pl-10 w-full h-10 rounded-md border bg-background px-3 py-2 text-sm border-input"
                                 placeholder="Search by tutor name..." />
@@ -183,9 +176,9 @@
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 fill-current">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="h-4 w-4 fill-current">
                                     <polygon
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>

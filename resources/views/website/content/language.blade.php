@@ -28,7 +28,7 @@
                                     class="md:w-1/3 bg-gradient-to-br from-primary/5 to-secondary/5 p-5 flex flex-col items-center justify-center text-center">
                                     <img class="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover mb-3 border-4 border-primary shadow-md"
                                         alt="{{ $teacher->user->name }}"
-                                        src="https://images.unsplash.com/photo-1692274634343-aa1bc1828b7c">
+                                        src="{{ asset('storage/' . $teacher->profile_image) }}">
                                     <h3 class="text-xl font-bold text-foreground mb-1">{{ $teacher->user->name }}</h3>
                                     <div class="flex items-center text-yellow-500 mb-1"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -69,9 +69,9 @@
                                             stroke-linecap="round" stroke-linejoin="round" class="inline h-4 w-4 mr-0.5">
                                             <line x1="12" x2="12" y1="2" y2="22"></line>
                                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                        </svg>28/hour</p>
-                                    <p class="text-primary font-semibold text-sm mb-3"><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        </svg>{{ $teacher->duration_60 ?? 'N/A' }}/hour</p>
+                                    <p class="text-primary font-semibold text-sm mb-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round"
                                             class="inline h-3.5 w-3.5 mr-0.5">
@@ -79,7 +79,8 @@
                                                 d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z">
                                             </path>
                                             <path d="M7 7h.01"></path>
-                                        </svg>Trial: $5</p>
+                                        </svg>Trial: $5
+                                    </p>
                                     <a href="{{ route('tutor', ['id' => $teacher->user->id]) }}">
                                         <button
                                             class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 w-full btn-red text-sm py-2">

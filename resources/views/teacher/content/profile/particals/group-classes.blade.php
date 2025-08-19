@@ -11,6 +11,17 @@
                 value="{{ old('groups.' . $index . '.title', $group['title'] ?? 'French for Beginners (A1)') }}"
                 placeholder="Group class title" required>
 
+            <!-- Description Textarea -->
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-dark">Description</label>
+                <textarea class="form-control" name="groups[{{ $index }}][description]" rows="3"
+                    placeholder="Describe your group class (e.g., curriculum, teaching method, target audience...)"
+                    style="resize: vertical;">{{ old('groups.' . $index . '.description', $group['description'] ?? '') }}</textarea>
+                <div class="form-text text-muted small">
+                    Optional: Help students understand what this class offers
+                </div>
+            </div>
+
             <div class="row g-2">
                 <div class="col-6 col-md-3">
                     <label class="form-label small" for="group_{{ $index }}_duration">Duration</label>
@@ -81,6 +92,17 @@
         <div class="group-container">
             <input type="text" name="groups[0][title]" class="form-control fw-bold editable-heading mb-3"
                 value="French for Beginners (A1)" required>
+
+            <!-- Description Textarea -->
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-dark">Description</label>
+                <textarea class="form-control" name="groups[0][description]" rows="3"
+                    placeholder="Describe your group class (e.g., curriculum, teaching method, target audience...)"
+                    style="resize: vertical;"></textarea>
+                <div class="form-text text-muted small">
+                    Optional: Help students understand what this class offers
+                </div>
+            </div>
 
             <div class="row g-2">
                 <div class="col-6 col-md-3">

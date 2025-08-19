@@ -23,44 +23,29 @@
                      <a class="nav-link active d-flex align-items-center" href="{{ route('student.dashboard') }}">
                          <i class="bi bi-house me-1"></i> Home
                      </a>
-                 {{-- </li>
-                 <li class="nav-item me-3">
-                     <a class="nav-link d-flex align-items-center" href="#"><i class="bi bi-calendar3 me-1"></i>
-                         My Calendar</a>
-                 </li> --}}
                  <li class="nav-item me-3">
                      <a class="nav-link d-flex align-items-center" href="{{ route('student.chats.index') }}"><i
                              class="bi bi-chat-left-text me-1"></i> Messages</a>
                  </li>
-                <!--  <li class="nav-item me-3">
-                     <a class="nav-link d-flex align-items-center" href="{{ route('zoom.meetings.index') }}"><i
-                             class="bi bi-camera-video me-1"></i> Lessons</a>
-                 </li> -->
-                 {{-- <li class="nav-item me-3">
-                     <a class="nav-link d-flex align-items-center" href="{{ route('student.public.profile') }}">
-                         <i class="bi bi-eye me-1"></i> Profile
-                     </a>
-                 </li> --}}
-                 
              </ul>
              <div class="d-flex align-items-center gap-2">
 
-                     <a class="btn btn-danger" href="{{ route('find.tutor') }}">
-                         Find Tutor
-                     </a>
-                 
+                 <a class="btn btn-danger" href="{{ route('find.tutor') }}">
+                     Find Tutor
+                 </a>
+
                  <div class="dropdown">
                      <div class="dropdown-toggle rounded-circle border border-warning text-warning fw-bold d-flex align-items-center justify-content-center"
                          style="width: 32px; height: 32px; cursor: pointer;" data-bs-toggle="dropdown"
                          aria-expanded="false" tabindex="0" role="button">
-                         T
+                         S
                      </div>
                      <ul class="dropdown-menu dropdown-menu-end">
                          <li><a class="dropdown-item" href="{{ route('student.profile.edit') }}">View Profile</a></li>
-                         <li><a class="dropdown-item" href="#">Settings</a></li>
-                         <li>
+                         {{-- <li><a class="dropdown-item" href="#">Settings</a></li> --}}
+                         {{-- <li>
                              <hr class="dropdown-divider">
-                         </li>
+                         </li> --}}
                          <li>
                              <a class="dropdown-item text-danger" href="javascript:void(0);"
                                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

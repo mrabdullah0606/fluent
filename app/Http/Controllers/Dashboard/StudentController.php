@@ -237,32 +237,57 @@ class StudentController extends Controller
         $originalPrice = (float) $request->input('original_price', 0);
         $discountPercent = (int) $request->input('discount_percent', 0);
         $fee = 0;
-        $teacherId = null; // Initialize teacher ID
+        $teacherId = null;
+        $additionalData = []; // For storing extra package/lesson info
 
         if ($type === 'duration') {
             $summary = "{$value}-Minute Session";
             $fee = round($calculatedPrice * 0.03, 2);
-            // Get teacher ID from session or request
             $teacherId = $request->input('teacher_id') ?? session('tutor_id');
+
+            // Store slot and date info for duration lessons
+            $additionalData = [
+                'slot_id' => $request->input('slot_id'),
+                'selected_date' => $request->input('selected_date'),
+                'duration' => $value
+            ];
         } elseif ($type === 'package') {
             $package = LessonPackage::find($value);
+            if (!$package) {
+                return redirect()->back()->with('error', 'Package not found');
+            }
+
             $summary = "{$package->number_of_lessons}-Lesson Package";
             $fee = round($calculatedPrice * 0.03, 2);
-            // Get teacher ID from package
             $teacherId = $package->teacher_id ?? $request->input('teacher_id') ?? session('tutor_id');
+
+            // Store package details
+            $additionalData = [
+                'package_id' => $package->id,
+                'package_name' => $package->name,
+                'number_of_lessons' => $package->number_of_lessons,
+                'duration_per_lesson' => $package->duration_per_lesson,
+                'package_description' => $package->description ?? null
+            ];
         } elseif ($type === 'group') {
             $courseId = $value;
             $course = GroupClass::with('teacher')->findOrFail($courseId);
             $summary = "Group Class: {$course->title} by {$course->teacher->name}";
             $calculatedPrice = $course->price_per_student;
             $fee = round($calculatedPrice * 0.03, 2);
-            // Get teacher ID from course
             $teacherId = $course->teacher_id;
+
+            // Store group class details
+            $additionalData = [
+                'course_id' => $course->id,
+                'course_title' => $course->title,
+                'course_description' => $course->description ?? null
+            ];
         }
 
         $total = round($calculatedPrice + $fee, 2);
 
-        // Store all necessary data in session for payment processing
+        // Enhanced session storage with all necessary data
         session([
             'checkout_data' => [
                 'type' => $type,
@@ -273,7 +298,9 @@ class StudentController extends Controller
                 'original_price' => $originalPrice,
                 'discount_percent' => $discountPercent,
                 'fee' => $fee,
-                'total' => $total
+                'total' => $total,
+                'additional_data' => $additionalData,
+                'timestamp' => now()->toISOString() // For session expiry tracking
             ]
         ]);
 
@@ -285,7 +312,8 @@ class StudentController extends Controller
             'total',
             'originalPrice',
             'discountPercent',
-            'teacherId' // Pass teacher ID to view
+            'teacherId',
+            'additionalData' // Pass additional data to view if needed
         ));
     }
 

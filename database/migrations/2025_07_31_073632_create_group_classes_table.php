@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
+            $table->text('description')->nullable();
             $table->integer('duration_per_class');
             $table->integer('lessons_per_week');
             $table->integer('max_students');

@@ -371,7 +371,7 @@
                         </div>
                     </div>
 
-                    <div class="lg:col-span-5 border-t pt-8" style="opacity: 1;">
+                    {{-- <div class="lg:col-span-5 border-t pt-8" style="opacity: 1;">
                         <h2 class="text-xl font-semibold text-foreground mb-4 flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -414,8 +414,72 @@
                                 </label>
                             @endforeach
                         </div>
-                    </div>
+                    </div> --}}
+                    <div class="lg:col-span-5 border-t pt-8" style="opacity: 1;">
+                        <h2 class="text-xl font-semibold text-foreground mb-4 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="mr-2 h-5 w-5 text-primary">
+                                <path d="m7.5 4.27 9 5.15"></path>
+                                <path
+                                    d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                                </path>
+                                <path d="m3.3 7 8.7 5 8.7-5"></path>
+                                <path d="M12 22V12"></path>
+                            </svg>
+                            ...Or Buy a Package &amp; Save!
+                        </h2>
 
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            @if ($teacher->lessonPackages && $teacher->lessonPackages->count() > 0)
+                                @foreach ($teacher->lessonPackages as $package)
+                                    <label for="package_{{ $package->id }}" class="block package-option">
+                                        <input type="radio" name="lesson_package" value="{{ $package->id }}"
+                                            id="package_{{ $package->id }}" class="hidden peer">
+                                        <div
+                                            class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted hover:border-primary/50">
+                                            <h4 class="font-bold text-lg text-foreground">
+                                                {{ $package->number_of_lessons }} Lessons</h4>
+
+                                            @if ($package->discount_percentage > 0)
+                                                <p class="text-sm font-semibold text-green-600">Save
+                                                    {{ $package->discount_percentage }}%</p>
+                                            @endif
+
+                                            <div class="text-2xl font-bold text-primary mt-2">
+                                                @if ($package->discount_percentage > 0)
+                                                    <span class="text-green-600">
+                                                        ${{ number_format($package->discounted_price, 2) }}
+                                                    </span>
+                                                    <div class="text-sm line-through text-red-500 mt-1">
+                                                        ${{ number_format($package->original_price, 2) }}
+                                                    </div>
+                                                @else
+                                                    <span>${{ number_format($package->original_price, 2) }}</span>
+                                                @endif
+                                            </div>
+
+                                            <p class="text-xs text-muted-foreground mt-1">
+                                                Just
+                                                ${{ number_format($package->discounted_price / $package->number_of_lessons, 2) }}
+                                                per lesson
+                                            </p>
+
+                                            @if ($package->duration_per_lesson)
+                                                <p class="text-xs text-muted-foreground">
+                                                    {{ $package->duration_per_lesson }} minutes per lesson
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </label>
+                                @endforeach
+                            @else
+                                <div class="col-span-3 text-center py-8">
+                                    <p class="text-muted-foreground">No lesson packages available at the moment.</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                     <div class="lg:col-span-5" style="opacity: 1;">
                         <div class="bg-primary/10 p-4 rounded-lg border border-primary/30 text-center">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
@@ -825,11 +889,104 @@
             }
         }
 
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     const teacherId = {{ $teacher->id }};
+        //     const calendar = new BookingCalendar(teacherId);
+        //     const durationPrices = @json($durationPrices);
+        //     const packagePrices = @json($teacher->lessonPackages->pluck('price', 'id'));
+
+        //     const durationInputs = document.querySelectorAll('input[name="duration"]');
+        //     const packageInputs = document.querySelectorAll('input[name="lesson_package"]');
+        //     const selectedDurationElem = document.getElementById('selected-duration');
+        //     const selectedPriceElem = document.getElementById('selected-price');
+
+        //     const checkoutType = document.getElementById('checkoutType');
+        //     const checkoutValue = document.getElementById('checkoutValue');
+        //     const checkoutPrice = document.getElementById('checkoutPrice');
+
+        //     packageInputs.forEach(input => {
+        //         input.addEventListener('change', function() {
+        //             const packageId = this.value;
+        //             const price = packagePrices[packageId];
+        //             durationInputs.forEach(dur => dur.checked = false);
+        //             const packageLabel = this.closest('label').querySelector('h4').textContent;
+        //             selectedDurationElem.textContent = packageLabel;
+        //             selectedPriceElem.textContent = price ? `${price}` : 'N/A';
+        //             checkoutType.value = 'package';
+        //             checkoutValue.value = packageId;
+        //             checkoutPrice.value = price ?? 0;
+        //             calendar.updateSelectedTimeDisplay();
+        //             calendar.updateCheckoutButton();
+        //         });
+        //     });
+
+        //     durationInputs.forEach(input => {
+        //         input.addEventListener('change', function() {
+        //             const minutes = this.value;
+        //             const key = `duration_${minutes}`;
+        //             const price = durationPrices[key];
+        //             packageInputs.forEach(pkg => pkg.checked = false);
+        //             const label = minutes === '120' ? '2 hours' : minutes + ' minutes';
+        //             selectedDurationElem.textContent = label;
+        //             selectedPriceElem.textContent = price ? `${price}` : 'N/A';
+        //             checkoutType.value = 'duration';
+        //             checkoutValue.value = minutes;
+        //             checkoutPrice.value = price ?? 0;
+        //             calendar.updateSelectedTimeDisplay();
+        //             calendar.updateCheckoutButton();
+        //         });
+        //     });
+        // });
+        // Add this to the booking page JavaScript to ensure proper form submission
         document.addEventListener('DOMContentLoaded', () => {
+            const checkoutForm = document.getElementById('checkoutForm');
+
+            // Enhanced form submission handler
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const params = new URLSearchParams();
+
+                    // Add all form data to params
+                    for (let [key, value] of formData.entries()) {
+                        params.append(key, value);
+                    }
+
+                    // Add teacher ID to ensure it's always included
+                    if (!params.has('teacher_id')) {
+                        params.append('teacher_id', {{ $teacher->id }});
+                    }
+
+                    // Construct URL with all parameters
+                    const url = `{{ route('student.tutor.checkout') }}?${params.toString()}`;
+
+                    // Redirect to checkout
+                    window.location.href = url;
+                });
+            }
+
+            // Rest of your existing calendar and selection logic...
             const teacherId = {{ $teacher->id }};
             const calendar = new BookingCalendar(teacherId);
             const durationPrices = @json($durationPrices);
-            const packagePrices = @json($teacher->lessonPackages->pluck('price', 'id'));
+
+            // Package prices and details (enhanced with discount info)
+            const packagePrices = {};
+            const packageDetails = {};
+
+            @foreach ($teacher->lessonPackages as $package)
+                packagePrices[{{ $package->id }}] = {{ $package->discounted_price ?? $package->price }};
+                packageDetails[{{ $package->id }}] = {
+                    original_price: {{ $package->original_price ?? $package->price }},
+                    discounted_price: {{ $package->discounted_price ?? $package->price }},
+                    discount_percent: {{ $package->discount_percentage ?? 0 }},
+                    lessons: {{ $package->number_of_lessons }},
+                    duration_per_lesson: {{ $package->duration_per_lesson ?? 60 }},
+                    name: "{{ $package->name ?? $package->number_of_lessons . ' Lessons' }}"
+                };
+            @endforeach
 
             const durationInputs = document.querySelectorAll('input[name="duration"]');
             const packageInputs = document.querySelectorAll('input[name="lesson_package"]');
@@ -840,34 +997,88 @@
             const checkoutValue = document.getElementById('checkoutValue');
             const checkoutPrice = document.getElementById('checkoutPrice');
 
+            // Enhanced package selection handler
             packageInputs.forEach(input => {
                 input.addEventListener('change', function() {
                     const packageId = this.value;
-                    const price = packagePrices[packageId];
-                    durationInputs.forEach(dur => dur.checked = false);
-                    const packageLabel = this.closest('label').querySelector('h4').textContent;
-                    selectedDurationElem.textContent = packageLabel;
-                    selectedPriceElem.textContent = price ? `${price}` : 'N/A';
-                    checkoutType.value = 'package';
-                    checkoutValue.value = packageId;
-                    checkoutPrice.value = price ?? 0;
-                    calendar.updateSelectedTimeDisplay();
-                    calendar.updateCheckoutButton();
+                    const packageInfo = packageDetails[packageId];
+
+                    if (packageInfo) {
+                        // Clear duration selection
+                        durationInputs.forEach(dur => dur.checked = false);
+
+                        // Update display
+                        selectedDurationElem.textContent = packageInfo.name;
+                        selectedPriceElem.textContent = packageInfo.discounted_price.toFixed(2);
+
+                        // Set checkout form values
+                        checkoutType.value = 'package';
+                        checkoutValue.value = packageId;
+                        checkoutPrice.value = packageInfo.discounted_price;
+
+                        // Remove existing package inputs
+                        document.querySelectorAll(
+                                '#checkoutForm input[name^="package_"], #checkoutForm input[name="original_price"], #checkoutForm input[name="discount_percent"]'
+                                )
+                            .forEach(input => input.remove());
+
+                        // Add package-specific hidden inputs
+                        const form = document.getElementById('checkoutForm');
+                        const hiddenInputs = [{
+                                name: 'package_lessons',
+                                value: packageInfo.lessons
+                            },
+                            {
+                                name: 'original_price',
+                                value: packageInfo.original_price
+                            },
+                            {
+                                name: 'discount_percent',
+                                value: packageInfo.discount_percent
+                            },
+                            {
+                                name: 'package_duration_per_lesson',
+                                value: packageInfo.duration_per_lesson
+                            }
+                        ];
+
+                        hiddenInputs.forEach(inputData => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = inputData.name;
+                            input.value = inputData.value;
+                            input.className = 'dynamic-checkout-input'; // For easy cleanup
+                            form.appendChild(input);
+                        });
+
+                        calendar.updateSelectedTimeDisplay();
+                        calendar.updateCheckoutButton();
+                    }
                 });
             });
 
+            // Enhanced duration selection handler
             durationInputs.forEach(input => {
                 input.addEventListener('change', function() {
                     const minutes = this.value;
                     const key = `duration_${minutes}`;
                     const price = durationPrices[key];
+
+                    // Clear package selection
                     packageInputs.forEach(pkg => pkg.checked = false);
+
+                    // Remove package-specific hidden inputs
+                    document.querySelectorAll('#checkoutForm .dynamic-checkout-input')
+                        .forEach(input => input.remove());
+
                     const label = minutes === '120' ? '2 hours' : minutes + ' minutes';
                     selectedDurationElem.textContent = label;
                     selectedPriceElem.textContent = price ? `${price}` : 'N/A';
+
                     checkoutType.value = 'duration';
                     checkoutValue.value = minutes;
                     checkoutPrice.value = price ?? 0;
+
                     calendar.updateSelectedTimeDisplay();
                     calendar.updateCheckoutButton();
                 });

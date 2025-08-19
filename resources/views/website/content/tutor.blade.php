@@ -9,9 +9,63 @@
                         class="bg-gray-50 p-6 md:p-8 rounded-xl shadow-lg border border-yellow-300 mb-8 md:flex items-center">
                         <div
                             class="md:w-1/3 flex flex-col items-center md:items-start text-center md:text-left mb-6 md:mb-0">
+                            {{-- <span
+                                class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400">
+                                <span
+                                    class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white">
+                                    <img src="{{ asset('storage/' . $teacher->teacherProfile->profile_image) }}"
+                                        alt="">
+                                </span>
+                            </span> --}}
+                            <!-- Profile Image (clickable) -->
+                            <!-- Profile Image -->
                             <span
-                                class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400"><span
-                                    class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white">EP</span></span>
+                                class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400 cursor-pointer"
+                                data-bs-toggle="modal" data-bs-target="#introVideoModal">
+                                <span
+                                    class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white">
+                                    <img src="{{ $teacher?->teacherProfile?->profile_image
+                                        ? asset('storage/' . $teacher->teacherProfile->profile_image)
+                                        : 'https://ui-avatars.com/api/?name=' . urlencode($teacher->name) . '&background=random' }}"
+                                        alt="Profile Image" class="rounded-full w-32 h-32 object-cover">
+
+                                </span>
+                            </span>
+                            <!-- Bootstrap Modal -->
+                            <div class="modal fade" id="introVideoModal" tabindex="-1" aria-labelledby="introVideoLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content border-0 rounded-3 shadow">
+                                        <div class="modal-header border-0">
+                                            <h5 class="modal-title d-flex align-items-center" id="introVideoLabel">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="me-2 text-warning">
+                                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                                </svg>
+                                                Intro
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @if ($teacher?->teacherProfile?->intro_video)
+                                                <video class="w-100 rounded border" controls>
+                                                    <source
+                                                        src="{{ asset('storage/' . $teacher->teacherProfile->intro_video) }}"
+                                                        type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            @else
+                                                <p class="text-muted">No introduction video available.</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $teacher->name }}</h1>
                             <p class="text-yellow-600 text-md mt-1">
                                 {{ $teacher?->teacherProfile?->headline ?? 'No headline added yet' }}
@@ -179,25 +233,6 @@
                                 <p class="text-gray-600 leading-relaxed whitespace-pre-line">
                                     {{ $teacher?->certifications ?? 'No Certifications provided yet.' }}
                                 </p>
-                            </div>
-                            <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="mr-2 h-6 w-6 text-yellow-500">
-                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                    </svg> Intro:</h2>
-                                @if ($teacher?->teacherProfile?->intro_video)
-                                    <video class="w-full rounded-md border border-gray-300 mb-3" controls>
-                                        <source src="{{ asset('storage/' . $teacher->teacherProfile->intro_video) }}"
-                                            type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                @else
-                                    <p class="text-gray-600">No introduction video available.</p>
-                                @endif
                             </div>
                         </div>
                         <div class="md:col-span-1 space-y-8">

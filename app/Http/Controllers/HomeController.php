@@ -119,19 +119,56 @@ class HomeController extends Controller
         return view('website.content.tutor', compact('teacher', 'duration60Rate', 'reviews', 'reviewsCount'));
     }
 
+    // public function tutorBooking($id): View
+    // {
+    //     $teacher = User::with([
+    //         'teacherSettings',
+    //         'lessonPackages',
+    //         'groupClasses.days',
+    //         'bookingRules',
+    //     ])
+    //         ->where('id', $id)
+    //         ->where('role', 'teacher')
+    //         ->firstOrFail();
+    //     // dd($teacher->toArray());
+    //     session(['tutor_id' => $teacher->id]); // store in session
+    //     return view('website.content.tutor-booking', compact('teacher'));
+    // }
+
     public function tutorBooking($id): View
     {
         $teacher = User::with([
             'teacherSettings',
-            'lessonPackages',
+            'lessonPackages' => function ($query) {
+                $query->where('is_active', true);
+            },
             'groupClasses.days',
             'bookingRules',
         ])
             ->where('id', $id)
             ->where('role', 'teacher')
             ->firstOrFail();
-        // dd($teacher->toArray());
-        session(['tutor_id' => $teacher->id]); // store in session
+        $discountMap = [
+            1 => 5,
+            2 => 10,
+            3 => 20,
+        ];
+
+        foreach ($teacher->lessonPackages as $package) {
+            $discountPercentage = $discountMap[$package->package_number] ?? 0;
+            $originalPrice = (float) $package->price;
+
+            if ($discountPercentage > 0) {
+                $package->discounted_price = $originalPrice - ($originalPrice * $discountPercentage / 100);
+                $package->discount_percentage = $discountPercentage;
+            } else {
+                $package->discounted_price = $originalPrice;
+                $package->discount_percentage = 0;
+            }
+            $package->original_price = $originalPrice;
+        }
+
+        session(['tutor_id' => $teacher->id]);
         return view('website.content.tutor-booking', compact('teacher'));
     }
 

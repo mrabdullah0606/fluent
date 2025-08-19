@@ -31,6 +31,7 @@ class SettingsRequest extends FormRequest
             // Group classes validation
             'groups' => 'nullable|array',
             'groups.*.title' => 'required_with:groups|string|max:255',
+            'groups.*.description' => 'nullable|string|max:500', // Add description validation
             'groups.*.duration_per_class' => 'required_with:groups.*.title|integer|in:60,90',
             'groups.*.lessons_per_week' => 'required_with:groups.*.title|integer|min:1|max:5',
             'groups.*.max_students' => 'required_with:groups.*|integer|min:1|max:100',
@@ -58,6 +59,7 @@ class SettingsRequest extends FormRequest
 
             // Group messages
             'groups.*.title.required_with' => 'Group title is required.',
+            'groups.*.description.max' => 'Description must not exceed 500 characters.',
             'groups.*.duration_per_class.required_with' => 'Class duration is required.',
             'groups.*.lessons_per_week.required_with' => 'Lessons per week is required.',
             'groups.*.max_students.required_with' => 'Maximum students is required.',
@@ -85,7 +87,7 @@ class SettingsRequest extends FormRequest
             $groups = $this->input('groups');
             foreach ($groups as $key => $group) {
                 $groups[$key]['is_active'] = isset($group['is_active']) ? true : false;
-                
+
                 // Ensure max_students is properly formatted as integer
                 if (isset($group['max_students'])) {
                     $groups[$key]['max_students'] = (int) $group['max_students'];

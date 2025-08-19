@@ -160,3 +160,91 @@ body {
         margin-top: 0.5rem;
     }
 }
+/* Additional styles for description textarea */
+.group-container textarea {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.group-container textarea:focus {
+    border-color: var(--primary-yellow);
+    box-shadow: 0 0 0 0.2rem rgba(253, 189, 0, 0.25);
+    outline: none;
+}
+
+.group-container textarea.is-valid {
+    border-color: #28a745;
+}
+
+.group-container textarea.is-invalid {
+    border-color: #dc3545;
+}
+
+/* Character counter styles */
+.char-count {
+    font-weight: 500;
+}
+
+.form-text.text-end {
+    margin-top: 0.25rem;
+}
+
+/* Description label spacing */
+.group-container .form-label {
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+/* Responsive adjustments for description */
+@media (max-width: 768px) {
+    .group-container textarea {
+        font-size: 13px;
+        min-height: 80px;
+    }
+
+    .form-text {
+        font-size: 12px;
+    }
+}
+
+/* Placeholder styling */
+.group-container textarea::placeholder {
+    color: #6c757d;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* Hover effects */
+.group-container textarea:hover {
+    border-color: #c0c0c0;
+}
+
+/* Textarea resize handle styling */
+.group-container textarea::-webkit-resizer {
+    background: linear-gradient(
+        -45deg,
+        transparent 0px,
+        transparent 2px,
+        var(--primary-yellow) 2px,
+        var(--primary-yellow) 4px,
+        transparent 4px
+    );
+}
+
+/* Animation for new groups with description */
+.group-container {
+    transition: all 0.3s ease;
+}
+
+.group-container.slide-out {
+    transform: translateX(-20px);
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
