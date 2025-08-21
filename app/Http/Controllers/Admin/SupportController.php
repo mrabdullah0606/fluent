@@ -16,516 +16,428 @@ class SupportController extends Controller
     private $accountId;
     private $webhookSecret;
 
-    public function __construct()
-    {
-        $this->apiUrl = config('services.chatwoot.api_url');
-        $this->apiToken = config('services.chatwoot.api_token');
-        $this->accountId = config('services.chatwoot.account_id');
-        $this->webhookSecret = config('services.chatwoot.webhook_secret');
-    }
+    // public function __construct()
+    // {
+    //     $this->apiUrl = config('services.chatwoot.api_url');
+    //     $this->apiToken = config('services.chatwoot.api_token');
+    //     $this->accountId = config('services.chatwoot.account_id');
+    //     $this->webhookSecret = config('services.chatwoot.webhook_secret');
+    // }
 
-    /** Display the customer support dashboard */
-    public function index()
-    {
-        return view('admin.content.customer-support');
-    }
+    // public function index()
+    // {
+    //     return view('admin.content.customer-support');
+    // }
 
-    /** Verify webhook signature */
-    private function verifyWebhookSignature(Request $request)
-    {
-        if (!$this->webhookSecret) {
-            return true; // No secret means skip
-        }
+    // private function verifyWebhookSignature(Request $request)
+    // {
+    //     if (!$this->webhookSecret) {
+    //         return true;
+    //     }
 
-        $payload = $request->all();
-        if (isset($payload['test']) && $payload['test'] === true) {
-            Log::info('Skipping signature verification for test webhook');
-            return true;
-        }
+    //     $payload = $request->all();
+    //     if (isset($payload['test']) && $payload['test'] === true) {
+    //         Log::info('Skipping signature verification for test webhook');
+    //         return true;
+    //     }
 
-        $signature = $request->header('X-Chatwoot-Signature');
-        if (!$signature) {
-            Log::warning('No X-Chatwoot-Signature header found');
-            return false;
-        }
+    //     $signature = $request->header('X-Chatwoot-Signature');
+    //     if (!$signature) {
+    //         Log::warning('No X-Chatwoot-Signature header found');
+    //         return false;
+    //     }
 
-        $expectedSignature = 'sha256=' . hash_hmac('sha256', $request->getContent(), $this->webhookSecret);
-        return hash_equals($signature, $expectedSignature);
-    }
+    //     $expectedSignature = 'sha256=' . hash_hmac('sha256', $request->getContent(), $this->webhookSecret);
+    //     return hash_equals($signature, $expectedSignature);
+    // }
 
-    /** Store webhook log entry (keep recent 50) */
-    private function storeWebhookLog($event, $payload)
-    {
-        try {
-            $logEntry = [
-                'timestamp' => now()->toISOString(),
-                'event' => $event,
-                'conversation_id' => $payload['conversation']['id'] ?? null,
-                'message_id' => $payload['message']['id'] ?? null,
-                'contact_id' => $payload['contact']['id'] ?? null,
-                'details' => $this->getEventDetails($event, $payload),
-                'payload' => $payload
-            ];
+    // private function storeWebhookLog($event, $payload)
+    // {
+    //     try {
+    //         $logEntry = [
+    //             'timestamp' => now()->toISOString(),
+    //             'event' => $event,
+    //             'conversation_id' => $payload['conversation']['id'] ?? null,
+    //             'message_id' => $payload['message']['id'] ?? null,
+    //             'contact_id' => $payload['contact']['id'] ?? null,
+    //             'details' => $this->getEventDetails($event, $payload),
+    //             'payload' => $payload
+    //         ];
 
-            $logs = Cache::get('webhook_logs', []);
-            array_unshift($logs, $logEntry);
-            $logs = array_slice($logs, 0, 50);
-            Cache::put('webhook_logs', $logs, 3600);
+    //         $logs = Cache::get('webhook_logs', []);
+    //         array_unshift($logs, $logEntry);
+    //         $logs = array_slice($logs, 0, 50);
+    //         Cache::put('webhook_logs', $logs, 3600);
 
-            // Optional: Write to file for persistent log
-            $logFile = storage_path('logs/chatwoot_webhooks.log');
-            file_put_contents($logFile, json_encode($logEntry) . "\n", FILE_APPEND | LOCK_EX);
+    //         $logFile = storage_path('logs/chatwoot_webhooks.log');
+    //         file_put_contents($logFile, json_encode($logEntry) . "\n", FILE_APPEND | LOCK_EX);
+    //     } catch (\Exception $e) {
+    //         Log::error('Failed to store webhook log: ' . $e->getMessage());
+    //     }
+    // }
 
-        } catch (\Exception $e) {
-            Log::error('Failed to store webhook log: ' . $e->getMessage());
-        }
-    }
+    // private function getEventDetails($event, $payload)
+    // {
+    //     switch ($event) {
+    //         case 'conversation_created':
+    //             return "New conversation from " . ($payload['conversation']['meta']['sender']['name'] ?? 'Unknown');
+    //         case 'message_created':
+    //             $messageType = $this->normalizeMessageType($payload['message']['message_type'] ?? 1);
+    //             $direction = $messageType === 0 ? 'Incoming' : 'Outgoing';
+    //             return "{$direction} message: " . substr($payload['message']['content'] ?? '', 0, 50);
+    //         case 'conversation_status_changed':
+    //             return "Status changed to: " . ($payload['conversation']['status'] ?? 'unknown');
+    //         case 'contact_created':
+    //             return "New contact: " . ($payload['contact']['name'] ?? $payload['contact']['email'] ?? 'Unknown');
+    //         default:
+    //             return "Event processed";
+    //     }
+    // }
 
-    /** Get event details string for logs */
-    private function getEventDetails($event, $payload)
-    {
-        switch ($event) {
-            case 'conversation_created':
-                return "New conversation from " . ($payload['conversation']['meta']['sender']['name'] ?? 'Unknown');
-            case 'message_created':
-                $messageType = $this->normalizeMessageType($payload['message']['message_type'] ?? 1);
-                $direction = $messageType === 0 ? 'Incoming' : 'Outgoing';
-                return "{$direction} message: " . substr($payload['message']['content'] ?? '', 0, 50);
-            case 'conversation_status_changed':
-                return "Status changed to: " . ($payload['conversation']['status'] ?? 'unknown');
-            case 'contact_created':
-                return "New contact: " . ($payload['contact']['name'] ?? $payload['contact']['email'] ?? 'Unknown');
-            default:
-                return "Event processed";
-        }
-    }
+    // private function normalizeMessageType($messageType)
+    // {
+    //     if (is_string($messageType)) {
+    //         switch (strtolower($messageType)) {
+    //             case 'incoming':
+    //             case '0':
+    //                 return 0;
+    //             case 'outgoing':
+    //             case '1':
+    //                 return 1;
+    //             default:
+    //                 return 1;
+    //         }
+    //     }
 
-    /**
-     * Normalize message type to consistent integer format
-     */
-    private function normalizeMessageType($messageType)
-    {
-        if (is_string($messageType)) {
-            switch (strtolower($messageType)) {
-                case 'incoming':
-                case '0':
-                    return 0;
-                case 'outgoing':
-                case '1':
-                    return 1;
-                default:
-                    return 1; // Default to outgoing
-            }
-        }
-        
-        return (int) $messageType;
-    }
+    //     return (int) $messageType;
+    // }
 
-    /**
-     * Store real-time event with better deduplication
-     */
-    private function storeRealtimeEvent(string $type, array $data)
-    {
-        try {
-            // Generate unique ID based on event type and content
-            $contentHash = md5(json_encode($data));
-            $eventId = time() . '_' . substr($contentHash, 0, 8);
-            
-            // Check for duplicate events
-            $events = Cache::get('realtime_events', []);
-            $duplicateCheck = array_filter($events, function($event) use ($eventId) {
-                return ($event['id'] ?? '') === $eventId;
-            });
-            
-            if (!empty($duplicateCheck)) {
-                Log::debug('Skipping duplicate real-time event', ['event_id' => $eventId, 'type' => $type]);
-                return null;
-            }
-            
-            $event = [
-                'id' => $eventId,
-                'type' => $type,
-                'data' => $data,
-                'timestamp' => now()->toISOString(),
-                'server_time' => time()
-            ];
+    // private function storeRealtimeEvent(string $type, array $data)
+    // {
+    //     try {
+    //         $contentHash = md5(json_encode($data));
+    //         $eventId = time() . '_' . substr($contentHash, 0, 8);
+    //         $events = Cache::get('realtime_events', []);
+    //         $duplicateCheck = array_filter($events, function ($event) use ($eventId) {
+    //             return ($event['id'] ?? '') === $eventId;
+    //         });
 
-            // Add to beginning of array
-            array_unshift($events, $event);
+    //         if (!empty($duplicateCheck)) {
+    //             Log::debug('Skipping duplicate real-time event', ['event_id' => $eventId, 'type' => $type]);
+    //             return null;
+    //         }
 
-            // Keep only last 100 events
-            $events = array_slice($events, 0, 100);
+    //         $event = [
+    //             'id' => $eventId,
+    //             'type' => $type,
+    //             'data' => $data,
+    //             'timestamp' => now()->toISOString(),
+    //             'server_time' => time()
+    //         ];
+    //         array_unshift($events, $event);
+    //         $events = array_slice($events, 0, 100);
+    //         Cache::put('realtime_events', $events, 7200);
 
-            // Store in cache for 2 hours
-            Cache::put('realtime_events', $events, 7200);
-            
-            Log::debug('Real-time event stored', [
-                'event_id' => $eventId,
-                'type' => $type,
-                'conversation_id' => $data['conversation_id'] ?? null,
-                'message_id' => $data['message']['id'] ?? null,
-                'total_events' => count($events)
-            ]);
+    //         Log::debug('Real-time event stored', [
+    //             'event_id' => $eventId,
+    //             'type' => $type,
+    //             'conversation_id' => $data['conversation_id'] ?? null,
+    //             'message_id' => $data['message']['id'] ?? null,
+    //             'total_events' => count($events)
+    //         ]);
 
-            return $event;
-        } catch (\Exception $e) {
-            Log::error('Failed to store real-time event: ' . $e->getMessage());
-            return null;
-        }
-    }
+    //         return $event;
+    //     } catch (\Exception $e) {
+    //         Log::error('Failed to store real-time event: ' . $e->getMessage());
+    //         return null;
+    //     }
+    // }
 
-    /**
-     * Get recent events with better filtering
-     */
-    private function getRecentEvents($lastEventId = 0)
-    {
-        $events = Cache::get('realtime_events', []);
-        
-        // Filter events newer than lastEventId and sort by ID
-        $filteredEvents = array_filter($events, function($event) use ($lastEventId) {
-            return ($event['id'] ?? 0) > $lastEventId;
-        });
-        
-        // Sort by ID to ensure proper order
-        usort($filteredEvents, function($a, $b) {
-            return ($a['id'] ?? 0) - ($b['id'] ?? 0);
-        });
-        
-        return $filteredEvents;
-    }
+    // private function getRecentEvents($lastEventId = 0)
+    // {
+    //     $events = Cache::get('realtime_events', []);
+    //     $filteredEvents = array_filter($events, function ($event) use ($lastEventId) {
+    //         return ($event['id'] ?? 0) > $lastEventId;
+    //     });
+    //     usort($filteredEvents, function ($a, $b) {
+    //         return ($a['id'] ?? 0) - ($b['id'] ?? 0);
+    //     });
 
-    /**
-     * Helper method to send SSE formatted messages
-     */
-    private function sendSSEMessage(array $data)
-    {
-        $json = json_encode($data);
-        echo "data: {$json}\n\n";
-        
-        // Force flush output
-        if (ob_get_level()) {
-            ob_flush();
-        }
-        flush();
-    }
+    //     return $filteredEvents;
+    // }
 
-    /**
-     * Enhanced SSE stream with better error handling and connection management
-     */
-    public function streamEvents(Request $request)
-    {
-        // Set headers for SSE
-        $headers = [
-            'Content-Type' => 'text/event-stream',
-            'Cache-Control' => 'no-cache, no-store, must-revalidate',
-            'Pragma' => 'no-cache',
-            'Expires' => '0',
-            'Connection' => 'keep-alive',
-            'X-Accel-Buffering' => 'no', // Disable nginx buffering
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Headers' => 'Cache-Control'
-        ];
 
-        return response()->stream(function () {
-            // Set longer execution time for SSE
-            set_time_limit(0);
-            ignore_user_abort(false);
+    // private function sendSSEMessage(array $data)
+    // {
+    //     $json = json_encode($data);
+    //     echo "data: {$json}\n\n";
+    //     if (ob_get_level()) {
+    //         ob_flush();
+    //     }
+    //     flush();
+    // }
 
-            try {
-                // Send initial connection event
-                $this->sendSSEMessage([
-                    'type' => 'connected',
-                    'timestamp' => now()->toISOString(),
-                    'server_time' => time()
-                ]);
+    // public function streamEvents(Request $request)
+    // {
+    //     $headers = [
+    //         'Content-Type' => 'text/event-stream',
+    //         'Cache-Control' => 'no-cache, no-store, must-revalidate',
+    //         'Pragma' => 'no-cache',
+    //         'Expires' => '0',
+    //         'Connection' => 'keep-alive',
+    //         'X-Accel-Buffering' => 'no',
+    //         'Access-Control-Allow-Origin' => '*',
+    //         'Access-Control-Allow-Headers' => 'Cache-Control'
+    //     ];
 
-                $lastEventId = 0;
-                $heartbeatCounter = 0;
-                $errorCount = 0;
-                $maxErrors = 5;
-                
-                while (true) {
-                    // Check if client disconnected
-                    if (connection_aborted()) {
-                        Log::info('[SSE] Client disconnected');
-                        break;
-                    }
+    //     return response()->stream(function () {
+    //         set_time_limit(0);
+    //         ignore_user_abort(false);
 
-                    try {
-                        // Get recent events
-                        $events = $this->getRecentEvents($lastEventId);
-                        
-                        foreach ($events as $event) {
-                            if (connection_aborted()) {
-                                break 2;
-                            }
-                            
-                            $this->sendSSEMessage($event);
-                            $lastEventId = max($lastEventId, $event['id'] ?? 0);
-                        }
-                        
-                        // Send heartbeat every 30 seconds (15 iterations * 2 seconds)
-                        $heartbeatCounter++;
-                        if ($heartbeatCounter >= 15) {
-                            $this->sendSSEMessage([
-                                'type' => 'heartbeat',
-                                'timestamp' => now()->toISOString()
-                            ]);
-                            $heartbeatCounter = 0;
-                        }
-                        
-                        // Reset error count on successful iteration
-                        $errorCount = 0;
-                        
-                    } catch (\Exception $e) {
-                        $errorCount++;
-                        Log::error('[SSE] Stream error: ' . $e->getMessage());
-                        
-                        $this->sendSSEMessage([
-                            'type' => 'error',
-                            'message' => 'Stream error occurred',
-                            'timestamp' => now()->toISOString()
-                        ]);
-                        
-                        // Break if too many consecutive errors
-                        if ($errorCount >= $maxErrors) {
-                            Log::error('[SSE] Too many consecutive errors, closing stream');
-                            break;
-                        }
-                    }
-                    
-                    // Wait 2 seconds before next check
-                    sleep(2);
-                }
-                
-            } catch (\Exception $e) {
-                Log::error('[SSE] Fatal stream error: ' . $e->getMessage());
-                $this->sendSSEMessage([
-                    'type' => 'fatal_error',
-                    'message' => 'Stream encountered fatal error',
-                    'timestamp' => now()->toISOString()
-                ]);
-            }
-        }, 200, $headers);
-    }
+    //         try {
+    //             $this->sendSSEMessage([
+    //                 'type' => 'connected',
+    //                 'timestamp' => now()->toISOString(),
+    //                 'server_time' => time()
+    //             ]);
 
-    /**
-     * Enhanced webhook handler with better logging and error handling
-     */
-    public function webhook(Request $request)
-    {
-        try {
-            $payload = $request->all();
-            $headers = $request->headers->all();
-            
-            Log::info('Chatwoot Webhook Received', [
-                'event' => $payload['event'] ?? 'unknown',
-                'conversation_id' => $payload['conversation']['id'] ?? null,
-                'message_id' => $payload['message']['id'] ?? null,
-                'user_agent' => $headers['user-agent'][0] ?? '',
-                'ip' => $request->ip(),
-                'payload_size' => strlen($request->getContent())
-            ]);
+    //             $lastEventId = 0;
+    //             $heartbeatCounter = 0;
+    //             $errorCount = 0;
+    //             $maxErrors = 5;
 
-            $isTestWebhook = isset($payload['test']) && $payload['test'] === true;
+    //             while (true) {
+    //                 if (connection_aborted()) {
+    //                     Log::info('[SSE] Client disconnected');
+    //                     break;
+    //                 }
 
-            // Verify webhook signature if configured
-            if ($this->webhookSecret && !$isTestWebhook && !$this->verifyWebhookSignature($request)) {
-                Log::warning('Webhook signature verification failed', [
-                    'received_signature' => $request->header('X-Chatwoot-Signature'),
-                    'ip' => $request->ip()
-                ]);
-                return response()->json(['error' => 'Invalid signature'], 401);
-            }
+    //                 try {
+    //                     $events = $this->getRecentEvents($lastEventId);
 
-            if (!$this->webhookSecret) {
-                Log::info('Webhook secret not configured - skipping signature verification');
-            }
+    //                     foreach ($events as $event) {
+    //                         if (connection_aborted()) {
+    //                             break 2;
+    //                         }
 
-            $event = $payload['event'] ?? 'unknown';
+    //                         $this->sendSSEMessage($event);
+    //                         $lastEventId = max($lastEventId, $event['id'] ?? 0);
+    //                     }
+    //                     $heartbeatCounter++;
+    //                     if ($heartbeatCounter >= 15) {
+    //                         $this->sendSSEMessage([
+    //                             'type' => 'heartbeat',
+    //                             'timestamp' => now()->toISOString()
+    //                         ]);
+    //                         $heartbeatCounter = 0;
+    //                     }
+    //                     $errorCount = 0;
+    //                 } catch (\Exception $e) {
+    //                     $errorCount++;
+    //                     Log::error('[SSE] Stream error: ' . $e->getMessage());
 
-            // Store webhook log
-            $this->storeWebhookLog($event, $payload);
+    //                     $this->sendSSEMessage([
+    //                         'type' => 'error',
+    //                         'message' => 'Stream error occurred',
+    //                         'timestamp' => now()->toISOString()
+    //                     ]);
+    //                     if ($errorCount >= $maxErrors) {
+    //                         Log::error('[SSE] Too many consecutive errors, closing stream');
+    //                         break;
+    //                     }
+    //                 }
+    //                 sleep(2);
+    //             }
+    //         } catch (\Exception $e) {
+    //             Log::error('[SSE] Fatal stream error: ' . $e->getMessage());
+    //             $this->sendSSEMessage([
+    //                 'type' => 'fatal_error',
+    //                 'message' => 'Stream encountered fatal error',
+    //                 'timestamp' => now()->toISOString()
+    //             ]);
+    //         }
+    //     }, 200, $headers);
+    // }
 
-            // Handle different webhook events
-            switch ($event) {
-                case 'conversation_created':
-                    $this->handleConversationCreated($payload);
-                    break;
-                case 'conversation_updated':
-                    $this->handleConversationUpdated($payload);
-                    break;
-                case 'conversation_status_changed':
-                    $this->handleConversationStatusChanged($payload);
-                    break;
-                case 'message_created':
-                    $this->handleMessageCreated($payload);
-                    break;
-                case 'message_updated':
-                    $this->handleMessageUpdated($payload);
-                    break;
-                case 'contact_created':
-                    $this->handleContactCreated($payload);
-                    break;
-                case 'contact_updated':
-                    $this->handleContactUpdated($payload);
-                    break;
-                case 'conversation_typing_on':
-                case 'conversation_typing_off':
-                    $this->handleTypingEvent($payload);
-                    break;
-                case 'webwidget_triggered':
-                    $this->handleWebwidgetTriggered($payload);
-                    break;
-                case 'test_webhook':
-                    Log::info('Test webhook received successfully', [
-                        'source' => $isTestWebhook ? 'Laravel Dashboard' : 'External',
-                        'conversation_id' => $payload['conversation']['id'] ?? null
-                    ]);
-                    break;
-                default:
-                    Log::info("Unhandled webhook event: {$event}", [
-                        'payload_keys' => array_keys($payload)
-                    ]);
-            }
+    // public function webhook(Request $request)
+    // {
+    //     try {
+    //         $payload = $request->all();
+    //         $headers = $request->headers->all();
 
-            // Clear relevant caches
-            $this->clearRelevantCaches($event);
+    //         Log::info('Chatwoot Webhook Received', [
+    //             'event' => $payload['event'] ?? 'unknown',
+    //             'conversation_id' => $payload['conversation']['id'] ?? null,
+    //             'message_id' => $payload['message']['id'] ?? null,
+    //             'user_agent' => $headers['user-agent'][0] ?? '',
+    //             'ip' => $request->ip(),
+    //             'payload_size' => strlen($request->getContent())
+    //         ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Webhook processed successfully',
-                'event' => $event,
-                'timestamp' => now()->toISOString(),
-                'test_mode' => $isTestWebhook,
-                'processing_time_ms' => round((microtime(true) - (defined('LARAVEL_START') ? LARAVEL_START : microtime(true))) * 1000, 2)
-            ]);
+    //         $isTestWebhook = isset($payload['test']) && $payload['test'] === true;
+    //         if ($this->webhookSecret && !$isTestWebhook && !$this->verifyWebhookSignature($request)) {
+    //             Log::warning('Webhook signature verification failed', [
+    //                 'received_signature' => $request->header('X-Chatwoot-Signature'),
+    //                 'ip' => $request->ip()
+    //             ]);
+    //             return response()->json(['error' => 'Invalid signature'], 401);
+    //         }
 
-        } catch (\Exception $e) {
-            Log::error('Webhook processing error', [
-                'error' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-                'request_data' => $request->all()
-            ]);
-            
-            return response()->json([
-                'success' => false,
-                'error' => 'Webhook processing failed',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
+    //         if (!$this->webhookSecret) {
+    //             Log::info('Webhook secret not configured - skipping signature verification');
+    //         }
 
-    /**
-     * Enhanced message created handler with better duplicate prevention
-     */
-    private function handleMessageCreated(array $payload)
-    {
-        $messageTypeRaw = $payload['message']['message_type'] ?? 1;
-        $conversationId = $payload['conversation']['id'] ?? null;
-        $message = $payload['message'] ?? [];
-        $messageId = $message['id'] ?? null;
-        
-        // Skip if we don't have essential data
-        if (!$conversationId || !$messageId) {
-            Log::warning('Skipping message - missing conversation_id or message_id', [
-                'conversation_id' => $conversationId,
-                'message_id' => $messageId
-            ]);
-            return;
-        }
-        
-        // Check for duplicate processing using cache with longer TTL
-        $duplicateKey = "processed_message_{$messageId}";
-        if (Cache::has($duplicateKey)) {
-            Log::debug('Skipping duplicate message processing', ['message_id' => $messageId]);
-            return;
-        }
-        
-        // Mark as processed for 30 minutes
-        Cache::put($duplicateKey, true, 1800);
-        
-        // Normalize message type to integer
-        $messageType = $this->normalizeMessageType($messageTypeRaw);
-        $messageDirection = ($messageType === 0) ? 'incoming' : 'outgoing';
-        
-        Log::info('Processing new message', [
-            'conversation_id' => $conversationId,
-            'message_id' => $messageId,
-            'message_type_raw' => $messageTypeRaw,
-            'message_type_normalized' => $messageType,
-            'direction' => $messageDirection,
-            'content_preview' => substr($message['content'] ?? '', 0, 100),
-            'sender' => $message['sender']['name'] ?? 'Unknown'
-        ]);
+    //         $event = $payload['event'] ?? 'unknown';
+    //         $this->storeWebhookLog($event, $payload);
+    //         switch ($event) {
+    //             case 'conversation_created':
+    //                 $this->handleConversationCreated($payload);
+    //                 break;
+    //             case 'conversation_updated':
+    //                 $this->handleConversationUpdated($payload);
+    //                 break;
+    //             case 'conversation_status_changed':
+    //                 $this->handleConversationStatusChanged($payload);
+    //                 break;
+    //             case 'message_created':
+    //                 $this->handleMessageCreated($payload);
+    //                 break;
+    //             case 'message_updated':
+    //                 $this->handleMessageUpdated($payload);
+    //                 break;
+    //             case 'contact_created':
+    //                 $this->handleContactCreated($payload);
+    //                 break;
+    //             case 'contact_updated':
+    //                 $this->handleContactUpdated($payload);
+    //                 break;
+    //             case 'conversation_typing_on':
+    //             case 'conversation_typing_off':
+    //                 $this->handleTypingEvent($payload);
+    //                 break;
+    //             case 'webwidget_triggered':
+    //                 $this->handleWebwidgetTriggered($payload);
+    //                 break;
+    //             case 'test_webhook':
+    //                 Log::info('Test webhook received successfully', [
+    //                     'source' => $isTestWebhook ? 'Laravel Dashboard' : 'External',
+    //                     'conversation_id' => $payload['conversation']['id'] ?? null
+    //                 ]);
+    //                 break;
+    //             default:
+    //                 Log::info("Unhandled webhook event: {$event}", [
+    //                     'payload_keys' => array_keys($payload)
+    //                 ]);
+    //         }
+    //         $this->clearRelevantCaches($event);
 
-        // Prepare normalized message data
-        $normalizedMessage = array_merge($message, [
-            'message_type' => $messageType, // Integer for consistency
-            'direction' => $messageDirection // String for easy frontend handling
-        ]);
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Webhook processed successfully',
+    //             'event' => $event,
+    //             'timestamp' => now()->toISOString(),
+    //             'test_mode' => $isTestWebhook,
+    //             'processing_time_ms' => round((microtime(true) - (defined('LARAVEL_START') ? LARAVEL_START : microtime(true))) * 1000, 2)
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         Log::error('Webhook processing error', [
+    //             'error' => $e->getMessage(),
+    //             'line' => $e->getLine(),
+    //             'file' => $e->getFile(),
+    //             'request_data' => $request->all()
+    //         ]);
 
-        // Store real-time event for SSE
-        $realtimeEvent = $this->storeRealtimeEvent('message_created', [
-            'conversation_id' => $conversationId,
-            'message' => $normalizedMessage,
-            'conversation' => $payload['conversation'] ?? null,
-        ]);
+    //         return response()->json([
+    //             'success' => false,
+    //             'error' => 'Webhook processing failed',
+    //             'message' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
 
-        if ($realtimeEvent) {
-            Log::info('Real-time message event stored', [
-                'event_id' => $realtimeEvent['id'],
-                'message_id' => $messageId,
-                'conversation_id' => $conversationId
-            ]);
-        }
+    // private function handleMessageCreated(array $payload)
+    // {
+    //     $messageTypeRaw = $payload['message']['message_type'] ?? 1;
+    //     $conversationId = $payload['conversation']['id'] ?? null;
+    //     $message = $payload['message'] ?? [];
+    //     $messageId = $message['id'] ?? null;
+    //     if (!$conversationId || !$messageId) {
+    //         Log::warning('Skipping message - missing conversation_id or message_id', [
+    //             'conversation_id' => $conversationId,
+    //             'message_id' => $messageId
+    //         ]);
+    //         return;
+    //     }
+    //     $duplicateKey = "processed_message_{$messageId}";
+    //     if (Cache::has($duplicateKey)) {
+    //         Log::debug('Skipping duplicate message processing', ['message_id' => $messageId]);
+    //         return;
+    //     }
+    //     Cache::put($duplicateKey, true, 1800);
+    //     $messageType = $this->normalizeMessageType($messageTypeRaw);
+    //     $messageDirection = ($messageType === 0) ? 'incoming' : 'outgoing';
 
-        // Handle specific message type processing
-        if ($messageType === 0) {
-            $this->handleIncomingMessage($payload);
-        } else {
-            $this->handleOutgoingMessage($payload);
-        }
-        
-        // Update conversation counts
-        $this->updateConversationCounts();
-    }
+    //     Log::info('Processing new message', [
+    //         'conversation_id' => $conversationId,
+    //         'message_id' => $messageId,
+    //         'message_type_raw' => $messageTypeRaw,
+    //         'message_type_normalized' => $messageType,
+    //         'direction' => $messageDirection,
+    //         'content_preview' => substr($message['content'] ?? '', 0, 100),
+    //         'sender' => $message['sender']['name'] ?? 'Unknown'
+    //     ]);
+    //     $normalizedMessage = array_merge($message, [
+    //         'message_type' => $messageType,
+    //         'direction' => $messageDirection
+    //     ]);
+    //     $realtimeEvent = $this->storeRealtimeEvent('message_created', [
+    //         'conversation_id' => $conversationId,
+    //         'message' => $normalizedMessage,
+    //         'conversation' => $payload['conversation'] ?? null,
+    //     ]);
 
-    /**
-     * Enhanced incoming message handler
-     */
-    private function handleIncomingMessage(array $payload)
-    {
-        $conversationId = $payload['conversation']['id'] ?? null;
-        $message = $payload['message'] ?? [];
+    //     if ($realtimeEvent) {
+    //         Log::info('Real-time message event stored', [
+    //             'event_id' => $realtimeEvent['id'],
+    //             'message_id' => $messageId,
+    //             'conversation_id' => $conversationId
+    //         ]);
+    //     }
+    //     if ($messageType === 0) {
+    //         $this->handleIncomingMessage($payload);
+    //     } else {
+    //         $this->handleOutgoingMessage($payload);
+    //     }
 
-        Log::info('Incoming message processed', [
-            'conversation_id' => $conversationId,
-            'message_id' => $message['id'] ?? null,
-            'content_length' => strlen($message['content'] ?? ''),
-            'sender' => $message['sender']['name'] ?? 'Unknown'
-        ]);
+    //     $this->updateConversationCounts();
+    // }
 
-        // Update conversation counts due to new incoming message
-        $this->updateConversationCounts();
-    }
+    // private function handleIncomingMessage(array $payload)
+    // {
+    //     $conversationId = $payload['conversation']['id'] ?? null;
+    //     $message = $payload['message'] ?? [];
 
-    /**
-     * Enhanced outgoing message handler
-     */
-    private function handleOutgoingMessage(array $payload)
-    {
-        $conversationId = $payload['conversation']['id'] ?? null;
-        $message = $payload['message'] ?? [];
+    //     Log::info('Incoming message processed', [
+    //         'conversation_id' => $conversationId,
+    //         'message_id' => $message['id'] ?? null,
+    //         'content_length' => strlen($message['content'] ?? ''),
+    //         'sender' => $message['sender']['name'] ?? 'Unknown'
+    //     ]);
+    //     $this->updateConversationCounts();
+    // }
 
-        Log::info('Outgoing message processed', [
-            'conversation_id' => $conversationId,
-            'message_id' => $message['id'] ?? null,
-            'content_length' => strlen($message['content'] ?? ''),
-            'sender' => $message['sender']['name'] ?? 'Unknown'
-        ]);
-    }
+    // private function handleOutgoingMessage(array $payload)
+    // {
+    //     $conversationId = $payload['conversation']['id'] ?? null;
+    //     $message = $payload['message'] ?? [];
+
+    //     Log::info('Outgoing message processed', [
+    //         'conversation_id' => $conversationId,
+    //         'message_id' => $message['id'] ?? null,
+    //         'content_length' => strlen($message['content'] ?? ''),
+    //         'sender' => $message['sender']['name'] ?? 'Unknown'
+    //     ]);
+    // }
 
     private function handleConversationCreated($payload)
     {
@@ -626,7 +538,410 @@ class SupportController extends Controller
         ]);
     }
 
-    /** Cache clearing helpers */
+    // private function clearRelevantCaches($event)
+    // {
+    //     foreach (['stats', 'conversations', 'contacts'] as $cache) {
+    //         Cache::forget("chatwoot_{$cache}");
+    //     }
+    // }
+    public function __construct()
+    {
+        $this->apiUrl = config('services.chatwoot.api_url');
+        $this->apiToken = config('services.chatwoot.api_token');
+        $this->accountId = config('services.chatwoot.account_id');
+        $this->webhookSecret = config('services.chatwoot.webhook_secret');
+    }
+
+    public function index()
+    {
+        return view('admin.content.customer-support');
+    }
+
+    private function verifyWebhookSignature(Request $request)
+    {
+        if (!$this->webhookSecret) {
+            return true;
+        }
+
+        $payload = $request->all();
+        if (isset($payload['test']) && $payload['test'] === true) {
+            Log::info('Skipping signature verification for test webhook');
+            return true;
+        }
+
+        $signature = $request->header('X-Chatwoot-Signature');
+        if (!$signature) {
+            Log::warning('No X-Chatwoot-Signature header found');
+            return false;
+        }
+
+        $expectedSignature = 'sha256=' . hash_hmac('sha256', $request->getContent(), $this->webhookSecret);
+        return hash_equals($signature, $expectedSignature);
+    }
+
+    private function storeWebhookLog($event, $payload)
+    {
+        try {
+            $logEntry = [
+                'timestamp' => now()->toISOString(),
+                'event' => $event,
+                'conversation_id' => $payload['conversation']['id'] ?? null,
+                'message_id' => $payload['message']['id'] ?? null,
+                'contact_id' => $payload['contact']['id'] ?? null,
+                'details' => $this->getEventDetails($event, $payload),
+                'payload' => $payload
+            ];
+
+            $logs = Cache::get('webhook_logs', []);
+            array_unshift($logs, $logEntry);
+            $logs = array_slice($logs, 0, 50);
+            Cache::put('webhook_logs', $logs, 3600);
+
+            $logFile = storage_path('logs/chatwoot_webhooks.log');
+            file_put_contents($logFile, json_encode($logEntry) . "\n", FILE_APPEND | LOCK_EX);
+        } catch (\Exception $e) {
+            Log::error('Failed to store webhook log: ' . $e->getMessage());
+        }
+    }
+
+    private function getEventDetails($event, $payload)
+    {
+        switch ($event) {
+            case 'conversation_created':
+                return "New conversation from " . ($payload['conversation']['meta']['sender']['name'] ?? 'Unknown');
+            case 'message_created':
+                $messageType = $this->normalizeMessageType($payload['message']['message_type'] ?? 1);
+                $direction = $messageType === 0 ? 'Incoming' : 'Outgoing';
+                return "{$direction} message: " . substr($payload['message']['content'] ?? '', 0, 50);
+            case 'conversation_status_changed':
+                return "Status changed to: " . ($payload['conversation']['status'] ?? 'unknown');
+            case 'contact_created':
+                return "New contact: " . ($payload['contact']['name'] ?? $payload['contact']['email'] ?? 'Unknown');
+            default:
+                return "Event processed";
+        }
+    }
+
+    private function normalizeMessageType($messageType)
+    {
+        if (is_string($messageType)) {
+            switch (strtolower($messageType)) {
+                case 'incoming':
+                case '0':
+                    return 0;
+                case 'outgoing':
+                case '1':
+                    return 1;
+                default:
+                    return 1;
+            }
+        }
+
+        return (int) $messageType;
+    }
+
+    private function storeRealtimeEvent(string $type, array $data)
+    {
+        try {
+            $contentHash = md5(json_encode($data));
+            $eventId = time() . '_' . substr($contentHash, 0, 8);
+            $events = Cache::get('realtime_events', []);
+            $duplicateCheck = array_filter($events, function ($event) use ($eventId) {
+                return ($event['id'] ?? '') === $eventId;
+            });
+
+            if (!empty($duplicateCheck)) {
+                Log::debug('Skipping duplicate real-time event', ['event_id' => $eventId, 'type' => $type]);
+                return null;
+            }
+
+            $event = [
+                'id' => time(),
+                'unique_id' => $eventId,
+                'type' => $type,
+                'data' => $data,
+                'timestamp' => now()->toISOString(),
+                'server_time' => time()
+            ];
+
+            array_unshift($events, $event);
+            $events = array_slice($events, 0, 100);
+            Cache::put('realtime_events', $events, 7200);
+
+            Log::debug('Real-time event stored', [
+                'event_id' => $eventId,
+                'type' => $type,
+                'conversation_id' => $data['conversation_id'] ?? null,
+                'message_id' => $data['message']['id'] ?? null,
+                'total_events' => count($events)
+            ]);
+
+            return $event;
+        } catch (\Exception $e) {
+            Log::error('Failed to store real-time event: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    private function getRecentEvents($lastEventId = 0)
+    {
+        $events = Cache::get('realtime_events', []);
+        $filteredEvents = array_filter($events, function ($event) use ($lastEventId) {
+            return ($event['id'] ?? 0) > $lastEventId;
+        });
+        usort($filteredEvents, function ($a, $b) {
+            return ($a['id'] ?? 0) - ($b['id'] ?? 0);
+        });
+
+        return $filteredEvents;
+    }
+
+    private function sendSSEMessage(array $data)
+    {
+        $json = json_encode($data);
+        echo "data: {$json}\n\n";
+        if (ob_get_level()) {
+            ob_flush();
+        }
+        flush();
+    }
+
+    public function streamEvents(Request $request)
+    {
+        $headers = [
+            'Content-Type' => 'text/event-stream',
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+            'Connection' => 'keep-alive',
+            'X-Accel-Buffering' => 'no',
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Headers' => 'Cache-Control'
+        ];
+
+        return response()->stream(function () {
+            set_time_limit(0);
+            ignore_user_abort(false);
+
+            try {
+                $this->sendSSEMessage([
+                    'type' => 'connected',
+                    'timestamp' => now()->toISOString(),
+                    'server_time' => time()
+                ]);
+
+                $lastEventId = 0;
+                $heartbeatCounter = 0;
+                $errorCount = 0;
+                $maxErrors = 5;
+
+                while (true) {
+                    if (connection_aborted()) {
+                        Log::info('[SSE] Client disconnected');
+                        break;
+                    }
+
+                    try {
+                        $events = $this->getRecentEvents($lastEventId);
+
+                        foreach ($events as $event) {
+                            if (connection_aborted()) {
+                                break 2;
+                            }
+
+                            $this->sendSSEMessage($event);
+                            $lastEventId = max($lastEventId, $event['id'] ?? 0);
+                        }
+                        $heartbeatCounter++;
+                        if ($heartbeatCounter >= 15) {
+                            $this->sendSSEMessage([
+                                'type' => 'heartbeat',
+                                'timestamp' => now()->toISOString()
+                            ]);
+                            $heartbeatCounter = 0;
+                        }
+                        $errorCount = 0;
+                    } catch (\Exception $e) {
+                        $errorCount++;
+                        Log::error('[SSE] Stream error: ' . $e->getMessage());
+
+                        $this->sendSSEMessage([
+                            'type' => 'error',
+                            'message' => 'Stream error occurred',
+                            'timestamp' => now()->toISOString()
+                        ]);
+                        if ($errorCount >= $maxErrors) {
+                            Log::error('[SSE] Too many consecutive errors, closing stream');
+                            break;
+                        }
+                    }
+                    sleep(2);
+                }
+            } catch (\Exception $e) {
+                Log::error('[SSE] Fatal stream error: ' . $e->getMessage());
+                $this->sendSSEMessage([
+                    'type' => 'fatal_error',
+                    'message' => 'Stream encountered fatal error',
+                    'timestamp' => now()->toISOString()
+                ]);
+            }
+        }, 200, $headers);
+    }
+
+    public function webhook(Request $request)
+    {
+        try {
+            $payload = $request->all();
+            $headers = $request->headers->all();
+
+            Log::info('Chatwoot Webhook Received', [
+                'event' => $payload['event'] ?? 'unknown',
+                'conversation_id' => $payload['conversation']['id'] ?? null,
+                'message_id' => $payload['message']['id'] ?? null,
+                'user_agent' => $headers['user-agent'][0] ?? '',
+                'ip' => $request->ip(),
+                'payload_size' => strlen($request->getContent())
+            ]);
+
+            $isTestWebhook = isset($payload['test']) && $payload['test'] === true;
+            if ($this->webhookSecret && !$isTestWebhook && !$this->verifyWebhookSignature($request)) {
+                Log::warning('Webhook signature verification failed', [
+                    'received_signature' => $request->header('X-Chatwoot-Signature'),
+                    'ip' => $request->ip()
+                ]);
+                return response()->json(['error' => 'Invalid signature'], 401);
+            }
+
+            if (!$this->webhookSecret) {
+                Log::info('Webhook secret not configured - skipping signature verification');
+            }
+
+            $event = $payload['event'] ?? 'unknown';
+            $this->storeWebhookLog($event, $payload);
+
+            switch ($event) {
+                case 'conversation_created':
+                    $this->handleConversationCreated($payload);
+                    break;
+                case 'conversation_updated':
+                    $this->handleConversationUpdated($payload);
+                    break;
+                case 'conversation_status_changed':
+                    $this->handleConversationStatusChanged($payload);
+                    break;
+                case 'message_created':
+                    $this->handleMessageCreated($payload);
+                    break;
+                case 'message_updated':
+                    $this->handleMessageUpdated($payload);
+                    break;
+                case 'contact_created':
+                    $this->handleContactCreated($payload);
+                    break;
+                case 'contact_updated':
+                    $this->handleContactUpdated($payload);
+                    break;
+                case 'conversation_typing_on':
+                case 'conversation_typing_off':
+                    $this->handleTypingEvent($payload);
+                    break;
+                case 'webwidget_triggered':
+                    $this->handleWebwidgetTriggered($payload);
+                    break;
+                case 'test_webhook':
+                    Log::info('Test webhook received successfully', [
+                        'source' => $isTestWebhook ? 'Laravel Dashboard' : 'External',
+                        'conversation_id' => $payload['conversation']['id'] ?? null
+                    ]);
+                    break;
+                default:
+                    Log::info("Unhandled webhook event: {$event}", [
+                        'payload_keys' => array_keys($payload)
+                    ]);
+            }
+
+            $this->clearRelevantCaches($event);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Webhook processed successfully',
+                'event' => $event,
+                'timestamp' => now()->toISOString(),
+                'test_mode' => $isTestWebhook,
+                'processing_time_ms' => round((microtime(true) - (defined('LARAVEL_START') ? LARAVEL_START : microtime(true))) * 1000, 2)
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Webhook processing error', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'request_data' => $request->all()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Webhook processing failed',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Handle message_created event
+    private function handleMessageCreated(array $payload)
+    {
+        $messageTypeRaw = $payload['message']['message_type'] ?? 1;
+        $conversationId = $payload['conversation']['id'] ?? null;
+        $message = $payload['message'] ?? [];
+        $messageId = $message['id'] ?? null;
+
+        if (!$conversationId || !$messageId) {
+            Log::warning('Skipping message - missing conversation_id or message_id', [
+                'conversation_id' => $conversationId,
+                'message_id' => $messageId
+            ]);
+            return;
+        }
+
+        $duplicateKey = "processed_message_{$messageId}";
+        if (Cache::has($duplicateKey)) {
+            Log::debug('Skipping duplicate message processing', ['message_id' => $messageId]);
+            return;
+        }
+        Cache::put($duplicateKey, true, 1800);
+
+        $messageType = $this->normalizeMessageType($messageTypeRaw);
+        $messageDirection = ($messageType === 0) ? 'incoming' : 'outgoing';
+
+        Log::info('Processing new message', [
+            'conversation_id' => $conversationId,
+            'message_id' => $messageId,
+            'message_type_raw' => $messageTypeRaw,
+            'message_type_normalized' => $messageType,
+            'direction' => $messageDirection,
+            'content_preview' => substr($message['content'] ?? '', 0, 100),
+            'sender' => $message['sender']['name'] ?? 'Unknown'
+        ]);
+
+        $normalizedMessage = array_merge($message, [
+            'message_type' => $messageType,
+            'direction' => $messageDirection
+        ]);
+
+        $realtimeEvent = $this->storeRealtimeEvent('message_created', [
+            'conversation_id' => $conversationId,
+            'message' => $normalizedMessage,
+            'conversation' => $payload['conversation'] ?? null,
+        ]);
+
+        if ($realtimeEvent) {
+            Log::info('Real-time message event stored', [
+                'event_id' => $realtimeEvent['id'],
+                'message_id' => $messageId,
+                'conversation_id' => $conversationId
+            ]);
+        }
+    }
+
     private function clearRelevantCaches($event)
     {
         foreach (['stats', 'conversations', 'contacts'] as $cache) {
@@ -644,21 +959,18 @@ class SupportController extends Controller
         Cache::forget('chatwoot_contacts');
     }
 
-    /**
-     * Get recent webhook logs
-     */
     public function getWebhookLogs()
     {
         try {
             $logs = Cache::get('webhook_logs', []);
-            
+
             return response()->json([
                 'success' => true,
                 'logs' => $logs
             ]);
         } catch (\Exception $e) {
             Log::error('Error fetching webhook logs: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to fetch webhook logs',
@@ -667,9 +979,6 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Get dashboard statistics
-     */
     public function getStats()
     {
         try {
@@ -685,11 +994,9 @@ class SupportController extends Controller
                     ]
                 ]);
             }
-
-            // Check cache first
             $cacheKey = 'chatwoot_stats';
             $cachedStats = Cache::get($cacheKey);
-            
+
             if ($cachedStats) {
                 return response()->json([
                     'success' => true,
@@ -697,8 +1004,6 @@ class SupportController extends Controller
                     'cached' => true
                 ]);
             }
-
-            // Get all conversations to calculate stats
             $response = Http::withHeaders([
                 'api_access_token' => $this->apiToken,
             ])->timeout(10)->get("{$this->apiUrl}/accounts/{$this->accountId}/conversations");
@@ -706,8 +1011,6 @@ class SupportController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 $meta = $data['data']['meta'] ?? [];
-                
-                // Get total contacts
                 $contactsResponse = Http::withHeaders([
                     'api_access_token' => $this->apiToken,
                 ])->timeout(10)->get("{$this->apiUrl}/accounts/{$this->accountId}/contacts");
@@ -724,8 +1027,6 @@ class SupportController extends Controller
                     'total_contacts' => $totalContacts,
                     'pending_conversations' => $meta['unassigned_count'] ?? 0
                 ];
-
-                // Cache for 5 minutes
                 Cache::put($cacheKey, $statsData, 300);
 
                 return response()->json([
@@ -735,10 +1036,9 @@ class SupportController extends Controller
             } else {
                 throw new \Exception('API request failed: ' . $response->body());
             }
-
         } catch (\Exception $e) {
             Log::error('Chatwoot stats error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to fetch stats: ' . $e->getMessage(),
@@ -752,9 +1052,6 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Get conversations with optional status filter
-     */
     public function getConversations(Request $request)
     {
         try {
@@ -773,10 +1070,9 @@ class SupportController extends Controller
                 'success' => true,
                 'data' => $conversations
             ]);
-
         } catch (\Exception $e) {
             Log::error('Chatwoot conversations error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to fetch conversations: ' . $e->getMessage(),
@@ -785,9 +1081,6 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Get messages for a specific conversation
-     */
     public function getMessages($conversationId)
     {
         try {
@@ -805,7 +1098,6 @@ class SupportController extends Controller
 
             if ($response->successful()) {
                 $messages = $response->json();
-                // Return the payload array which contains the messages
                 return response()->json([
                     'success' => true,
                     'data' => $messages['payload'] ?? []
@@ -813,10 +1105,9 @@ class SupportController extends Controller
             } else {
                 throw new \Exception('API request failed: ' . $response->body());
             }
-
         } catch (\Exception $e) {
             Log::error('Chatwoot messages error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to fetch messages: ' . $e->getMessage(),
@@ -825,9 +1116,6 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Send a message to a conversation
-     */
     public function sendMessage(Request $request, $conversationId)
     {
         try {
@@ -851,13 +1139,13 @@ class SupportController extends Controller
 
             if ($response->successful()) {
                 $responseData = $response->json();
-                
+
                 Log::info('Message sent successfully via API', [
                     'conversation_id' => $conversationId,
                     'message_id' => $responseData['id'] ?? null,
                     'content_length' => strlen($request->content)
                 ]);
-                
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Message sent successfully',
@@ -866,10 +1154,9 @@ class SupportController extends Controller
             } else {
                 throw new \Exception('API request failed: ' . $response->body());
             }
-
         } catch (\Exception $e) {
             Log::error('Chatwoot send message error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to send message: ' . $e->getMessage()
@@ -877,9 +1164,6 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Test API connection
-     */
     public function testConnection()
     {
         try {
@@ -911,7 +1195,6 @@ class SupportController extends Controller
                     'status_code' => $response->status()
                 ]);
             }
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -920,9 +1203,6 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Helper method to get conversations by status
-     */
     private function getConversationsByStatus($status)
     {
         try {
@@ -934,10 +1214,9 @@ class SupportController extends Controller
 
             if ($response->successful()) {
                 $data = $response->json();
-                // Based on your API response structure
                 return $data['data']['payload'] ?? [];
             }
-            
+
             return [];
         } catch (\Exception $e) {
             Log::error("Error fetching {$status} conversations: " . $e->getMessage());
@@ -945,13 +1224,9 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Get resolved conversations count for today
-     */
     private function getResolvedTodayCount()
     {
         try {
-            // This is a simplified version - you might need to adjust based on actual API
             $response = Http::withHeaders([
                 'api_access_token' => $this->apiToken,
             ])->timeout(10)->get("{$this->apiUrl}/accounts/{$this->accountId}/conversations", [
@@ -962,20 +1237,17 @@ class SupportController extends Controller
                 $data = $response->json();
                 return count($data['data']['payload'] ?? []);
             }
-            
+
             return 0;
         } catch (\Exception $e) {
             return 0;
         }
     }
 
-    /**
-     * Redirect to specific Chatwoot sections
-     */
     public function redirect($section = 'dashboard')
     {
         $baseUrl = 'https://app.chatwoot.com/app/accounts/' . $this->accountId;
-        
+
         $allowedSections = [
             'dashboard' => '/dashboard',
             'conversations' => '/conversations',
@@ -986,32 +1258,27 @@ class SupportController extends Controller
         ];
 
         $path = $allowedSections[$section] ?? '/dashboard';
-        
+
         return redirect()->away($baseUrl . $path);
     }
 
-    /**
-     * Get live conversation updates
-     */
     public function getLiveUpdates(Request $request)
     {
         try {
             $conversationId = $request->get('conversation_id');
             $lastMessageId = $request->get('last_message_id', 0);
-            
+
             if (!$conversationId) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Conversation ID required'
                 ]);
             }
-
-            // Get latest messages for the conversation
             $messages = $this->getMessages($conversationId);
             $messagesData = json_decode($messages->getContent(), true);
-            
+
             if ($messagesData['success']) {
-                $newMessages = array_filter($messagesData['data'], function($message) use ($lastMessageId) {
+                $newMessages = array_filter($messagesData['data'], function ($message) use ($lastMessageId) {
                     return ($message['id'] ?? 0) > $lastMessageId;
                 });
 
@@ -1027,10 +1294,9 @@ class SupportController extends Controller
                 'success' => false,
                 'message' => 'Failed to fetch messages'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Live updates error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to get live updates'
@@ -1038,20 +1304,16 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Get typing status for a conversation
-     */
     public function getTypingStatus($conversationId)
     {
         try {
             $typingData = Cache::get("typing_status_{$conversationId}", []);
-            
+
             return response()->json([
                 'success' => true,
                 'typing' => $typingData,
                 'conversation_id' => $conversationId
             ]);
-            
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -1060,16 +1322,12 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Clear all cached data (for debugging)
-     */
     public function clearCache()
     {
         try {
-            // Clear all chatwoot related caches
             $cacheKeys = [
                 'chatwoot_stats',
-                'chatwoot_conversations', 
+                'chatwoot_conversations',
                 'chatwoot_contacts',
                 'realtime_events',
                 'webhook_logs'
@@ -1078,19 +1336,15 @@ class SupportController extends Controller
             foreach ($cacheKeys as $key) {
                 Cache::forget($key);
             }
-
-            // Clear processed message cache (pattern-based)
-            // Note: This is a simplified approach - in production you might want a more sophisticated cache clearing mechanism
             Log::info('Cache cleared manually');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Cache cleared successfully'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Cache clear error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to clear cache: ' . $e->getMessage()
@@ -1098,15 +1352,12 @@ class SupportController extends Controller
         }
     }
 
-    /**
-     * Get system status and diagnostics
-     */
     public function getStatus()
     {
         try {
             $eventCount = count(Cache::get('realtime_events', []));
             $logCount = count(Cache::get('webhook_logs', []));
-            
+
             return response()->json([
                 'success' => true,
                 'status' => [
@@ -1121,7 +1372,6 @@ class SupportController extends Controller
                     'php_memory_peak' => memory_get_peak_usage(true)
                 ]
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

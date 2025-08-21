@@ -1,4 +1,4 @@
-@extends('teacher.master.master')
+@extends('student.master.master')
 @section('title', 'Lessons - FluentAll')
 @section('content')
     <div class="dashboard__content-wrap container">
@@ -23,82 +23,6 @@
                 @endif
             </div>
         @endif
-
-        {{-- Main Form & Instructions --}}
-        <div class="row g-4">
-            <div class="col-lg-8">
-                <div class="card shadow-sm p-4">
-                    <form method="POST" action="{{ route('teacher.zoom.meetings.store') }}">
-                        @csrf
-
-                        <div class="mb-3">
-                            <label for="topic" class="form-label">{{ __('Meeting Topic') }} <code>*</code></label>
-                            <input type="text" id="topic" name="topic" class="form-control"
-                                value="{{ old('topic') }}" required>
-                            @error('topic')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-
-                        {{-- Type Dropdown --}}
-                        <div class="mb-3">
-                            <label for="meeting_type" class="form-label">{{ __('Meeting Type') }} <code>*</code></label>
-                            <select id="meeting_type" name="meeting_type" class="form-control" required>
-                                <option value="">-- Select Type --</option>
-                                <option value="package">Package</option>
-                                <option value="duration">Duration</option>
-                                <option value="group">Group</option>
-                            </select>
-                        </div>
-
-                        {{-- Summary Dropdown (loads after type is chosen) --}}
-                        <div class="mb-3">
-                            <label for="meeting_summary" class="form-label">{{ __('Summary') }} <code>*</code></label>
-                            <select id="meeting_summary" name="meeting_summary" class="form-control" required disabled>
-                                <option value="">-- Select Summary --</option>
-                            </select>
-                        </div>
-
-                        {{-- Students List --}}
-                        <div id="students-container" class="mt-3"></div>
-
-
-
-                        <div class="mb-3">
-                            <label for="start_time" class="form-label">{{ __('Start Time') }} <code>*</code></label>
-                            <input type="datetime-local" id="start_time" name="start_time" class="form-control"
-                                value="{{ old('start_time') }}" required>
-                            @error('start_time')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="duration" class="form-label">{{ __('Duration (minutes)') }} <code>*</code></label>
-                            <input type="number" id="duration" name="duration" class="form-control"
-                                value="{{ old('duration', 30) }}" min="1" max="480" required>
-                            @error('duration')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-
-                        <button type="submit" class="btn btn-primary mt-2">{{ __('Create Meeting') }}</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="card bg-light p-4 shadow-sm">
-                    <h5 class="mb-3">{{ __('Quick Instructions') }}</h5>
-                    <ul class="mb-0 ps-3">
-                        <li>Enter a descriptive meeting topic</li>
-                        <li>Select your preferred start time</li>
-                        <li>Set duration (max 8 hours)</li>
-                        <li>Meeting link will appear below after creation</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
 
         {{-- Meeting List --}}
         <div class="row mt-5">

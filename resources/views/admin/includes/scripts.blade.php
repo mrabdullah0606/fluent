@@ -13,7 +13,7 @@
 		"paging": true,
 		"ordering": true,
 		"info": true,
-		"responsive": true
+		"responsive": true 
 		});
 	});
 	document.addEventListener('DOMContentLoaded', function () {

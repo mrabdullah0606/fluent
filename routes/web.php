@@ -17,6 +17,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ZoomMeetingController;
 use App\Http\Controllers\Dashboard\StripeController;
+use App\Http\Controllers\Dashboard\WalletController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -157,6 +158,11 @@ Route::prefix('teacher')->group(function () {
         /* ********************************** zoom ********************************** */
         Route::get('zoom-meetings', [ZoomMeetingController::class, 'index'])->name('teacher.zoom.meetings.index');
         Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('teacher.zoom.meetings.store');
+        // Route::get('zoom/students/{type}', [ZoomMeetingController::class, 'getStudents'])
+        //     ->name('teacher.zoom.students');
+        Route::get('zoom/summaries', [ZoomMeetingController::class, 'getSummaries']);
+        Route::get('zoom/students', [ZoomMeetingController::class, 'getStudentsBySummary']);
+
 
         /* ****************************** Availability ****************************** */
         Route::prefix('availability')->name('teacher.availability.')->group(function () {
@@ -241,38 +247,38 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{review}', [AdminController::class, 'reviewsDestroy'])->name('destroy');
         });
         /* ******************************** Career Management End ******************************** */
-         Route::prefix('wallet')->name('admin.wallet.')->group(function () {
+        Route::prefix('wallet')->name('admin.wallet.')->group(function () {
             Route::get('/withdrawals', [AdminWalletController::class, 'withdrawals'])->name('withdrawals.index');
             Route::get('/withdrawals/{id}', [AdminWalletController::class, 'showWithdrawal'])->name('withdrawals.show');
             Route::post('/withdrawals/{id}/approve', [AdminWalletController::class, 'approveWithdrawal'])->name('withdrawals.approve');
             Route::post('/withdrawals/{id}/reject', [AdminWalletController::class, 'rejectWithdrawal'])->name('withdrawals.reject');
         });
-        
+
         Route::prefix('customer-support')->name('admin.customer.')->group(function () {
             // Existing routes...
             Route::get('/', [SupportController::class, 'index'])->name('support');
-            Route::get('/webhook-config', function() {
+            Route::get('/webhook-config', function () {
                 return view('admin.content.webhook-config');
             })->name('support.webhook.config');
-            Route::get('/test', function() {
+            Route::get('/test', function () {
                 return view('admin.content.support-test');
             })->name('support.test.page');
-            
+
             // API endpoints
             Route::get('/stats', [SupportController::class, 'getStats'])->name('support.stats');
             Route::get('/conversations', [SupportController::class, 'getConversations'])->name('support.conversations');
             Route::get('/conversations/{conversationId}/messages', [SupportController::class, 'getMessages'])->name('support.messages');
             Route::post('/conversations/{conversationId}/messages', [SupportController::class, 'sendMessage'])->name('support.send.message');
-            
+
             // Real-time updates
             Route::get('/live-updates', [SupportController::class, 'getLiveUpdates'])->name('support.live.updates');
             Route::get('/webhook-logs', [SupportController::class, 'getWebhookLogs'])->name('support.webhook.logs');
             Route::get('/conversations/{conversationId}/typing', [SupportController::class, 'getTypingStatus'])->name('support.typing.status');
-            
+
             // NEW ENHANCED ENDPOINTS
             Route::get('/status', [SupportController::class, 'getStatus'])->name('support.status');
             Route::post('/clear-cache', [SupportController::class, 'clearCache'])->name('support.clear.cache');
-            
+
             // Utility routes
             Route::get('/test-connection', [SupportController::class, 'testConnection'])->name('support.test');
             Route::get('/redirect/{section?}', [SupportController::class, 'redirect'])->name('support.redirect');
@@ -284,7 +290,7 @@ Route::post('/admin/customer-support/webhook', [SupportController::class, 'webho
     ->name('admin.customer.support.webhook')
     ->withoutMiddleware(['web']);
 
-Route::get('/admin/customer-support/webhook-test', function() {
+Route::get('/admin/customer-support/webhook-test', function () {
     return response()->json([
         'status' => 'Webhook endpoint is reachable',
         'url' => route('admin.customer.support.webhook'),

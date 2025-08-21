@@ -13,7 +13,7 @@
         </div>
         <table id="userTable" class="table table-bordered bg-white shadow-sm">
             <thead class="table-warning">
-                <tr>
+                <tr> 
                     <th>ID</th>
                     <th>Name</th>
                     <th>Role</th>

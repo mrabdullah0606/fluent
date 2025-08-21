@@ -2,45 +2,150 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ZoomMeetingInvitationMail;
 use App\Models\ZoomMeeting;
 use Illuminate\Http\Request;
 use App\Services\ZoomService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ZoomMeetingController extends Controller
 {
     public function index(Request $request)
     {
-        // Get all meetings (since they're all created by the same host)
-        // But you can filter by the teacher who created them if needed
         $meetings = ZoomMeeting::latest()
             ->paginate(10);
 
         return view('teacher.content.zoom.meetings', compact('meetings'));
     }
 
-    public function indexStudent()
+    // public function getStudents($type)
+    // {
+    //     $students = \App\Models\User::whereHas('payments', function ($q) use ($type) {
+    //         $q->where('teacher_id', auth()->id())
+    //             ->where('type', $type)
+    //             ->where('status', 'successful');
+    //     })->get();
+
+    //     return response()->json($students);
+    // }
+    public function getSummaries(Request $request)
     {
-        $meetings = auth()->user()->zoomMeetings()->latest()->paginate(10);
-        return view('frontend.student-dashboard.zoom.meetings', compact('meetings'));
+        $type = $request->input('type');
+
+        $summaries = \DB::table('payments')
+            ->where('teacher_id', auth()->id())
+            ->where('status', 'successful')
+            ->where('type', $type)
+            ->pluck('summary')
+            ->unique()
+            ->values();
+
+        return response()->json($summaries);
     }
 
+    public function getStudentsBySummary(Request $request)
+    {
+        $summary = $request->input('summary');
+
+        $students = \App\Models\User::whereHas('payments', function ($q) use ($summary) {
+            $q->where('teacher_id', auth()->id())
+                ->where('status', 'successful')
+                ->where('summary', $summary);
+        })->get(['id', 'name', 'email']);
+
+        return response()->json($students);
+    }
+
+
+
+    // public function store(Request $request, ZoomService $zoomService)
+    // {
+    //     // Validate the request
+    //     $validated = $request->validate([
+    //         'topic' => 'required|string|max:255',
+    //         'start_time' => 'required|date|after:now',
+    //         'duration' => 'required|integer|min:1|max:480',
+    //         'meeting_type' => 'required|min:1|max:480',
+    //     ]);
+
+    //     try {
+    //         // Use fixed Zoom host email for all meetings
+    //     $zoomHostEmail = config('services.zoom.host_email', 'itsabdullah824@gmail.com');
+
+    //         // Create Zoom meeting
+    //         $zoomData = $zoomService->createMeeting(
+    //             $zoomHostEmail,
+    //             $validated['topic'],
+    //             $validated['start_time'],
+    //             $validated['duration']
+    //         );
+
+    //         if (!$zoomData) {
+    //             Log::error('Zoom meeting creation failed', [
+    //                 'user_id' => Auth::id(),
+    //                 'email' => $zoomHostEmail,
+    //                 'topic' => $validated['topic']
+    //             ]);
+
+    //             return back()
+    //                 ->withInput()
+    //                 ->with('error', 'Failed to create Zoom meeting. Please ensure your email is registered with Zoom.');
+    //         }
+
+    //         // Save meeting to database
+    //         $zoomMeeting = ZoomMeeting::create([
+    //             'uuid' => $zoomData['uuid'] ?? null,
+    //             'meeting_id' => $zoomData['id'],
+    //             'host_id' => $zoomData['host_id'] ?? $zoomHostEmail,
+    //             'topic' => $zoomData['topic'],
+    //             'start_time' => $zoomData['start_time'],
+    //             'duration' => $zoomData['duration'],
+    //             'teacher_id' => auth()->user()->id,
+    //             'meeting_type' => $request->input('meeting_type'),
+    //             'timezone' => $zoomData['timezone'] ?? 'Asia/Karachi',
+    //             'join_url' => $zoomData['join_url'],
+    //             'start_url' => $zoomData['start_url'] ?? null,
+    //             'password' => $zoomData['password'] ?? null,
+    //             'raw_response' => $zoomData,
+    //         ]);
+
+    //         Log::info('Zoom meeting created successfully', [
+    //             'meeting_id' => $zoomMeeting->meeting_id,
+    //             'user_id' => Auth::id(),
+    //             'topic' => $zoomMeeting->topic
+    //         ]);
+
+    //         return redirect()->route('teacher.zoom.meetings.index')
+    //             ->with('success', 'Zoom meeting created successfully! You can now share the join link with your students.');
+    //     } catch (\Exception $e) {
+    //         Log::error('Exception creating Zoom meeting', [
+    //             'error' => $e->getMessage(),
+    //             'user_id' => Auth::id(),
+    //             'topic' => $validated['topic']
+    //         ]);
+
+    //         return back()
+    //             ->withInput()
+    //             ->with('error', 'An error occurred while creating the meeting. Please try again.');
+    //     }
+    // }
     public function store(Request $request, ZoomService $zoomService)
     {
         // Validate the request
         $validated = $request->validate([
             'topic' => 'required|string|max:255',
             'start_time' => 'required|date|after:now',
-            'duration' => 'required|integer|min:1|max:480', // Max 8 hours
-            'meeting_type' => 'required|min:1|max:480', // Max 8 hours
+            'duration' => 'required|integer|min:1|max:480',
+            'meeting_type' => 'required',
+            'attendees' => 'array', // <-- NEW
+            'attendees.*' => 'email', // each attendee must be email
         ]);
 
         try {
-            // Use fixed Zoom host email for all meetings
             $zoomHostEmail = config('services.zoom.host_email', 'itsabdullah824@gmail.com');
 
-            // Create Zoom meeting
             $zoomData = $zoomService->createMeeting(
                 $zoomHostEmail,
                 $validated['topic'],
@@ -49,18 +154,9 @@ class ZoomMeetingController extends Controller
             );
 
             if (!$zoomData) {
-                Log::error('Zoom meeting creation failed', [
-                    'user_id' => Auth::id(),
-                    'email' => $zoomHostEmail,
-                    'topic' => $validated['topic']
-                ]);
-
-                return back()
-                    ->withInput()
-                    ->with('error', 'Failed to create Zoom meeting. Please ensure your email is registered with Zoom.');
+                return back()->with('error', 'Failed to create Zoom meeting.');
             }
 
-            // Save meeting to database
             $zoomMeeting = ZoomMeeting::create([
                 'uuid' => $zoomData['uuid'] ?? null,
                 'meeting_id' => $zoomData['id'],
@@ -77,24 +173,16 @@ class ZoomMeetingController extends Controller
                 'raw_response' => $zoomData,
             ]);
 
-            Log::info('Zoom meeting created successfully', [
-                'meeting_id' => $zoomMeeting->meeting_id,
-                'user_id' => Auth::id(),
-                'topic' => $zoomMeeting->topic
-            ]);
+            if ($request->has('attendees')) {
+                foreach ($request->attendees as $email) {
+                    Mail::to($email)->queue(new ZoomMeetingInvitationMail($zoomMeeting));
+                }
+            }
 
             return redirect()->route('teacher.zoom.meetings.index')
-                ->with('success', 'Zoom meeting created successfully! You can now share the join link with your students.');
+                ->with('success', 'Zoom meeting created and emails sent successfully!');
         } catch (\Exception $e) {
-            Log::error('Exception creating Zoom meeting', [
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id(),
-                'topic' => $validated['topic']
-            ]);
-
-            return back()
-                ->withInput()
-                ->with('error', 'An error occurred while creating the meeting. Please try again.');
+            return back()->with('error', 'An error occurred while creating the meeting. Please try again.');
         }
     }
 

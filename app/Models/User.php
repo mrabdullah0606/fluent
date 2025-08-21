@@ -210,4 +210,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(WithdrawalRequest::class, 'teacher_id');
     }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'student_id');
+    }
 }
