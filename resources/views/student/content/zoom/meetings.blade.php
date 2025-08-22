@@ -1,71 +1,178 @@
 @extends('student.master.master')
-@section('title', 'Lessons - FluentAll')
+@section('title', 'My Zoom Meetings - FluentAll')
 @section('content')
-    <div class="dashboard__content-wrap container">
-        <div class="dashboard__content-title mt-4 mb-4 bg-warning p-3">
-            <h4 class="title text-white fw-bold">{{ __('Zoom Meetings') }}</h4>
+    <div class="container py-4">
+        <div class="row mb-4">
+            <div class="col-10">
+                <h2 class="mb-0"><i class="fas fa-video me-2"></i>My Zoom Meetings</h2>
+            </div>
+            <div class="col-2 text-end">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#packagesModal">
+                    View My Packages
+                </button>
+            </div>
+            <!-- Packages Modal -->
+            <div class="modal fade" id="packagesModal" tabindex="-1" aria-labelledby="packagesModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="packagesModalLabel">My Purchased Packages</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            @if ($lessonTracking->count() > 0)
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Package</th>
+                                            <th>Total Lessons</th>
+                                            <th>Taken</th>
+                                            <th>Remaining</th>
+                                            <th>Price per Lesson</th>
+                                            <th>Purchase Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($lessonTracking as $package)
+                                            <tr>
+                                                <td>{{ $package->package_summary }}</td>
+                                                <td>{{ $package->total_lessons_purchased }}</td>
+                                                <td>{{ $package->lessons_taken }}</td>
+                                                <td>{{ $package->lessons_remaining }}</td>
+                                                <td>${{ number_format($package->price_per_lesson, 2) }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($package->purchase_date)->format('M d, Y') }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <p class="text-muted">You haven’t purchased any packages yet.</p>
+                            @endif
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
 
-        {{-- Toast Alerts --}}
         @if (session('success') || session('error'))
-            <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
+            <div class="row mb-3">
+                <div class="col-12">
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+                </div>
             </div>
         @endif
 
-        {{-- Meeting List --}}
-        <div class="row mt-5">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm text-center border-success">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">Remaining Lessons</h5>
+                        <p class="h3">{{ $remaining }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm text-center border-primary">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Taken Lessons</h5>
+                        <p class="h3">{{ $lessonsTaken }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm text-center border-dark">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">Total Lessons Purchased</h5>
+                        <p class="h3">{{ $totalPurchased }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-12">
-                <h5 class="mb-3">{{ __('Your Meetings') }}</h5>
-                @if ($meetings->count())
+                @if ($meetings->count() > 0)
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle" id="zoomTable">
+                        <table class="table table-striped table-bordered align-middle">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>{{ __('Topic') }}</th>
-                                    <th>{{ __('Created By') }}</th>
-                                    <th>{{ __('Start Time') }}</th>
-                                    <th>{{ __('Duration') }}</th>
-                                    <th>{{ __('Meeting ID') }}</th>
-                                    <th>{{ __('Actions') }}</th>
+                                    <th>Topic</th>
+                                    <th>Teacher</th>
+                                    <th>Start Time</th>
+                                    <th>Duration</th>
+                                    <th>Meeting ID</th>
+                                    <th>Password</th>
+                                    <th>Link</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($meetings as $meeting)
                                     <tr>
-                                        <td>{{ $meeting->topic }}</td>
+                                        {{-- <td>{{ $meeting->topic }} - {{ $meeting->meeting_type }} </td> --}}
                                         <td>
-                                            {{ $meeting->creator?->name ?? 'N/A' }}
-                                            @if ($meeting->created_by === auth()->id())
-                                                <span class="badge bg-primary ms-1">You</span>
-                                            @endif
+                                            {{ $meeting->topic }} -
+                                            @php
+                                                $attendee = $meeting->attendees->firstWhere('id', auth()->id());
+                                                $tracking = null;
+                                                if ($attendee?->pivot?->lesson_tracking_id) {
+                                                    $tracking = $lessonTracking->firstWhere(
+                                                        'id',
+                                                        $attendee->pivot->lesson_tracking_id,
+                                                    );
+                                                }
+                                            @endphp
+
+                                            {{ $tracking->package_summary ?? ucfirst($meeting->meeting_type) }}
                                         </td>
+                                        <td>{{ $meeting->teacher->name ?? 'N/A' }}</td>
                                         <td>{{ $meeting->start_time->format('d M Y, h:i A') }}</td>
-                                        <td>{{ $meeting->duration }} {{ __('min') }}</td>
+                                        <td>{{ $meeting->duration }} min</td>
+                                        <td><code>{{ $meeting->meeting_id }}</code></td>
+                                        <td>{{ $meeting->password ?? '-' }}</td>
+
                                         <td>
-                                            <code>{{ $meeting->meeting_id }}</code>
-                                            @if ($meeting->password)
-                                                <br><small class="text-muted">Password:
-                                                    <code>{{ $meeting->password }}</code></small>
+                                            @php
+                                                $attendee = $meeting->attendees->firstWhere('id', auth()->id());
+                                            @endphp
+
+                                            @if ($attendee && $attendee->pivot->has_joined)
+                                                {{-- Already joined → show Rejoin --}}
+                                                <a href="{{ $meeting->join_url }}" target="_blank"
+                                                    class="btn btn-sm btn-primary">
+                                                    Rejoin
+                                                </a>
+                                            @else
+                                                {{-- First time → normal join (deducts) --}}
+                                                <a href="{{ route('student.zoom.join', $meeting->id) }}"
+                                                    class="btn btn-sm btn-success">
+                                                    Join
+                                                </a>
                                             @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ $meeting->join_url }}" target="_blank"
-                                                class="btn btn-sm btn-success">{{ __('Join') }}</a>
+
                                             <button class="btn btn-sm btn-outline-secondary"
-                                                onclick="copyToClipboard('{{ $meeting->join_url }}')">
-                                                {{ __('Copy') }}
+                                                onclick="copyMeetingLink('{{ $meeting->join_url }}', '{{ $meeting->meeting_id }}', '{{ $meeting->password }}')">
+                                                Copy
                                             </button>
                                         </td>
                                     </tr>
@@ -73,190 +180,25 @@
                             </tbody>
                         </table>
                     </div>
-                    {{ $meetings->links() }}
                 @else
-                    <div class="alert alert-light text-center mt-4">
-                        <i class="fas fa-video-slash fa-3x text-muted mb-3"></i>
-                        <h6>{{ __('No meetings found') }}</h6>
-                        <p class="text-muted">{{ __('Create your first Zoom meeting using the form above.') }}</p>
+                    <div class="alert alert-light text-center">
+                        <i class="fas fa-video-slash fa-2x mb-2 text-muted"></i>
+                        <p class="mb-0">No meetings found</p>
                     </div>
                 @endif
             </div>
         </div>
     </div>
-@endsection
-
-@push('scripts')
     <script>
-        // document.getElementById('meeting_type').addEventListener('change', function() {
-        //     let type = this.value;
-        //     let container = document.getElementById('students-container');
+        function copyMeetingLink(joinUrl, meetingId, password) {
+            let text = `Zoom Meeting Details:\n\nJoin URL: ${joinUrl}\nMeeting ID: ${meetingId}`;
+            if (password) text += `\nPassword: ${password}`;
 
-        //     container.innerHTML = '<p class="text-muted">Loading students...</p>';
-
-        //     if (type !== '') {
-        //         fetch(`/teacher/zoom/students/${type}`)
-        //             .then(res => res.json())
-        //             .then(data => {
-        //                 if (data.length > 0) {
-        //                     let html = `
-    //                 <div class="mb-2">
-    //                     <input type="checkbox" id="select_all_students">
-    //                     <label for="select_all_students" class="fw-bold">Select All Students</label>
-    //                 </div>
-    //                 <label class="mb-2 d-block">Select Attendees</label>
-    //             `;
-        //                     data.forEach(student => {
-        //                         html += `
-    //                     <div class="d-flex align-items-center mb-2">
-    //                         <input type="checkbox" name="attendees[]" value="${student.email}" 
-    //                             id="attendee_${student.id}" class="student-checkbox">
-    //                         <label for="attendee_${student.id}" style="cursor: pointer; margin-left: 8px;">
-    //                             ${student.name} (${student.email})
-    //                         </label>
-    //                     </div>
-    //                 `;
-        //                     });
-        //                     container.innerHTML = html;
-
-        //                     let selectAll = document.getElementById('select_all_students');
-        //                     let checkboxes = container.querySelectorAll('.student-checkbox');
-
-        //                     // When "Select All" is toggled
-        //                     selectAll.addEventListener('change', function() {
-        //                         checkboxes.forEach(cb => cb.checked = this.checked);
-        //                     });
-
-        //                     // When individual checkbox changes
-        //                     checkboxes.forEach(cb => {
-        //                         cb.addEventListener('change', function() {
-        //                             if (!this.checked) {
-        //                                 selectAll.checked =
-        //                                     false; // uncheck "Select All" if one unchecked
-        //                             } else if ([...checkboxes].every(c => c.checked)) {
-        //                                 selectAll.checked =
-        //                                     true; // check "Select All" if all checked manually
-        //                             }
-        //                         });
-        //                     });
-        //                 } else {
-        //                     container.innerHTML = '<p class="text-muted">No attendees found for this type.</p>';
-        //                 }
-        //             })
-        //             .catch(err => {
-        //                 container.innerHTML = '<p class="text-danger">Error loading students.</p>';
-        //                 console.error(err);
-        //             });
-        //     } else {
-        //         container.innerHTML = '';
-        //     }
-        // });
-
-        let typeSelect = document.getElementById('meeting_type');
-        let summarySelect = document.getElementById('meeting_summary');
-        let studentsContainer = document.getElementById('students-container');
-
-        // When type changes → load summaries
-        typeSelect.addEventListener('change', function() {
-            let type = this.value;
-            summarySelect.innerHTML = '<option value="">-- Select Summary --</option>';
-            studentsContainer.innerHTML = '';
-
-            if (type) {
-                summarySelect.disabled = true;
-                fetch(`/teacher/zoom/summaries?type=${encodeURIComponent(type)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            data.forEach(summary => {
-                                summarySelect.innerHTML +=
-                                    `<option value="${summary}">${summary}</option>`;
-                            });
-                            summarySelect.disabled = false;
-                        } else {
-                            summarySelect.innerHTML = '<option value="">No summaries found</option>';
-                        }
-                    });
-            } else {
-                summarySelect.disabled = true;
-            }
-        });
-
-        // When summary changes → load students
-        summarySelect.addEventListener('change', function() {
-            let summary = this.value;
-            studentsContainer.innerHTML = '';
-
-            if (summary) {
-                studentsContainer.innerHTML = '<p class="text-muted">Loading students...</p>';
-                fetch(`/teacher/zoom/students?summary=${encodeURIComponent(summary)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            let html = `
-                        <div class="mb-2">
-                            <input type="checkbox" id="select_all_students">
-                            <label for="select_all_students" class="fw-bold">Select All Students</label>
-                        </div>
-                        <label class="mb-2 d-block">Select Attendees</label>
-                    `;
-                            data.forEach(student => {
-                                html += `
-                            <div class="d-flex align-items-center mb-2">
-                                <input type="checkbox" name="attendees[]" value="${student.email}" 
-                                    id="attendee_${student.id}" class="student-checkbox">
-                                <label for="attendee_${student.id}" style="cursor: pointer; margin-left: 8px;">
-                                    ${student.name} (${student.email})
-                                </label>
-                            </div>
-                        `;
-                            });
-                            studentsContainer.innerHTML = html;
-
-                            let selectAll = document.getElementById('select_all_students');
-                            let checkboxes = studentsContainer.querySelectorAll('.student-checkbox');
-
-                            selectAll.addEventListener('change', function() {
-                                checkboxes.forEach(cb => cb.checked = this.checked);
-                            });
-
-                            checkboxes.forEach(cb => {
-                                cb.addEventListener('change', function() {
-                                    if (!this.checked) {
-                                        selectAll.checked = false;
-                                    } else if ([...checkboxes].every(c => c.checked)) {
-                                        selectAll.checked = true;
-                                    }
-                                });
-                            });
-                        } else {
-                            studentsContainer.innerHTML =
-                                '<p class="text-muted">No students found for this summary.</p>';
-                        }
-                    });
-            }
-        });
-
-        // Copy link to clipboard with toast
-        function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                const toast = document.createElement('div');
-                toast.className = 'alert alert-success position-fixed';
-                toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 250px;';
-                toast.innerHTML = '<i class="fas fa-check-circle me-1"></i> {{ __('Link copied to clipboard!') }}';
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            }).catch(err => {
-                alert('Failed to copy link.');
+                alert("Meeting details copied to clipboard!");
+            }).catch(() => {
+                prompt("Copy these meeting details:", text);
             });
         }
-
-        // Set minimum datetime
-        document.addEventListener('DOMContentLoaded', () => {
-            const input = document.getElementById('start_time');
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            input.min = now.toISOString().slice(0, 16);
-        });
     </script>
-@endpush
+@endsection

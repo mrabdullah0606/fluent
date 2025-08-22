@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\StudentAuthController;
 use App\Http\Controllers\Auth\TeacherAuthController;
 use App\Http\Controllers\Dashboard\AvailabilityController;
 use App\Http\Controllers\Dashboard\ChatController;
+use App\Http\Controllers\Dashboard\LessonTrackingController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\StudentController;
 use App\Http\Controllers\Dashboard\TeacherController;
@@ -88,7 +89,9 @@ Route::prefix('student')->group(function () {
         Route::get('/find-tutor', [StudentController::class, 'findTutor'])->name('student.find.tutor');
         Route::get('/one-on-one-tutors', [StudentController::class, 'oneOnOneTutors'])->name('student.one.on.one.tutors');
         Route::get('/group-lesson', [StudentController::class, 'groupLesson'])->name('student.group.lesson');
-
+        Route::get('/lesson-tracking', [LessonTrackingController::class, 'lessonTracking'])->name('student.lesson.tracking');
+        Route::get('zoom/join/{id}', [LessonTrackingController::class, 'join'])
+            ->name('student.zoom.join');
         /* ********************************** CHAT ROUTES ********************************** */
         Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');
         Route::get('chat/{user}', [ChatController::class, 'index'])->name('student.chat.index');
@@ -158,10 +161,9 @@ Route::prefix('teacher')->group(function () {
         /* ********************************** zoom ********************************** */
         Route::get('zoom-meetings', [ZoomMeetingController::class, 'index'])->name('teacher.zoom.meetings.index');
         Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('teacher.zoom.meetings.store');
-        // Route::get('zoom/students/{type}', [ZoomMeetingController::class, 'getStudents'])
-        //     ->name('teacher.zoom.students');
-        Route::get('zoom/summaries', [ZoomMeetingController::class, 'getSummaries']);
-        Route::get('zoom/students', [ZoomMeetingController::class, 'getStudentsBySummary']);
+        Route::get('zoom/summaries', [ZoomMeetingController::class, 'getSummaries'])->name('teacher.zoom.getSummaries');
+        Route::get('zoom/students', [ZoomMeetingController::class, 'getStudentsBySummary'])->name('teacher.zoom.getStudentsByPackage');
+        Route::get('zoom/packages', [ZoomMeetingController::class, 'getPackages'])->name('teacher.zoom.getPackages');
 
 
         /* ****************************** Availability ****************************** */

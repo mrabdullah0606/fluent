@@ -215,7 +215,7 @@
                             data.forEach(student => {
                                 html += `
                             <div class="d-flex align-items-center mb-2">
-                                <input type="checkbox" name="attendees[]" value="${student.id}:${student.tracking_id}" 
+                                <input type="checkbox" name="attendees[]" value="${student.email}" 
                                     id="attendee_${student.id}" class="student-checkbox">
                                 <label for="attendee_${student.id}" style="cursor: pointer; margin-left: 8px;">
                                     ${student.name} (${student.email})

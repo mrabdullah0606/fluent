@@ -116,8 +116,11 @@ class User extends Authenticatable
 
     public function zoomMeetings()
     {
-        return $this->hasMany(ZoomMeeting::class, 'teacher_id');
+        return $this->belongsToMany(ZoomMeeting::class, 'zoom_meeting_user')
+            ->withPivot('teacher_id')
+            ->withTimestamps();
     }
+
 
 
     // User.php
@@ -213,5 +216,113 @@ class User extends Authenticatable
     public function payments()
     {
         return $this->hasMany(Payment::class, 'student_id');
+    }
+
+
+    // As a student - lesson packages purchased
+    public function lessonTrackings()
+    {
+        return $this->hasMany(UserLessonTracking::class, 'student_id');
+    }
+
+    // As a teacher - students' lesson packages
+    public function studentLessonTrackings()
+    {
+        return $this->hasMany(UserLessonTracking::class, 'teacher_id');
+    }
+
+    // As a student - lesson attendance records
+    public function lessonAttendances()
+    {
+        return $this->hasMany(LessonAttendance::class, 'student_id');
+    }
+
+    // As a teacher - taught lessons
+    public function taughtLessons()
+    {
+        return $this->hasMany(LessonAttendance::class, 'teacher_id');
+    }
+
+    // Active lesson packages as student
+    public function activeLessonPackages()
+    {
+        return $this->lessonTrackings()
+            ->where('status', 'active')
+            ->where('lessons_remaining', '>', 0);
+    }
+
+    // Get total lessons remaining across all packages
+    public function getTotalLessonsRemainingAttribute()
+    {
+        return $this->activeLessonPackages()->sum('lessons_remaining');
+    }
+
+    // Get attendance rate as student
+    public function getAttendanceRateAttribute()
+    {
+        $totalLessons = $this->lessonAttendances()->count();
+        if ($totalLessons === 0) return 0;
+
+        $attendedLessons = $this->lessonAttendances()
+            ->where('attendance_status', 'attended')
+            ->count();
+
+        return round(($attendedLessons / $totalLessons) * 100, 1);
+    }
+
+    // Get total lessons taken as student
+    public function getTotalLessonsTakenAttribute()
+    {
+        return $this->lessonTrackings()->sum('lessons_taken');
+    }
+
+    // Get total lessons purchased as student
+    public function getTotalLessonsPurchasedAttribute()
+    {
+        return $this->lessonTrackings()->sum('total_lessons_purchased');
+    }
+
+    // Check if user has any active lesson packages
+    public function hasActiveLessons()
+    {
+        return $this->activeLessonPackages()->exists();
+    }
+
+    // Get next expiring package
+    public function getNextExpiringPackage()
+    {
+        return $this->activeLessonPackages()
+            ->whereNotNull('expiry_date')
+            ->orderBy('expiry_date')
+            ->first();
+    }
+
+    // As teacher - get students with low lesson counts
+    public function getStudentsWithLowLessons($threshold = 2)
+    {
+        return $this->studentLessonTrackings()
+            ->where('status', 'active')
+            ->where('lessons_remaining', '<=', $threshold)
+            ->with('student')
+            ->get();
+    }
+
+    // As teacher - get active students count
+    public function getActiveStudentsCount()
+    {
+        return $this->studentLessonTrackings()
+            ->where('status', 'active')
+            ->where('lessons_remaining', '>', 0)
+            ->distinct('student_id')
+            ->count('student_id');
+    }
+
+    // As teacher - get total revenue from lesson packages
+    public function getLessonPackageRevenue()
+    {
+        return $this->studentLessonTrackings()
+            ->join('payments', 'user_lesson_tracking.payment_id', '=', 'payments.id')
+            ->where('payments.status', 'successful')
+            ->sum('payments.total');
     }
 }

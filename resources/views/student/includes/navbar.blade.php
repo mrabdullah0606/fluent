@@ -28,7 +28,7 @@
                              class="bi bi-chat-left-text me-1"></i> Messages</a>
                  </li>
                  <li class="nav-item me-3">
-                     <a class="nav-link d-flex align-items-center" href="{{ route('student.chats.index') }}"><i
+                     <a class="nav-link d-flex align-items-center" href="{{ route('student.lesson.tracking') }}"><i
                              class="bi bi-camera-video me-1"></i> Meetings</a>
                  </li>
              </ul>

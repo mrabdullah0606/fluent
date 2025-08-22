@@ -9,6 +9,7 @@ use App\Services\ZoomService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class ZoomMeetingController extends Controller
 {
@@ -20,25 +21,41 @@ class ZoomMeetingController extends Controller
         return view('teacher.content.zoom.meetings', compact('meetings'));
     }
 
-    // public function getStudents($type)
+    // public function getSummaries(Request $request)
     // {
-    //     $students = \App\Models\User::whereHas('payments', function ($q) use ($type) {
+    //     $type = $request->input('type');
+
+    //     $summaries = \DB::table('payments')
+    //         ->where('teacher_id', auth()->id())
+    //         ->where('status', 'successful')
+    //         ->where('type', $type)
+    //         ->pluck('summary')
+    //         ->unique()
+    //         ->values();
+
+    //     return response()->json($summaries);
+    // }
+
+    // public function getStudentsBySummary(Request $request)
+    // {
+    //     $summary = $request->input('summary');
+
+    //     $students = \App\Models\User::whereHas('payments', function ($q) use ($summary) {
     //         $q->where('teacher_id', auth()->id())
-    //             ->where('type', $type)
-    //             ->where('status', 'successful');
-    //     })->get();
+    //             ->where('status', 'successful')
+    //             ->where('summary', $summary);
+    //     })->get(['id', 'name', 'email']);
 
     //     return response()->json($students);
     // }
     public function getSummaries(Request $request)
     {
-        $type = $request->input('type');
+        $type = $request->input('type'); // package | duration | group
 
-        $summaries = \DB::table('payments')
+        $summaries = DB::table('user_lesson_trackings')
             ->where('teacher_id', auth()->id())
-            ->where('status', 'successful')
-            ->where('type', $type)
-            ->pluck('summary')
+            ->where('payment_type', $type) // ✅ matches your column
+            ->pluck('package_summary')     // ✅ matches your column
             ->unique()
             ->values();
 
@@ -48,89 +65,22 @@ class ZoomMeetingController extends Controller
     public function getStudentsBySummary(Request $request)
     {
         $summary = $request->input('summary');
+        $teacherId = auth()->id();
 
-        $students = \App\Models\User::whereHas('payments', function ($q) use ($summary) {
-            $q->where('teacher_id', auth()->id())
-                ->where('status', 'successful')
-                ->where('summary', $summary);
-        })->get(['id', 'name', 'email']);
+        $students = DB::table('user_lesson_trackings')
+            ->join('users', 'user_lesson_trackings.student_id', '=', 'users.id')
+            ->where('user_lesson_trackings.teacher_id', $teacherId)
+            ->where('user_lesson_trackings.package_summary', $summary)
+            ->where('user_lesson_trackings.lessons_remaining', '>', 0) // ✅ sirf active lessons
+            ->select('users.id', 'users.name', 'users.email', 'user_lesson_trackings.id as tracking_id')
+            ->distinct()
+            ->get();
 
         return response()->json($students);
     }
 
 
 
-    // public function store(Request $request, ZoomService $zoomService)
-    // {
-    //     // Validate the request
-    //     $validated = $request->validate([
-    //         'topic' => 'required|string|max:255',
-    //         'start_time' => 'required|date|after:now',
-    //         'duration' => 'required|integer|min:1|max:480',
-    //         'meeting_type' => 'required|min:1|max:480',
-    //     ]);
-
-    //     try {
-    //         // Use fixed Zoom host email for all meetings
-    //     $zoomHostEmail = config('services.zoom.host_email', 'itsabdullah824@gmail.com');
-
-    //         // Create Zoom meeting
-    //         $zoomData = $zoomService->createMeeting(
-    //             $zoomHostEmail,
-    //             $validated['topic'],
-    //             $validated['start_time'],
-    //             $validated['duration']
-    //         );
-
-    //         if (!$zoomData) {
-    //             Log::error('Zoom meeting creation failed', [
-    //                 'user_id' => Auth::id(),
-    //                 'email' => $zoomHostEmail,
-    //                 'topic' => $validated['topic']
-    //             ]);
-
-    //             return back()
-    //                 ->withInput()
-    //                 ->with('error', 'Failed to create Zoom meeting. Please ensure your email is registered with Zoom.');
-    //         }
-
-    //         // Save meeting to database
-    //         $zoomMeeting = ZoomMeeting::create([
-    //             'uuid' => $zoomData['uuid'] ?? null,
-    //             'meeting_id' => $zoomData['id'],
-    //             'host_id' => $zoomData['host_id'] ?? $zoomHostEmail,
-    //             'topic' => $zoomData['topic'],
-    //             'start_time' => $zoomData['start_time'],
-    //             'duration' => $zoomData['duration'],
-    //             'teacher_id' => auth()->user()->id,
-    //             'meeting_type' => $request->input('meeting_type'),
-    //             'timezone' => $zoomData['timezone'] ?? 'Asia/Karachi',
-    //             'join_url' => $zoomData['join_url'],
-    //             'start_url' => $zoomData['start_url'] ?? null,
-    //             'password' => $zoomData['password'] ?? null,
-    //             'raw_response' => $zoomData,
-    //         ]);
-
-    //         Log::info('Zoom meeting created successfully', [
-    //             'meeting_id' => $zoomMeeting->meeting_id,
-    //             'user_id' => Auth::id(),
-    //             'topic' => $zoomMeeting->topic
-    //         ]);
-
-    //         return redirect()->route('teacher.zoom.meetings.index')
-    //             ->with('success', 'Zoom meeting created successfully! You can now share the join link with your students.');
-    //     } catch (\Exception $e) {
-    //         Log::error('Exception creating Zoom meeting', [
-    //             'error' => $e->getMessage(),
-    //             'user_id' => Auth::id(),
-    //             'topic' => $validated['topic']
-    //         ]);
-
-    //         return back()
-    //             ->withInput()
-    //             ->with('error', 'An error occurred while creating the meeting. Please try again.');
-    //     }
-    // }
     public function store(Request $request, ZoomService $zoomService)
     {
         // Validate the request
@@ -140,7 +90,9 @@ class ZoomMeetingController extends Controller
             'duration' => 'required|integer|min:1|max:480',
             'meeting_type' => 'required',
             'attendees' => 'array', // <-- NEW
-            'attendees.*' => 'email', // each attendee must be email
+            // 'attendees.*' => 'email', // each attendee must be email
+            'attendees.*' => 'string', // <-- was 'email', now string to allow id:trackingId
+
         ]);
 
         try {
@@ -173,11 +125,38 @@ class ZoomMeetingController extends Controller
                 'raw_response' => $zoomData,
             ]);
 
+            // if ($request->has('attendees')) {
+            //     foreach ($request->attendees as $email) {
+            //         $student = \App\Models\User::where('email', $email)->first();
+            //         if ($student) {
+            //             // save in pivot table
+            //             $zoomMeeting->attendees()->attach($student->id, [
+            //                 'teacher_id' => auth()->id(),
+            //             ]);
+
+            //             // send mail
+            //             Mail::to($email)->queue(new ZoomMeetingInvitationMail($zoomMeeting));
+            //         }
+            //     }
+            // }
             if ($request->has('attendees')) {
-                foreach ($request->attendees as $email) {
-                    Mail::to($email)->queue(new ZoomMeetingInvitationMail($zoomMeeting));
+                foreach ($request->attendees as $attendee) {
+                    [$studentId, $trackingId] = explode(':', $attendee);
+
+                    $zoomMeeting->attendees()->attach($studentId, [
+                        'teacher_id' => auth()->id(),
+                        'lesson_tracking_id' => $trackingId,
+                    ]);
+
+                    // optional: send mail
+                    $student = \App\Models\User::find($studentId);
+                    if ($student) {
+                        Mail::to($student->email)->queue(new ZoomMeetingInvitationMail($zoomMeeting));
+                    }
                 }
             }
+
+
 
             return redirect()->route('teacher.zoom.meetings.index')
                 ->with('success', 'Zoom meeting created and emails sent successfully!');

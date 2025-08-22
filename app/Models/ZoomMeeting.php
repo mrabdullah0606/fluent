@@ -30,7 +30,7 @@ class ZoomMeeting extends Model
     public function attendees()
     {
         return $this->belongsToMany(User::class, 'zoom_meeting_user')
-            ->withPivot('teacher_id')
+            ->withPivot('teacher_id', 'has_joined', 'lesson_tracking_id')
             ->withTimestamps();
     }
 
@@ -42,5 +42,10 @@ class ZoomMeeting extends Model
     public function group()
     {
         return $this->belongsTo(GroupClass::class, 'group_id');
+    }
+
+    public function lessonTracking()
+    {
+        return $this->belongsTo(UserLessonTracking::class, 'lesson_tracking_id');
     }
 }

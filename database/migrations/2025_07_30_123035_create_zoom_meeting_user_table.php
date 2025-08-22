@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('zoom_meeting_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
+            $table->boolean('has_joined')->default(false);
+            $table->unsignedBigInteger('lesson_tracking_id')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('zoom_meetings');
+        Schema::dropIfExists('zoom_meeting_user');
     }
 };
