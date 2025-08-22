@@ -447,21 +447,12 @@
                                             @endif
 
                                             <div class="text-2xl font-bold text-primary mt-2">
-                                                @if ($package->discount_percentage > 0)
-                                                    <span class="text-green-600">
-                                                        ${{ number_format($package->discounted_price, 2) }}
-                                                    </span>
-                                                    <div class="text-sm line-through text-red-500 mt-1">
-                                                        ${{ number_format($package->original_price, 2) }}
-                                                    </div>
-                                                @else
-                                                    <span>${{ number_format($package->original_price, 2) }}</span>
-                                                @endif
+                                                <span>${{ number_format($package->original_price ?? $package->price, 2) }}</span>
                                             </div>
 
                                             <p class="text-xs text-muted-foreground mt-1">
                                                 Just
-                                                ${{ number_format($package->discounted_price / $package->number_of_lessons, 2) }}
+                                                ${{ number_format(($package->original_price ?? $package->price) / $package->number_of_lessons, 2) }}
                                                 per lesson
                                             </p>
 
@@ -972,15 +963,13 @@
             const calendar = new BookingCalendar(teacherId);
             const durationPrices = @json($durationPrices);
 
-            // Package prices and details (enhanced with discount info)
             const packagePrices = {};
             const packageDetails = {};
 
             @foreach ($teacher->lessonPackages as $package)
-                packagePrices[{{ $package->id }}] = {{ $package->discounted_price ?? $package->price }};
+                packagePrices[{{ $package->id }}] = {{ $package->original_price ?? $package->price }};
                 packageDetails[{{ $package->id }}] = {
                     original_price: {{ $package->original_price ?? $package->price }},
-                    discounted_price: {{ $package->discounted_price ?? $package->price }},
                     discount_percent: {{ $package->discount_percentage ?? 0 }},
                     lessons: {{ $package->number_of_lessons }},
                     duration_per_lesson: {{ $package->duration_per_lesson ?? 60 }},
@@ -997,6 +986,7 @@
             const checkoutValue = document.getElementById('checkoutValue');
             const checkoutPrice = document.getElementById('checkoutPrice');
 
+
             // Enhanced package selection handler
             packageInputs.forEach(input => {
                 input.addEventListener('change', function() {
@@ -1007,19 +997,19 @@
                         // Clear duration selection
                         durationInputs.forEach(dur => dur.checked = false);
 
-                        // Update display
+                        // Update display with original price
                         selectedDurationElem.textContent = packageInfo.name;
-                        selectedPriceElem.textContent = packageInfo.discounted_price.toFixed(2);
+                        selectedPriceElem.textContent = packageInfo.original_price.toFixed(2);
 
-                        // Set checkout form values
+                        // Set checkout form values with original price
                         checkoutType.value = 'package';
                         checkoutValue.value = packageId;
-                        checkoutPrice.value = packageInfo.discounted_price;
+                        checkoutPrice.value = packageInfo.original_price;
 
                         // Remove existing package inputs
                         document.querySelectorAll(
                                 '#checkoutForm input[name^="package_"], #checkoutForm input[name="original_price"], #checkoutForm input[name="discount_percent"]'
-                                )
+                            )
                             .forEach(input => input.remove());
 
                         // Add package-specific hidden inputs

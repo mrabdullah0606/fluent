@@ -46,7 +46,7 @@ class StripeController extends Controller
             'line_items' => $lineItems,
             'mode' => 'payment',
             'success_url' => route('student.dashboard'),
-            'cancel_url' => route('student.public.profile'),
+            'cancel_url' => route('student.dashboard'),
         ]);
 
         $this->recordPayment($request, 'successful');

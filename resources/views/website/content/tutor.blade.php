@@ -260,12 +260,6 @@
                                                 ];
                                                 $discountPercentage = $discountMap[$package->package_number] ?? 0;
                                                 $originalPrice = (float) $package->price;
-                                                $discountedPrice = $originalPrice;
-
-                                                if ($discountPercentage > 0) {
-                                                    $discountedPrice =
-                                                        $originalPrice - ($originalPrice * $discountPercentage) / 100;
-                                                }
                                             @endphp
                                             <div
                                                 class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
@@ -279,26 +273,9 @@
                                                 <div class="text-xs text-gray-600 mb-2">
                                                     <p><strong>{{ $package->number_of_lessons }}</strong> lessons</p>
                                                     <p>
-                                                        <style>
-                                                            .original-price {
-                                                                text-decoration-line: line-through;
-                                                                color: #888;
-                                                            }
-                                                        </style>
-                                                        @if ($discountPercentage > 0)
-                                                            <span class="text-green-600 font-bold text-base">
-                                                                ${{ number_format($discountedPrice, 2) }}
-                                                            </span>
-                                                            <span
-                                                                class="line-through text-red-500 text-sm ml-2 original-price">
-                                                                ${{ number_format($originalPrice, 2) }}
-                                                            </span>
-                                                        @else
-                                                            <span
-                                                                class="font-semibold text-black text-base line-through original-price">
-                                                                ${{ number_format($originalPrice, 2) }}
-                                                            </span>
-                                                        @endif
+                                                        <span class="font-semibold text-black text-base">
+                                                            ${{ number_format($originalPrice, 2) }}
+                                                        </span>
                                                     </p>
 
                                                     @if ($package->duration_per_lesson)
@@ -332,7 +309,7 @@
 
                                                 <button
                                                     class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white"
-                                                    onclick="selectPackage({{ $package->id }}, '{{ $package->name }}', {{ $discountedPrice }}, {{ $package->number_of_lessons }}, {{ $originalPrice }}, {{ $discountPercentage }})">
+                                                    onclick="selectPackage({{ $package->id }}, '{{ $package->name }}', {{ $originalPrice }}, {{ $package->number_of_lessons }}, {{ $originalPrice }}, {{ $discountPercentage }}, {{ $teacher->id }})">
                                                     Select Package
                                                 </button>
                                             </div>
@@ -344,27 +321,19 @@
                                         </div>
                                     @endif
                                 </div>
-
                             </div>
                         </div>
 
-                        {{-- <script>
-                            function selectPackage(packageId, packageName, price, lessons) {
-                                const url = `/student/checkout?type=package&value=${packageId}&price=${price}&lessons=${lessons}`;
-                                window.location.href = url;
-
-                                // Or you could store the selection and show a form
-                                // console.log('Selected package:', {packageId, packageName, price, lessons});
-                            }
-                        </script> --}}
                         <script>
-                            function selectPackage(packageId, packageName, discountedPrice, lessons, originalPrice = 0, discountPercent = 0) {
+                            function selectPackage(packageId, packageName, discountedPrice, lessons, originalPrice = 0, discountPercent = 0,
+                                teacherId = 0) {
                                 const url = `/student/checkout?type=package` +
                                     `&value=${packageId}` +
                                     `&price=${discountedPrice}` +
                                     `&lessons=${lessons}` +
                                     `&original_price=${originalPrice}` +
-                                    `&discount_percent=${discountPercent}`;
+                                    `&discount_percent=${discountPercent}` +
+                                    `&teacher_id=${teacherId}`;
 
                                 window.location.href = url;
                             }
