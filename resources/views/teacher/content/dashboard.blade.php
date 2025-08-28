@@ -47,8 +47,8 @@
                                 </svg>
                             </div>
                             <div class="p-6 pt-0">
-                                <div class="text-2xl font-bold">23</div>
-                                <p class="text-xs text-muted-foreground">+2 new this month</p>
+                                <div class="text-2xl font-bold">{{ $totalEnrollers ?? 0 }}</div>
+                                <p class="text-xs text-muted-foreground">+1 new this month</p>
                             </div>
                         </div>
                     </div>

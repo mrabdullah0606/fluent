@@ -101,8 +101,8 @@ class TeacherController extends Controller
 
         \Log::info('Visible Meetings: ' . count($visibleMeetings));
         \Log::info('Hidden Meetings: ' . count($hiddenMeetings));
-
-        return response()->view('teacher.content.dashboard', compact('teacher', 'visibleMeetings', 'hiddenMeetings', 'wallet'));
+        $totalEnrollers = Payment::where('teacher_id', $teacher->id)->distinct('student_id')->count('student_id');
+        return response()->view('teacher.content.dashboard', compact('teacher', 'visibleMeetings', 'hiddenMeetings', 'wallet', 'totalEnrollers'));
     }
 
     public function editProfile(): View

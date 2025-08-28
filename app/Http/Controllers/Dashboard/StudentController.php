@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class StudentController extends Controller
 {
@@ -29,7 +30,8 @@ class StudentController extends Controller
 
         // Get all payments made by this student
         $payments = Payment::where('student_id', $student->id)->get();
-
+        $totalTeachers = $payments->pluck('teacher_id')->unique()->count();
+        // dd($totalTeachers);
         $meetingDetails = [];
 
         foreach ($payments as $payment) {
@@ -67,8 +69,13 @@ class StudentController extends Controller
                 }
             }
         }
+        $upcomingMeetings = collect($meetingDetails)->filter(function ($meeting) {
+            return Carbon::parse($meeting['start_time'])->isToday() ||
+                Carbon::parse($meeting['start_time'])->isFuture();
+        })->values();
 
-        return response()->view('student.content.dashboard', compact('student', 'meetingDetails'));
+        // dd($upcomingMeetings,$meetingDetails);
+        return response()->view('student.content.dashboard', compact('student', 'meetingDetails', 'totalTeachers', 'upcomingMeetings'));
     }
 
 

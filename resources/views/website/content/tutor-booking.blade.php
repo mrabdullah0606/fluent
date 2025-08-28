@@ -880,55 +880,6 @@
             }
         }
 
-        // document.addEventListener('DOMContentLoaded', () => {
-        //     const teacherId = {{ $teacher->id }};
-        //     const calendar = new BookingCalendar(teacherId);
-        //     const durationPrices = @json($durationPrices);
-        //     const packagePrices = @json($teacher->lessonPackages->pluck('price', 'id'));
-
-        //     const durationInputs = document.querySelectorAll('input[name="duration"]');
-        //     const packageInputs = document.querySelectorAll('input[name="lesson_package"]');
-        //     const selectedDurationElem = document.getElementById('selected-duration');
-        //     const selectedPriceElem = document.getElementById('selected-price');
-
-        //     const checkoutType = document.getElementById('checkoutType');
-        //     const checkoutValue = document.getElementById('checkoutValue');
-        //     const checkoutPrice = document.getElementById('checkoutPrice');
-
-        //     packageInputs.forEach(input => {
-        //         input.addEventListener('change', function() {
-        //             const packageId = this.value;
-        //             const price = packagePrices[packageId];
-        //             durationInputs.forEach(dur => dur.checked = false);
-        //             const packageLabel = this.closest('label').querySelector('h4').textContent;
-        //             selectedDurationElem.textContent = packageLabel;
-        //             selectedPriceElem.textContent = price ? `${price}` : 'N/A';
-        //             checkoutType.value = 'package';
-        //             checkoutValue.value = packageId;
-        //             checkoutPrice.value = price ?? 0;
-        //             calendar.updateSelectedTimeDisplay();
-        //             calendar.updateCheckoutButton();
-        //         });
-        //     });
-
-        //     durationInputs.forEach(input => {
-        //         input.addEventListener('change', function() {
-        //             const minutes = this.value;
-        //             const key = `duration_${minutes}`;
-        //             const price = durationPrices[key];
-        //             packageInputs.forEach(pkg => pkg.checked = false);
-        //             const label = minutes === '120' ? '2 hours' : minutes + ' minutes';
-        //             selectedDurationElem.textContent = label;
-        //             selectedPriceElem.textContent = price ? `${price}` : 'N/A';
-        //             checkoutType.value = 'duration';
-        //             checkoutValue.value = minutes;
-        //             checkoutPrice.value = price ?? 0;
-        //             calendar.updateSelectedTimeDisplay();
-        //             calendar.updateCheckoutButton();
-        //         });
-        //     });
-        // });
-        // Add this to the booking page JavaScript to ensure proper form submission
         document.addEventListener('DOMContentLoaded', () => {
             const checkoutForm = document.getElementById('checkoutForm');
 

@@ -30,12 +30,16 @@
                             <a class="nav-link d-flex align-items-center" href="{{ route('student.chats.index') }}"><i
                                     class="bi bi-chat-left-text me-1"></i> Messages</a>
                         </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link d-flex align-items-center" href="{{ route('student.lesson.tracking') }}"><i
+                                    class="bi bi-camera-video me-1"></i> Meetings</a>
+                        </li>
                     </ul>
                     <div class="d-flex align-items-center gap-2">
                         <a class="btn btn-danger" href="{{ route('find.tutor') }}">
                             Find Tutor
                         </a>
-                        
+
                         <div class="dropdown">
                             <div class="dropdown-toggle rounded-circle border border-warning text-warning fw-bold d-flex align-items-center justify-content-center"
                                 style="width: 32px; height: 32px; cursor: pointer;" data-bs-toggle="dropdown"
@@ -43,7 +47,8 @@
                                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                             </div>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{{ route('student.profile.edit') }}">View Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('student.profile.edit') }}">View Profile</a>
+                                </li>
                                 <li><a class="dropdown-item" href="#">Settings</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
@@ -66,7 +71,8 @@
     @else
         {{-- Teacher or other authenticated users --}}
         <nav class="navbar navbar-expand-lg bg-white border-bottom border-warning border-2 py-3">
-            <div class="container-fluid px-3 px-md-5 d-flex align-items-center justify-content-between flex-wrap flex-lg-nowrap">
+            <div
+                class="container-fluid px-3 px-md-5 d-flex align-items-center justify-content-between flex-wrap flex-lg-nowrap">
 
                 <!-- Left: Logo + Tagline -->
                 <div class="d-flex align-items-center me-2 flex-shrink-1" style="max-width: 75%;">
@@ -92,33 +98,36 @@
                 </button>
 
                 <!-- Navigation -->
-                <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100" id="navbarNav">
+                <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100"
+                    id="navbarNav">
                     @php
                         $user = auth()->user();
                     @endphp
 
-                    @if($user->role !== 'student')
-                        <a href="{{ route('switch.to.teacher') }}" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
+                    @if ($user->role !== 'student')
+                        <a href="{{ route('switch.to.teacher') }}"
+                            class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
                             🔁 Switch to Teacher Account
                         </a>
                     @endif
-                    
+
                     <ul class="navbar-nav me-3">
                         <li class="nav-item"><a class="nav-link text-dark" href="{{ route('index') }}">Home</a></li>
                         <li class="nav-item"><a class="nav-link text-dark" href="{{ route('messages') }}">Messages</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" href="{{ route('contact') }}">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" href="{{ route('contact') }}">Contact Us</a>
+                        </li>
                         <li class="nav-item"><a class="nav-link text-dark" href="{{ route('about') }}">About</a></li>
                     </ul>
 
                     <a href="{{ route('find.tutor') }}" class="btn btn-sm px-4 py-2 fw-semibold text-white me-2"
                         style="background-color: #E83030;">Find Tutor</a>
-                    
+
                     @php
                         $initial = strtoupper(substr($user->name, 0, 1));
                     @endphp
 
                     {{-- Teacher Dropdown --}}
-                    @if($user->role === 'teacher')
+                    @if ($user->role === 'teacher')
                         <div class="dropdown">
                             <div class="dropdown-toggle rounded-circle border border-warning text-warning fw-bold d-flex align-items-center justify-content-center"
                                 style="width: 32px; height: 32px; cursor: pointer;" data-bs-toggle="dropdown"
@@ -126,15 +135,19 @@
                                 {{ $initial }}
                             </div>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{{ route('teacher.profile.edit') }}">View Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('teacher.profile.edit') }}">View Profile</a>
+                                </li>
                                 <li><a class="dropdown-item" href="{{ route('teacher.settings.index') }}">Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li>
                                     <a class="dropdown-item text-danger" href="javascript:void(0);"
                                         onclick="event.preventDefault(); document.getElementById('logout-form-teacher').submit();">
                                         Logout
                                     </a>
-                                    <form id="logout-form-teacher" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form-teacher" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
                                         @csrf
                                     </form>
                                 </li>
@@ -151,13 +164,16 @@
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="#">View Profile</a></li>
                                 <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li>
                                     <a class="dropdown-item text-danger" href="javascript:void(0);"
                                         onclick="event.preventDefault(); document.getElementById('logout-form-other').submit();">
                                         Logout
                                     </a>
-                                    <form id="logout-form-other" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form-other" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
                                         @csrf
                                     </form>
                                 </li>
@@ -171,7 +187,8 @@
 @else
     {{-- Not authenticated - Guest navbar --}}
     <nav class="navbar navbar-expand-lg bg-white border-bottom border-warning border-2 py-3">
-        <div class="container-fluid px-3 px-md-5 d-flex align-items-center justify-content-between flex-wrap flex-lg-nowrap">
+        <div
+            class="container-fluid px-3 px-md-5 d-flex align-items-center justify-content-between flex-wrap flex-lg-nowrap">
 
             <!-- Left: Logo + Tagline -->
             <div class="d-flex align-items-center me-2 flex-shrink-1" style="max-width: 75%;">
@@ -197,11 +214,12 @@
             </button>
 
             <!-- Navigation -->
-            <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100" id="navbarNav">
+            <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100"
+                id="navbarNav">
                 <a href="{{ route('switch.to.teacher') }}" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
                     🔁 Switch to Teacher Account
                 </a>
-                
+
                 <ul class="navbar-nav me-3">
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('index') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('messages') }}">Messages</a></li>
@@ -211,7 +229,7 @@
 
                 <a href="{{ route('find.tutor') }}" class="btn btn-sm px-4 py-2 fw-semibold text-white me-2"
                     style="background-color: #E83030;">Find Tutor</a>
-                
+
                 {{-- Not logged in - Show login button --}}
                 <a href="{{ route('student.login') }}" class="btn btn-outline-danger px-4 py-2 fw-semibold btn-sm">
                     Student Log In
