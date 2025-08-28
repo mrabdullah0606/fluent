@@ -105,6 +105,11 @@ Route::prefix('student')->group(function () {
         /************************** Stripe *************************************************/
         Route::get('/checkout', [StudentController::class, 'checkout'])->name('student.tutor.checkout');
         Route::post('/create-checkout-session', [StripeController::class, 'create'])->name('student.stripe.checkout');
+
+        // New routes for success and cancel
+        Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
+        Route::get('/stripe/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
+        /************************** Stripe End *********************************************/
     });
 });
 

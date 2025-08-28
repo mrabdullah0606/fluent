@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('total', 10, 2);
             $table->string('payment_method'); // e.g. stripe, demo
             $table->string('status')->default('pending'); // e.g. pending, successful
+            $table->string('stripe_payment_intent_id')->nullable();
             $table->timestamps();
         });
     }
