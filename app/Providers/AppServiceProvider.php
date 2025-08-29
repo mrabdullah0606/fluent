@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Services\WalletService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use App\Http\View\Composers\NavbarComposer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +25,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer([
+            'teacher.master.master',
+            'student.master.master'
+        ], NavbarComposer::class);
         Schema::defaultStringLength(191);
     }
 }

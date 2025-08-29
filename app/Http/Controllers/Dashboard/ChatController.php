@@ -17,7 +17,7 @@ class ChatController extends Controller
         $userId = auth()->id();
 
         // Get all users the teacher has chatted with
-        $chattedUserIds = \App\Models\Message::where('sender_id', $userId)
+        $chattedUserIds = Message::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
             ->get()
             ->flatMap(function ($msg) use ($userId) {
@@ -27,17 +27,36 @@ class ChatController extends Controller
             ->filter(fn($id) => $id != $userId)
             ->values();
 
-        $users = \App\Models\User::whereIn('id', $chattedUserIds)->get();
+        // Get users with their unread message counts
+        $users = User::whereIn('id', $chattedUserIds)
+            ->get()
+            ->map(function ($user) use ($userId) {
+                $user->unread_count = Message::where('sender_id', $user->id)
+                    ->where('receiver_id', $userId)
+                    ->whereNull('read_at')
+                    ->count();
+
+                // Get last message for preview
+                $user->last_message = Message::where(function ($query) use ($user, $userId) {
+                    $query->where('sender_id', $userId)->where('receiver_id', $user->id);
+                })->orWhere(function ($query) use ($user, $userId) {
+                    $query->where('sender_id', $user->id)->where('receiver_id', $userId);
+                })->latest()->first();
+
+                return $user;
+            })
+            ->sortByDesc(function ($user) {
+                return $user->last_message ? $user->last_message->created_at : null;
+            });
 
         return view('teacher.content.chat.users', compact('users'));
     }
-
 
     public function studentChatList()
     {
         $userId = auth()->id();
 
-        $chattedUserIds = \App\Models\Message::where('sender_id', $userId)
+        $chattedUserIds = Message::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
             ->get()
             ->flatMap(function ($msg) use ($userId) {
@@ -47,11 +66,30 @@ class ChatController extends Controller
             ->filter(fn($id) => $id != $userId)
             ->values();
 
-        $users = \App\Models\User::whereIn('id', $chattedUserIds)->get();
+        // Get users with their unread message counts
+        $users = User::whereIn('id', $chattedUserIds)
+            ->get()
+            ->map(function ($user) use ($userId) {
+                $user->unread_count = Message::where('sender_id', $user->id)
+                    ->where('receiver_id', $userId)
+                    ->whereNull('read_at')
+                    ->count();
+
+                // Get last message for preview
+                $user->last_message = Message::where(function ($query) use ($user, $userId) {
+                    $query->where('sender_id', $userId)->where('receiver_id', $user->id);
+                })->orWhere(function ($query) use ($user, $userId) {
+                    $query->where('sender_id', $user->id)->where('receiver_id', $userId);
+                })->latest()->first();
+
+                return $user;
+            })
+            ->sortByDesc(function ($user) {
+                return $user->last_message ? $user->last_message->created_at : null;
+            });
 
         return view('student.content.chat.users', compact('users'));
     }
-
 
     public function index(User $user)
     {
@@ -62,6 +100,12 @@ class ChatController extends Controller
             $query->where('sender_id', $user->id)
                 ->where('receiver_id', auth()->id());
         })->with('sender')->orderBy('created_at')->get();
+
+        // Mark messages as read when viewing the chat
+        Message::where('sender_id', $user->id)
+            ->where('receiver_id', auth()->id())
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
 
         $role = auth()->user()->role;
 
@@ -87,7 +131,7 @@ class ChatController extends Controller
 
             Log::info('Validation passed');
 
-            // Create the message
+            // Create the message (read_at will be null by default, marking it as unread)
             $message = Message::create([
                 'sender_id' => auth()->id(),
                 'receiver_id' => $request->receiver_id,
@@ -131,9 +175,43 @@ class ChatController extends Controller
         }
     }
 
-    // public function users()
-    // {
-    //     $users = User::where('id', '!=', auth()->id())->get();
-    //     return view('teacher.content.chat.users', compact('users'));
-    // }
+    public function getUnreadCount()
+    {
+        try {
+            $userId = auth()->id();
+            $unreadCount = Message::where('receiver_id', $userId)
+                ->whereNull('read_at')
+                ->count();
+
+            return response()->json([
+                'success' => true,
+                'unread_count' => $unreadCount
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function markAllAsRead()
+    {
+        try {
+            $userId = auth()->id();
+            $updated = Message::where('receiver_id', $userId)
+                ->whereNull('read_at')
+                ->update(['read_at' => now()]);
+
+            return response()->json([
+                'success' => true,
+                'updated_count' => $updated
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

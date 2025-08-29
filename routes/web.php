@@ -60,6 +60,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::post('/stripe/webhook', [StripeController::class, 'webhook'])->name('stripe.webhook');
 
 /* ************************************************************************** */
 /*                               STUDENT ROUTES                               */
@@ -93,9 +94,18 @@ Route::prefix('student')->group(function () {
         Route::get('zoom/join/{id}', [LessonTrackingController::class, 'join'])
             ->name('student.zoom.join');
         /* ********************************** CHAT ROUTES ********************************** */
+        // Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');
+        // Route::get('chat/{user}', [ChatController::class, 'index'])->name('student.chat.index');
+        // Route::post('chat/send', [ChatController::class, 'send'])->name('student.chat.send');
         Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');
-        Route::get('chat/{user}', [ChatController::class, 'index'])->name('student.chat.index');
+
+        // PUT THESE SPECIFIC ROUTES FIRST
+        Route::get('chat/unread-count', [ChatController::class, 'getUnreadCount'])->name('student.chat.unread-count');
+        Route::post('chat/mark-all-read', [ChatController::class, 'markAllAsRead'])->name('student.chat.mark-all-read');
         Route::post('chat/send', [ChatController::class, 'send'])->name('student.chat.send');
+
+        // THEN PUT THE DYNAMIC ROUTE LAST
+        Route::get('chat/{user}', [ChatController::class, 'index'])->name('student.chat.index');
 
         // Logout route
         Route::post('logout', [StudentAuthController::class, 'logout'])->name('student.logout');
@@ -159,10 +169,18 @@ Route::prefix('teacher')->group(function () {
         });
 
         /* ********************************** CHAT ROUTES ********************************** */
+        // Route::get('chats', [ChatController::class, 'teacherChatList'])->name('teacher.chats.index');
+        // Route::get('chat/{user}', [ChatController::class, 'index'])->name('teacher.chat.index');
+        // Route::post('chat/send', [ChatController::class, 'send'])->name('teacher.chat.send');
         Route::get('chats', [ChatController::class, 'teacherChatList'])->name('teacher.chats.index');
-        Route::get('chat/{user}', [ChatController::class, 'index'])->name('teacher.chat.index');
+
+        // PUT THESE SPECIFIC ROUTES FIRST
+        Route::get('chat/unread-count', [ChatController::class, 'getUnreadCount'])->name('teacher.chat.unread-count');
+        Route::post('chat/mark-all-read', [ChatController::class, 'markAllAsRead'])->name('teacher.chat.mark-all-read');
         Route::post('chat/send', [ChatController::class, 'send'])->name('teacher.chat.send');
 
+        // THEN PUT THE DYNAMIC ROUTE LAST
+        Route::get('chat/{user}', [ChatController::class, 'index'])->name('teacher.chat.index');
         /* ********************************** zoom ********************************** */
         Route::get('zoom-meetings', [ZoomMeetingController::class, 'index'])->name('teacher.zoom.meetings.index');
         Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('teacher.zoom.meetings.store');

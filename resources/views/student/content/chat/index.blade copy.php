@@ -5,14 +5,9 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="mb-0">Chat with {{ $user->name }}</h4>
-                            <small id="connection-status" class="text-muted">Connecting...</small>
-                        </div>
-                        <a href="{{ route('student.chats.index') }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-arrow-left"></i> Back to Chats
-                        </a>
+                    <div class="card-header">
+                        <h4>Chat with {{ $user->name }}</h4>
+                        <small id="connection-status" class="text-muted">Connecting...</small>
                     </div>
                     <div class="card-body">
                         <div id="chat-box"
@@ -24,10 +19,7 @@
                                         class="d-inline-block p-2 rounded {{ $msg->sender->id === auth()->id() ? 'bg-primary text-white' : 'bg-light' }}">
                                         <strong>{{ $msg->sender->id === auth()->id() ? 'You' : $msg->sender->name }}:</strong>
                                         {{ $msg->message }}
-                                        <br><small
-                                            class="{{ $msg->sender->id === auth()->id() ? 'text-light' : 'text-muted' }}">
-                                            {{ $msg->created_at->format('H:i') }}
-                                        </small>
+                                        <br><small class="text-muted">{{ $msg->created_at->format('H:i') }}</small>
                                     </div>
                                 </div>
                             @endforeach
@@ -47,20 +39,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Toast notification for new messages -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="messageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <strong class="me-auto">New Message</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body" id="toastBody">
-                <!-- Message content will be inserted here -->
-            </div>
-        </div>
-    </div>
-
     <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
     <script>
         Pusher.logToConsole = true;
@@ -108,6 +86,7 @@
             console.error('Pusher connection error:', err);
         });
 
+        // IMPORTANT: Both files should subscribe to private channel
         const channel = pusher.subscribe(`private-${channelName}`);
 
         channel.bind('pusher:subscription_succeeded', function() {
@@ -122,15 +101,12 @@
             statusElement.className = 'text-danger';
         });
 
-        // Listen for messages - FIXED: Only show messages from OTHER users
+        // Listen for messages
         channel.bind('message.sent', function(data) {
             console.log('Message received:', data);
-            // IMPORTANT: Only show message if it's NOT from current user
+            // Only show message if it's not from current user
             if (data.sender_id !== currentUserId) {
                 addMessageToChat(data.sender_name, data.message, data.created_at, false);
-                showNotificationToast(data.sender_name, data.message);
-                showBrowserNotification(data.sender_name, data.message);
-                updateNavbarNotificationCount();
             }
         });
 
@@ -145,71 +121,18 @@
             });
 
             messageDiv.innerHTML = `
-            <div class="d-inline-block p-2 rounded ${isOwnMessage ? 'bg-primary text-white' : 'bg-light'}">
-                <strong>${isOwnMessage ? 'You' : senderName}:</strong>
-                ${message}
-                <br><small class="${isOwnMessage ? 'text-light' : 'text-muted'}">${time}</small>
-            </div>
-        `;
+                <div class="d-inline-block p-2 rounded ${isOwnMessage ? 'bg-primary text-white' : 'bg-light'}">
+                    <strong>${isOwnMessage ? 'You' : senderName}:</strong>
+                    ${message}
+                    <br><small class="text-muted">${time}</small>
+                </div>
+            `;
 
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function showNotificationToast(senderName, message) {
-            // Only show toast if Bootstrap is available
-            if (typeof bootstrap !== 'undefined') {
-                const toastElement = document.getElementById('messageToast');
-                const toastBody = document.getElementById('toastBody');
-
-                if (toastElement && toastBody) {
-                    toastBody.innerHTML = `<strong>${senderName}:</strong> ${message}`;
-
-                    const toast = new bootstrap.Toast(toastElement, {
-                        autohide: true,
-                        delay: 5000
-                    });
-
-                    toast.show();
-                }
-            }
-        }
-
-        function updateNavbarNotificationCount() {
-            // Get the correct route based on user role
-            const role = '{{ auth()->user()->role }}';
-            const unreadCountRoute = role === 'teacher' ?
-                '{{ route('teacher.chat.unread-count') }}' :
-                '{{ route('student.chat.unread-count') }}';
-
-            fetch(unreadCountRoute)
-                .then(response => response.json())
-                .then(data => {
-                    const badge = document.querySelector('.notification-badge');
-                    const messagesLink = document.querySelector('a[href*="chats"]');
-
-                    if (data.unread_count > 0) {
-                        if (badge) {
-                            badge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
-                        } else if (messagesLink) {
-                            const newBadge = document.createElement('span');
-                            newBadge.className =
-                                'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge';
-                            newBadge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
-                            messagesLink.appendChild(newBadge);
-                        }
-                    } else {
-                        if (badge) {
-                            badge.remove();
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching unread count:', error);
-                });
-        }
-
-        // Form submission - FIXED: Don't add message twice
+        // Form submission - Use appropriate route for each file
         document.getElementById('chat-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -224,12 +147,7 @@
 
             sendBtn.disabled = true;
             sendBtn.textContent = 'Sending...';
-
-            // Get the correct send route based on user role
-            const role = '{{ auth()->user()->role }}';
-            const sendUrl = role === 'teacher' ?
-                '{{ route('teacher.chat.send') }}' :
-                '{{ route('student.chat.send') }}';
+            const sendUrl = '{{ route('student.chat.send') }}';
 
             fetch(sendUrl, {
                     method: 'POST',
@@ -270,9 +188,7 @@
         // Auto-scroll to bottom on page load
         document.addEventListener('DOMContentLoaded', function() {
             const chatBox = document.getElementById('chat-box');
-            if (chatBox) {
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
+            chatBox.scrollTop = chatBox.scrollHeight;
         });
 
         // Enter key to send message
@@ -282,21 +198,5 @@
                 document.getElementById('chat-form').dispatchEvent(new Event('submit'));
             }
         });
-
-        // Request notification permission on page load
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
-
-        // Show browser notification for new messages (when tab is not active)
-        function showBrowserNotification(senderName, message) {
-            if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
-                new Notification(`New message from ${senderName}`, {
-                    body: message,
-                    icon: '/favicon.ico',
-                    tag: 'chat-message'
-                });
-            }
-        }
     </script>
 @endsection
