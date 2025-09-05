@@ -347,7 +347,7 @@
                             </div>
                         </div>
 
-                        @php
+                        {{-- @php
                             $durationPrices = $teacher->teacherSettings->pluck('value', 'key')->toArray();
                         @endphp
                         <h3 class="font-semibold text-foreground mb-3 text-lg">Lesson Duration</h3>
@@ -368,6 +368,22 @@
                                     </label>
                                 </div>
                             @endforeach
+                        </div> --}}
+                        @php
+                            $durationPrices = $teacher->teacherSettings->pluck('value', 'key')->toArray();
+                            $price60 = $durationPrices['duration_60'] ?? 'N/A';
+                        @endphp
+                        <h3 class="font-semibold text-foreground mb-3 text-lg">Lesson Duration</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="duration-option">
+                                <input type="radio" name="duration" value="60" id="duration-60"
+                                    class="peer hidden" required checked>
+                                <label for="duration-60"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col items-center justify-between rounded-md border-2 border-primary bg-primary/10 p-4 text-center transition-all duration-300">
+                                    60 minutes <br>
+                                    <span class="text-xs text-muted">$ {{ $price60 }}</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -999,11 +1015,37 @@
             });
 
             // Enhanced duration selection handler
-            durationInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const minutes = this.value;
-                    const key = `duration_${minutes}`;
-                    const price = durationPrices[key];
+            // durationInputs.forEach(input => {
+            //     input.addEventListener('change', function() {
+            //         const minutes = this.value;
+            //         const key = `duration_${minutes}`;
+            //         const price = durationPrices[key];
+
+            //         // Clear package selection
+            //         packageInputs.forEach(pkg => pkg.checked = false);
+
+            //         // Remove package-specific hidden inputs
+            //         document.querySelectorAll('#checkoutForm .dynamic-checkout-input')
+            //             .forEach(input => input.remove());
+
+            //         const label = minutes === '120' ? '2 hours' : minutes + ' minutes';
+            //         selectedDurationElem.textContent = label;
+            //         selectedPriceElem.textContent = price ? `${price}` : 'N/A';
+
+            //         checkoutType.value = 'duration';
+            //         checkoutValue.value = minutes;
+            //         checkoutPrice.value = price ?? 0;
+
+            //         calendar.updateSelectedTimeDisplay();
+            //         calendar.updateCheckoutButton();
+            //     });
+            // });
+            // Simplified duration selection handler for 60 minutes only
+            const duration60Input = document.getElementById('duration-60');
+            if (duration60Input) {
+                duration60Input.addEventListener('change', function() {
+                    const minutes = '60';
+                    const price = durationPrices['duration_60'];
 
                     // Clear package selection
                     packageInputs.forEach(pkg => pkg.checked = false);
@@ -1012,8 +1054,7 @@
                     document.querySelectorAll('#checkoutForm .dynamic-checkout-input')
                         .forEach(input => input.remove());
 
-                    const label = minutes === '120' ? '2 hours' : minutes + ' minutes';
-                    selectedDurationElem.textContent = label;
+                    selectedDurationElem.textContent = '60 minutes';
                     selectedPriceElem.textContent = price ? `${price}` : 'N/A';
 
                     checkoutType.value = 'duration';
@@ -1023,7 +1064,12 @@
                     calendar.updateSelectedTimeDisplay();
                     calendar.updateCheckoutButton();
                 });
-            });
+
+                // Auto-trigger the change event to set initial values
+                if (duration60Input.checked) {
+                    duration60Input.dispatchEvent(new Event('change'));
+                }
+            }
         });
     </script>
 @endsection

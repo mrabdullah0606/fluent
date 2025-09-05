@@ -10,9 +10,16 @@
                             <h4 class="mb-0">Chat with {{ $user->name }}</h4>
                             <small id="connection-status" class="text-muted">Connecting...</small>
                         </div>
-                        <a href="{{ route('student.chats.index') }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-arrow-left"></i> Back to Chats
-                        </a>
+                        <div class="d-flex align-items-center gap-2">
+                            <!-- Sound toggle button -->
+                            <button type="button" id="sound-toggle" class="btn btn-outline-secondary btn-sm"
+                                title="Toggle notification sounds">
+                                <i id="sound-icon" class="bi bi-volume-up"></i>
+                            </button>
+                            <a href="{{ route('student.chats.index') }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-arrow-left"></i> Back to Chats
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div id="chat-box"
@@ -48,6 +55,13 @@
         </div>
     </div>
 
+    <!-- Audio element for notification sound -->
+    <audio id="notification-sound" preload="auto">
+        <!-- You can use multiple sources for better browser compatibility -->
+        <source src="{{ asset('assets/website/sounds/notification-sound.wav') }}" type="audio/wav">
+        <!-- Fallback notification sound (simple beep) -->
+    </audio>
+
     <!-- Toast notification for new messages -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="messageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -75,6 +89,76 @@
         console.log('Receiver ID:', receiverId);
         console.log('Channel Name:', channelName);
 
+        let soundEnabled = localStorage.getItem('chatSoundEnabled') !== 'false';
+        const notificationSound = document.getElementById('notification-sound');
+        const soundToggle = document.getElementById('sound-toggle');
+        const soundIcon = document.getElementById('sound-icon');
+
+        function updateSoundToggle() {
+            if (soundEnabled) {
+                soundIcon.className = 'bi bi-volume-up';
+                soundToggle.classList.remove('btn-outline-danger');
+                soundToggle.classList.add('btn-outline-secondary');
+                soundToggle.title = 'Sound enabled - Click to disable';
+            } else {
+                soundIcon.className = 'bi bi-volume-mute';
+                soundToggle.classList.remove('btn-outline-secondary');
+                soundToggle.classList.add('btn-outline-danger');
+                soundToggle.title = 'Sound disabled - Click to enable';
+            }
+        }
+        updateSoundToggle();
+        soundToggle.addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('chatSoundEnabled', soundEnabled);
+            updateSoundToggle();
+            if (soundEnabled) {
+                playNotificationSound();
+            }
+        });
+
+        function playNotificationSound() {
+            if (soundEnabled && notificationSound) {
+                try {
+                    notificationSound.currentTime = 0;
+                    const playPromise = notificationSound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(function(error) {
+                            console.log('Could not play notification sound:', error);
+                            createSimpleBeep();
+                        });
+                    }
+                } catch (error) {
+                    console.log('Error playing notification sound:', error);
+                    createSimpleBeep();
+                }
+            }
+        }
+
+        function createSimpleBeep() {
+            if (!soundEnabled) return;
+
+            try {
+                const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (error) {
+                console.log('Could not create beep sound:', error);
+            }
+        }
+
         const pusher = new Pusher('{{ config('broadcasting.connections.pusher.key') }}', {
             cluster: '{{ config('broadcasting.connections.pusher.options.cluster') }}',
             forceTLS: true,
@@ -88,8 +172,6 @@
         });
 
         const statusElement = document.getElementById('connection-status');
-
-        // Connection status handlers
         pusher.connection.bind('connected', function() {
             statusElement.textContent = 'Connected ✓';
             statusElement.className = 'text-success';
@@ -122,15 +204,14 @@
             statusElement.className = 'text-danger';
         });
 
-        // Listen for messages - FIXED: Only show messages from OTHER users
         channel.bind('message.sent', function(data) {
             console.log('Message received:', data);
-            // IMPORTANT: Only show message if it's NOT from current user
             if (data.sender_id !== currentUserId) {
                 addMessageToChat(data.sender_name, data.message, data.created_at, false);
                 showNotificationToast(data.sender_name, data.message);
                 showBrowserNotification(data.sender_name, data.message);
                 updateNavbarNotificationCount();
+                playNotificationSound();
             }
         });
 
@@ -157,7 +238,6 @@
         }
 
         function showNotificationToast(senderName, message) {
-            // Only show toast if Bootstrap is available
             if (typeof bootstrap !== 'undefined') {
                 const toastElement = document.getElementById('messageToast');
                 const toastBody = document.getElementById('toastBody');
@@ -176,7 +256,6 @@
         }
 
         function updateNavbarNotificationCount() {
-            // Get the correct route based on user role
             const role = '{{ auth()->user()->role }}';
             const unreadCountRoute = role === 'teacher' ?
                 '{{ route('teacher.chat.unread-count') }}' :
@@ -209,7 +288,6 @@
                 });
         }
 
-        // Form submission - FIXED: Don't add message twice
         document.getElementById('chat-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -224,8 +302,6 @@
 
             sendBtn.disabled = true;
             sendBtn.textContent = 'Sending...';
-
-            // Get the correct send route based on user role
             const role = '{{ auth()->user()->role }}';
             const sendUrl = role === 'teacher' ?
                 '{{ route('teacher.chat.send') }}' :
@@ -250,7 +326,6 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        // Add message to chat immediately for sender
                         addMessageToChat('You', message, data.data.created_at, true);
                         messageInput.value = '';
                     } else {
@@ -267,7 +342,6 @@
                 });
         });
 
-        // Auto-scroll to bottom on page load
         document.addEventListener('DOMContentLoaded', function() {
             const chatBox = document.getElementById('chat-box');
             if (chatBox) {
@@ -275,7 +349,6 @@
             }
         });
 
-        // Enter key to send message
         document.getElementById('message').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -283,12 +356,10 @@
             }
         });
 
-        // Request notification permission on page load
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }
 
-        // Show browser notification for new messages (when tab is not active)
         function showBrowserNotification(senderName, message) {
             if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
                 new Notification(`New message from ${senderName}`, {

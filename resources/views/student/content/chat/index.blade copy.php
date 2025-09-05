@@ -1,46 +1,46 @@
 @extends('student.master.master')
 @section('title', 'Chats - FluentAll')
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Chat with {{ $user->name }}</h4>
-                        <small id="connection-status" class="text-muted">Connecting...</small>
-                    </div>
-                    <div class="card-body">
-                        <div id="chat-box"
-                            style="height:400px; overflow-y:auto; border:1px solid #ddd; padding:15px; margin-bottom:15px; background-color:#f8f9fa;">
-                            @foreach ($messages as $msg)
-                                <div
-                                    class="message mb-2 {{ $msg->sender->id === auth()->id() ? 'text-end' : 'text-start' }}">
-                                    <div
-                                        class="d-inline-block p-2 rounded {{ $msg->sender->id === auth()->id() ? 'bg-primary text-white' : 'bg-light' }}">
-                                        <strong>{{ $msg->sender->id === auth()->id() ? 'You' : $msg->sender->name }}:</strong>
-                                        {{ $msg->message }}
-                                        <br><small class="text-muted">{{ $msg->created_at->format('H:i') }}</small>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <form id="chat-form" class="mt-3">
-                            @csrf
-                            <input type="hidden" id="receiver_id" value="{{ $user->id }}">
-                            <div class="input-group">
-                                <input type="text" id="message" class="form-control" placeholder="Type a message..."
-                                    required maxlength="1000">
-                                <button type="submit" class="btn btn-primary" id="send-btn">Send</button>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Chat with {{ $user->name }}</h4>
+                    <small id="connection-status" class="text-muted">Connecting...</small>
+                </div>
+                <div class="card-body">
+                    <div id="chat-box"
+                        style="height:400px; overflow-y:auto; border:1px solid #ddd; padding:15px; margin-bottom:15px; background-color:#f8f9fa;">
+                        @foreach ($messages as $msg)
+                        <div
+                            class="message mb-2 {{ $msg->sender->id === auth()->id() ? 'text-end' : 'text-start' }}">
+                            <div
+                                class="d-inline-block p-2 rounded {{ $msg->sender->id === auth()->id() ? 'bg-primary text-white' : 'bg-light' }}">
+                                <strong>{{ $msg->sender->id === auth()->id() ? 'You' : $msg->sender->name }}:</strong>
+                                {{ $msg->message }}
+                                <br><small class="text-muted">{{ $msg->created_at->format('H:i') }}</small>
                             </div>
-                        </form>
+                        </div>
+                        @endforeach
                     </div>
+
+                    <form id="chat-form" class="mt-3">
+                        @csrf
+                        <input type="hidden" id="receiver_id" value="{{ $user->id }}">
+                        <div class="input-group">
+                            <input type="text" id="message" class="form-control" placeholder="Type a message..."
+                                required maxlength="1000">
+                            <button type="submit" class="btn btn-primary" id="send-btn">Send</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
-    <script>
+</div>
+<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+<!-- <script>
         Pusher.logToConsole = true;
 
         const currentUserId = {{ auth()->id() }};
@@ -198,5 +198,5 @@
                 document.getElementById('chat-form').dispatchEvent(new Event('submit'));
             }
         });
-    </script>
+    </script> -->
 @endsection

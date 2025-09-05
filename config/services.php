@@ -31,8 +31,6 @@ return [
         'dashboard_url' => 'https://app.chatwoot.com/app/accounts/131300/dashboard',
         'api_url' => 'https://app.chatwoot.com/api/v1',
         'api_token' => env('CHATWOOT_API_TOKEN', null),
-        'website_token' => env('CHATWOOT_WEBSITE_TOKEN', null),
-        'webhook_secret' => env('CHATWOOT_WEBHOOK_SECRET', null),
     ],
     
     'resend' => [

@@ -67,9 +67,23 @@ class SettingsController extends Controller
         }
     }
 
+    // private function updateIndividualPricing($teacherId, array $data)
+    // {
+    //     $durations = [30, 60, 90, 120];
+
+    //     foreach ($durations as $duration) {
+    //         $key = "duration_{$duration}";
+    //         if (isset($data[$key])) {
+    //             TeacherSetting::updateOrCreate(
+    //                 ['teacher_id' => $teacherId, 'key' => $key],
+    //                 ['value' => $data[$key]]
+    //             );
+    //         }
+    //     }
+    // }
     private function updateIndividualPricing($teacherId, array $data)
     {
-        $durations = [30, 60, 90, 120];
+        $durations = [60]; // Only 60 minutes now
 
         foreach ($durations as $duration) {
             $key = "duration_{$duration}";
