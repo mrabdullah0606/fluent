@@ -332,7 +332,7 @@ class StudentController extends Controller
     }
 
     public function oneOnOneTutors(): View
-    {
+    {   
         $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
         // dd($teachers->toArray());
         return view('student.content.one-to-one', compact('teachers'));
@@ -361,7 +361,7 @@ class StudentController extends Controller
 
     $studentId = Auth::id();
 
-    // Check if student has completed at least one lesson with this teacher
+    //Check if student has completed at least one lesson with this teacher
     $hasLesson = \DB::table('user_lesson_trackings')
         ->where('student_id', $studentId)
         ->where('teacher_id', $request->teacher_id)

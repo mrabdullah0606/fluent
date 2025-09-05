@@ -161,61 +161,71 @@
                             @endif
 
                             <h3 class="text-xl font-bold text-foreground mb-1">{{ $teacher->name }}</h3>
-                            <div class="flex items-center text-yellow-500 mb-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4 fill-current">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                    </polygon>
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4 fill-current">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                    </polygon>
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4 fill-current">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                    </polygon>
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 fill-current">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                    </polygon>
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"
-                                    style="clip-path: inset(0px 50% 0px 0px);">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                    </polygon>
-                                </svg>
-                                <span class="ml-1.5 text-muted-foreground text-xs">(120 reviews)</span>
-                            </div>
-                            <p class="text-secondary font-semibold text-md mb-0.5"><svg xmlns="http://www.w3.org/2000/svg"
-                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="inline h-4 w-4 mr-0.5">
-                                    <line x1="12" x2="12" y1="2" y2="22"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                                {{ $teacher->duration_60 ?? 'N/A' }}/hour
-                            </p>
-                            <p class="text-primary font-semibold text-sm mb-2">Trial: $5</p>
-                            <button
-                                class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 btn-red w-full text-sm py-2">
-                                <a href="{{ route('tutor', ['id' => $teacher->id]) }}" class="...">View Profile &amp;
-                                    Book</a>
+                           <div class="flex items-center text-yellow-500 mb-1">
+                            @php
+                                $fullStars = floor($teacher->average_rating); // full stars
+                                $halfStar = ($teacher->average_rating - $fullStars) >= 0.5; // half star if needed
+                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0); // remaining empty stars
+                            @endphp
 
-                            </button>
+                            {{-- Full Stars --}}
+                            @for ($i = 0; $i < $fullStars; $i++)
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 
+                                                     18.18 21.02 12 17.77 5.82 21.02 
+                                                     7 14.14 2 9.27 8.91 8.26 12 2">
+                                    </polygon>
+                                </svg>
+                            @endfor
+
+                            {{-- Half Star --}}
+                            @if ($halfStar)
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" viewBox="0 0 24 24">
+                                    <defs>
+                                        <linearGradient id="half-grad">
+                                            <stop offset="50%" stop-color="currentColor"/>
+                                            <stop offset="50%" stop-color="transparent"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <polygon fill="url(#half-grad)" stroke="currentColor" stroke-width="2"
+                                             points="12 2 15.09 8.26 22 9.27 17 14.14 
+                                                     18.18 21.02 12 17.77 5.82 21.02 
+                                                     7 14.14 2 9.27 8.91 8.26 12 2">
+                                    </polygon>
+                                </svg>
+                            @endif
+
+                            {{-- Empty Stars --}}
+                            @for ($i = 0; $i < $emptyStars; $i++)
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" viewBox="0 0 24 24">
+                                    <polygon fill="none" stroke="currentColor" stroke-width="2"
+                                             points="12 2 15.09 8.26 22 9.27 17 14.14 
+                                                     18.18 21.02 12 17.77 5.82 21.02 
+                                                     7 14.14 2 9.27 8.91 8.26 12 2">
+                                    </polygon>
+                                </svg>
+                            @endfor
+                            <span class="ml-1.5 text-muted-foreground text-xs">
+                                ({{ $teacher->reviews_count }} {{ Str::plural('review', $teacher->reviews_count) }})
+                            </span>
+                        </div>
+
+                                                    <p class="text-secondary font-semibold text-md mb-0.5"><svg xmlns="http://www.w3.org/2000/svg"
+                                                            width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round" class="inline h-4 w-4 mr-0.5">
+                                                            <line x1="12" x2="12" y1="2" y2="22"></line>
+                                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                                        </svg>
+                                                        {{ $teacher->duration_60 ?? 'N/A' }}/hour
+                                                    </p>
+                                                    <p class="text-primary font-semibold text-sm mb-2">Trial: $5</p>
+                                                    <button
+                                                        class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 btn-red w-full text-sm py-2">
+                                                        <a href="{{ route('tutor', ['id' => $teacher->id]) }}" class="...">View Profile &amp;
+                                                            Book</a>
+
+                                                    </button>
                         </div>
                         <div class="md:w-2/3">
                             <p class="text-muted-foreground text-sm leading-relaxed mb-3 line-clamp-3">

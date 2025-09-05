@@ -197,13 +197,21 @@ class TeacherController extends Controller
     // }
 
     public function publicProfile(): View
-    {
+    {   
+
         $user = auth()->user();
         $teacher = $user->teacherProfile;
          $introVideo = \DB::table('teachers')
         ->where('user_id', $user->id)
         ->value('intro_video');
-        return view('teacher.content.profile.public', compact('user', 'teacher','introVideo'));
+        $reviews = \DB::table('reviews')
+        ->join('users', 'reviews.student_id', '=', 'users.id')
+        ->where('reviews.teacher_id', $teacher->id)
+        ->where('reviews.is_approved', 1) // ✅ correct column name
+        ->select('reviews.*', 'users.name as student_name')
+        ->latest()
+        ->get();
+        return view('teacher.content.profile.public', compact('user', 'teacher','introVideo','reviews'));
     }
 
 

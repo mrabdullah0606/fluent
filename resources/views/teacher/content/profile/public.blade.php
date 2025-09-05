@@ -791,7 +791,46 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200 mt-12"
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200 mt-12">
+                        <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            Student Reviews ({{ $reviews->count() }})
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @forelse($reviews as $review)
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex items-center">
+                                        <span class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3">
+                                            <span class="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                                                {{ strtoupper(substr($review->student_name, 0, 1)) }}
+                                            </span>
+                                        </span>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">{{ $review->student_name }}</p>
+                                            <p class="text-xs text-gray-500">{{ $review->created_at->format('M d, Y') }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        @for($i = 1; $i <= 5; $i++)
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {{ $i <= $review->rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300' }}" viewBox="0 0 24 24" fill="currentColor">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                        </svg>
+                                        @endfor
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 italic mt-3">"{{ $review->comment }}"</p>
+                            </div>
+                            @empty
+                            <p class="text-gray-500">No reviews yet.</p>
+                            @endforelse
+                        </div>
+                    </div>
+                    <!--static data -->
+                   <!--  <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200 mt-12"
                         style="opacity: 1; transform: none;">
                         <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 flex items-center"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -800,7 +839,7 @@
                                 <polygon
                                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                 </polygon>
-                            </svg> Student Reviews (180)</h2>
+                            </svg> Student Reviewss (180)</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"
                                 style="opacity: 1; transform: none;">
@@ -1111,7 +1150,7 @@
                         <div class="text-center mt-8"><button
                                 class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Show
                                 More Reviews (2 more)</button></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

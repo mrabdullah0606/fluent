@@ -117,9 +117,12 @@ class HomeController extends Controller
             ->latest()
             ->get();
         $reviewsCount = $reviews->count();
+        $averageRating = $reviewsCount > 0 
+        ? round($reviews->avg('rating'), 1) 
+        : 0;
         // dd($teacher->toArray(), $duration60Rate);
         // dd($reviews->toArray());
-        return view('website.content.tutor', compact('teacher', 'duration60Rate', 'reviews', 'reviewsCount', 'profileImage'));
+        return view('website.content.tutor', compact('teacher', 'duration60Rate', 'reviews', 'reviewsCount', 'profileImage','averageRating'));
     }
 
     // public function tutorBooking($id): View
@@ -351,92 +354,197 @@ class HomeController extends Controller
     //     return view('website.content.one-to-one', compact('teachers', 'languages', 'teacherLanguages', 'countries'));
     //     //return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
     // }
+
+
     public function oneOnOneTutors(Request $request): View
-    {
-        $countries = [
-            'Pakistan',
-            'USA',
-            'UK',
-            'Canada',
-            'India',
-            'France',
-            'Germany',
-            'Saudi Arabia',
-            'UAE',
-            'Australia',
-            'Japan',
-            'China',
-            'Bangladesh',
-            'Nepal',
-            'Turkey',
-            'South Africa',
-            'Malaysia',
-            'Indonesia',
-            'Italy',
-            'Spain'
-        ];
+{
+    $countries = [
+        'Pakistan',
+        'USA',
+        'UK',
+        'Canada',
+        'India',
+        'France',
+        'Germany',
+        'Saudi Arabia',
+        'UAE',
+        'Australia',
+        'Japan',
+        'China',
+        'Bangladesh',
+        'Nepal',
+        'Turkey',
+        'South Africa',
+        'Malaysia',
+        'Indonesia',
+        'Italy',
+        'Spain'
+    ];
 
-        $query = User::with('teacherProfile', 'teacherSettings')->where('role', 'teacher');
+    $query = User::with(['teacherProfile', 'teacherSettings'])
+        ->where('role', 'teacher');
 
-        if ($request->filled('learn_language')) {
-            $query->whereHas('teacherProfile', function ($q) use ($request) {
-                $q->where('teaches', 'LIKE', '%' . $request->learn_language . '%');
-            });
-        }
-
-        if ($request->filled('speaks')) {
-            $query->whereHas('teacherProfile', function ($q) use ($request) {
-                $q->where('speaks', 'LIKE', '%' . $request->speaks . '%');
-            });
-        }
-
-        if ($request->filled('country')) {
-            $query->whereHas('teacherProfile', function ($q) use ($request) {
-                $q->where('country', $request->country);
-            });
-        }
-
-        if ($request->filled('name')) {
-            $query->where('name', 'LIKE', '%' . $request->name . '%');
-        }
-
-        if ($request->filled('min_price') && $request->filled('max_price')) {
-            $query->whereHas('teacherProfile', function ($q) use ($request) {
-                $q->whereBetween('hourly_rate', [(int)$request->min_price, (int)$request->max_price]);
-            });
-        }
-
-        $teachers = $query->get()->map(function ($teacher) {
-            $teacher->teaches_names = [];
-            if ($teacher->teacherProfile && $teacher->teacherProfile->teaches) {
-                $teachesIds = is_array($teacher->teacherProfile->teaches)
-                    ? $teacher->teacherProfile->teaches
-                    : json_decode($teacher->teacherProfile->teaches, true);
-
-                if (!empty($teachesIds)) {
-                    $teacher->teaches_names = Language::whereIn('id', $teachesIds)->pluck('name')->toArray();
-                }
-            }
-            $teacher->duration_60 = null;
-            $settings = $teacher->teacherSettings ?? $teacher->teacher_settings ?? null;
-            if ($settings && (is_array($settings) || is_countable($settings)) && count($settings) > 0) {
-                foreach ($settings as $setting) {
-                    if (!$setting) continue;
-                    $key = is_array($setting) ? ($setting['key'] ?? null) : ($setting->key ?? null);
-                    $value = is_array($setting) ? ($setting['value'] ?? null) : ($setting->value ?? null);
-
-                    if ($key === 'duration_60') {
-                        $teacher->duration_60 = $value;
-                        break;
-                    }
-                }
-            }
-
-            return $teacher;
+    // ✅ Apply filters
+    if ($request->filled('learn_language')) {
+        $query->whereHas('teacherProfile', function ($q) use ($request) {
+            $q->where('teaches', 'LIKE', '%' . $request->learn_language . '%');
         });
-        $languages = Language::all();
-        return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
     }
+
+    if ($request->filled('speaks')) {
+        $query->whereHas('teacherProfile', function ($q) use ($request) {
+            $q->where('speaks', 'LIKE', '%' . $request->speaks . '%');
+        });
+    }
+
+    if ($request->filled('country')) {
+        $query->whereHas('teacherProfile', function ($q) use ($request) {
+            $q->where('country', $request->country);
+        });
+    }
+
+    if ($request->filled('name')) {
+        $query->where('name', 'LIKE', '%' . $request->name . '%');
+    }
+
+    if ($request->filled('min_price') && $request->filled('max_price')) {
+        $query->whereHas('teacherProfile', function ($q) use ($request) {
+            $q->whereBetween('hourly_rate', [(int)$request->min_price, (int)$request->max_price]);
+        });
+    }
+
+    $teachers = $query->get()->map(function ($teacher) {
+        // ✅ Decode teaches into names
+        $teacher->teaches_names = [];
+        if ($teacher->teacherProfile && $teacher->teacherProfile->teaches) {
+            $teachesIds = is_array($teacher->teacherProfile->teaches)
+                ? $teacher->teacherProfile->teaches
+                : json_decode($teacher->teacherProfile->teaches, true);
+
+            if (!empty($teachesIds)) {
+                $teacher->teaches_names = Language::whereIn('id', $teachesIds)->pluck('name')->toArray();
+            }
+        }
+
+        // ✅ Get duration_60 from teacherSettings
+        $teacher->duration_60 = null;
+        $settings = $teacher->teacherSettings ?? $teacher->teacher_settings ?? null;
+        if ($settings && (is_array($settings) || is_countable($settings)) && count($settings) > 0) {
+            foreach ($settings as $setting) {
+                if (!$setting) continue;
+                $key = is_array($setting) ? ($setting['key'] ?? null) : ($setting->key ?? null);
+                $value = is_array($setting) ? ($setting['value'] ?? null) : ($setting->value ?? null);
+
+                if ($key === 'duration_60') {
+                    $teacher->duration_60 = $value;
+                    break;
+                }
+            }
+        }
+
+        // ✅ Calculate average rating & reviews count
+        $teacher->reviews_count = Review::where('teacher_id', $teacher->id)
+            ->where('is_approved', true)
+            ->count();
+
+        $teacher->average_rating = Review::where('teacher_id', $teacher->id)
+            ->where('is_approved', true)
+            ->avg('rating') ?? 0;
+
+        return $teacher;
+    });
+
+    $languages = Language::all();
+
+    return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
+}
+
+    // public function oneOnOneTutors(Request $request): View
+    // {
+    //     $countries = [
+    //         'Pakistan',
+    //         'USA',
+    //         'UK',
+    //         'Canada',
+    //         'India',
+    //         'France',
+    //         'Germany',
+    //         'Saudi Arabia',
+    //         'UAE',
+    //         'Australia',
+    //         'Japan',
+    //         'China',
+    //         'Bangladesh',
+    //         'Nepal',
+    //         'Turkey',
+    //         'South Africa',
+    //         'Malaysia',
+    //         'Indonesia',
+    //         'Italy',
+    //         'Spain'
+    //     ];
+
+    //     $query = User::with('teacherProfile', 'teacherSettings')->where('role', 'teacher');
+
+    //     if ($request->filled('learn_language')) {
+    //         $query->whereHas('teacherProfile', function ($q) use ($request) {
+    //             $q->where('teaches', 'LIKE', '%' . $request->learn_language . '%');
+    //         });
+    //     }
+
+    //     if ($request->filled('speaks')) {
+    //         $query->whereHas('teacherProfile', function ($q) use ($request) {
+    //             $q->where('speaks', 'LIKE', '%' . $request->speaks . '%');
+    //         });
+    //     }
+
+    //     if ($request->filled('country')) {
+    //         $query->whereHas('teacherProfile', function ($q) use ($request) {
+    //             $q->where('country', $request->country);
+    //         });
+    //     }
+
+    //     if ($request->filled('name')) {
+    //         $query->where('name', 'LIKE', '%' . $request->name . '%');
+    //     }
+
+    //     if ($request->filled('min_price') && $request->filled('max_price')) {
+    //         $query->whereHas('teacherProfile', function ($q) use ($request) {
+    //             $q->whereBetween('hourly_rate', [(int)$request->min_price, (int)$request->max_price]);
+    //         });
+    //     }
+
+    //     $teachers = $query->get()->map(function ($teacher) {
+    //         $teacher->teaches_names = [];
+    //         if ($teacher->teacherProfile && $teacher->teacherProfile->teaches) {
+    //             $teachesIds = is_array($teacher->teacherProfile->teaches)
+    //                 ? $teacher->teacherProfile->teaches
+    //                 : json_decode($teacher->teacherProfile->teaches, true);
+
+    //             if (!empty($teachesIds)) {
+    //                 $teacher->teaches_names = Language::whereIn('id', $teachesIds)->pluck('name')->toArray();
+    //             }
+    //         }
+    //         $teacher->duration_60 = null;
+    //         $settings = $teacher->teacherSettings ?? $teacher->teacher_settings ?? null;
+    //         if ($settings && (is_array($settings) || is_countable($settings)) && count($settings) > 0) {
+    //             foreach ($settings as $setting) {
+    //                 if (!$setting) continue;
+    //                 $key = is_array($setting) ? ($setting['key'] ?? null) : ($setting->key ?? null);
+    //                 $value = is_array($setting) ? ($setting['value'] ?? null) : ($setting->value ?? null);
+
+    //                 if ($key === 'duration_60') {
+    //                     $teacher->duration_60 = $value;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+
+    //         return $teacher;
+    //     });
+    //     $languages = Language::all();
+    //     return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
+    // }
 
 
     public function groupLesson(): View
