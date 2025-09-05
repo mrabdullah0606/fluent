@@ -487,18 +487,63 @@
                     <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 mb-8 md:flex items-center">
                         <div
                             class="md:w-1/3 flex flex-col items-center md:items-start text-center md:text-left mb-6 md:mb-0">
-                            <span
-                                class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-primary">
-                                @if ($teacher && $teacher->profile_image)
-                                    <img src="{{ asset('storage/' . $teacher->profile_image) }}"
-                                        class="w-full h-full object-cover rounded-full">
-                                @else
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-primary text-white">
-                                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                            <!-- Profile Image (clickable) -->
+                            <!-- Profile Image -->
+                            <span 
+                            class="relative flex shrink-0 rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400 cursor-pointer" 
+                            data-bs-toggle="modal" data-bs-target="#introVideoModal">
+                            <!-- Profile Image -->
+                                <span class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white overflow-hidden">
+                                    @if ($teacher && $teacher->profile_image)
+                                    <img src="{{ asset('storage/' . $teacher->profile_image) }}" 
+                                    class="w-full h-full object-cover rounded-full">
+                                    @else
+                                    <span class="flex w-full w-full items-center justify-center rounded-full text-4xl text-white">
+                                        <span style="font-size: 12px;">No Image Uploaded</span>
                                     </span>
-                                @endif
+                                    @endif
+                                </span>
+                                <!-- Play Button Badge (bottom center) -->
+                                <span 
+                                class="absolute -top-2 bg-warning right-0 left-1/2 transform -translate-x-1/2 flex items-center justify-center w-8 h-8 bg-red-600 text-white rounded-full shadow-lg z-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"></path>
+                                </svg>
+                                </span>
                             </span>
+                            <!-- Bootstrap Modal -->
+                            <div class="modal fade" id="introVideoModal" tabindex="-1" aria-labelledby="introVideoLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content border-0 rounded-3 shadow">
+                                        <div class="modal-header border-0">
+                                            <h5 class="modal-title d-flex align-items-center" id="introVideoLabel">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="me-2 text-warning">
+                                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                                </svg>
+                                                Intro
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @if ($introVideo)
+                                            <video controls class="w-full h-64 rounded-lg">
+                                                <source src="{{ asset('storage/' . $introVideo) }}" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                                @else
+                                                <p class="text-gray-500">No Intro Video Uploaded</p>
+                                                @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
                                 {{ $user->name ?? 'Unnamed Teacher' }}
                             </h1>

@@ -350,33 +350,83 @@ class StudentController extends Controller
     /* ************************************************************************** */
     /*                                   review                                   */
     /* ************************************************************************** */
+
     public function reviewStore(Request $request)
-    {
-        $request->validate([
-            'teacher_id' => 'required|exists:users,id',
-            'rating'     => 'required|integer|min:1|max:5',
-            'comment'    => 'required|string|max:1000',
-        ]);
+{
+    $request->validate([
+        'teacher_id' => 'required|exists:users,id',
+        'rating'     => 'required|integer|min:1|max:5',
+        'comment'    => 'required|string|max:1000',
+    ]);
 
-        // Check if review already exists
-        $exists = Review::where('teacher_id', $request->teacher_id)
-            ->where('student_id', Auth::id())
-            ->exists();
-        if ($exists) {
-            return response()->json(['error' => 'You have already reviewed this teacher.'], 422);
-        }
+    $studentId = Auth::id();
 
-        $review = Review::create([
-            'teacher_id' => $request->teacher_id,
-            'student_id' => Auth::id(),
-            'rating'     => $request->rating,
-            'comment'    => $request->comment,
-            'is_approved' => false
-        ]);
+    // Check if student has completed at least one lesson with this teacher
+    $hasLesson = \DB::table('user_lesson_trackings')
+        ->where('student_id', $studentId)
+        ->where('teacher_id', $request->teacher_id)
+        ->where('lessons_taken', '>', 0) // ✅ must have taken at least one lesson
+        ->exists();
 
+    if (! $hasLesson) {
         return response()->json([
-            'success' => 'Review submitted successfully and is pending approval.',
-            'review'  => $review
-        ]);
+            'error' => 'You can only review a teacher after taking at least one lesson.'
+        ], 422);
     }
+
+    // Check if review already exists
+    $exists = Review::where('teacher_id', $request->teacher_id)
+        ->where('student_id', $studentId)
+        ->exists();
+
+    if ($exists) {
+        return response()->json([
+            'error' => 'You have already reviewed this teacher.'
+        ], 422);
+    }
+
+    // Store review
+    $review = Review::create([
+        'teacher_id'  => $request->teacher_id,
+        'student_id'  => $studentId,
+        'rating'      => $request->rating,
+        'comment'     => $request->comment,
+        'is_approved' => false
+    ]);
+
+    return response()->json([
+        'success' => 'Review submitted successfully and is pending approval.',
+        'review'  => $review
+    ]);
+}
+
+    // public function reviewStore(Request $request)
+    // {
+    //     $request->validate([
+    //         'teacher_id' => 'required|exists:users,id',
+    //         'rating'     => 'required|integer|min:1|max:5',
+    //         'comment'    => 'required|string|max:1000',
+    //     ]);
+
+    //     // Check if review already exists
+    //     $exists = Review::where('teacher_id', $request->teacher_id)
+    //         ->where('student_id', Auth::id())
+    //         ->exists();
+    //     if ($exists) {
+    //         return response()->json(['error' => 'You have already reviewed this teacher.'], 422);
+    //     }
+
+    //     $review = Review::create([
+    //         'teacher_id' => $request->teacher_id,
+    //         'student_id' => Auth::id(),
+    //         'rating'     => $request->rating,
+    //         'comment'    => $request->comment,
+    //         'is_approved' => false
+    //     ]);
+
+    //     return response()->json([
+    //         'success' => 'Review submitted successfully and is pending approval.',
+    //         'review'  => $review
+    //     ]);
+    // }
 }

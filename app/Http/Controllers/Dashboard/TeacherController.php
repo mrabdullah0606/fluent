@@ -200,8 +200,10 @@ class TeacherController extends Controller
     {
         $user = auth()->user();
         $teacher = $user->teacherProfile;
-
-        return view('teacher.content.profile.public', compact('user', 'teacher'));
+         $introVideo = \DB::table('teachers')
+        ->where('user_id', $user->id)
+        ->value('intro_video');
+        return view('teacher.content.profile.public', compact('user', 'teacher','introVideo'));
     }
 
 

@@ -106,6 +106,9 @@ class HomeController extends Controller
     public function tutor($id): View
     {
         $teacher = User::with('teacherSettings', 'teacherProfile')->where('id', $id)->where('role', 'teacher')->firstOrFail();
+         $profileImage = \DB::table('teachers')
+        ->where('user_id', $id)
+        ->value('profile_image');
         $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
         // $reviews = Review::where('teacher_id', $id)->with('student')->get();
         $reviews = Review::with('student')
@@ -116,7 +119,7 @@ class HomeController extends Controller
         $reviewsCount = $reviews->count();
         // dd($teacher->toArray(), $duration60Rate);
         // dd($reviews->toArray());
-        return view('website.content.tutor', compact('teacher', 'duration60Rate', 'reviews', 'reviewsCount'));
+        return view('website.content.tutor', compact('teacher', 'duration60Rate', 'reviews', 'reviewsCount', 'profileImage'));
     }
 
     // public function tutorBooking($id): View

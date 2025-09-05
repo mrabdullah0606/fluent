@@ -19,16 +19,34 @@
                             </span> --}}
                             <!-- Profile Image (clickable) -->
                             <!-- Profile Image -->
-                            <span
-                                class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400 cursor-pointer"
-                                data-bs-toggle="modal" data-bs-target="#introVideoModal">
-                                <span
-                                    class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white">
-                                    <img src="{{ $teacher?->teacherProfile?->profile_image
-                                        ? asset('storage/' . $teacher->teacherProfile->profile_image)
-                                        : 'https://ui-avatars.com/api/?name=' . urlencode($teacher->name) . '&background=random' }}"
-                                        alt="Profile Image" class="rounded-full w-32 h-32 object-cover">
-
+                            <span 
+                            class="relative flex shrink-0 rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400 cursor-pointer" 
+                            data-bs-toggle="modal" data-bs-target="#introVideoModal">
+                            <!-- Profile Image -->
+                                <span class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white overflow-hidden">
+                                    @if ($profileImage)
+                                    <img src="{{ asset('storage/' . $profileImage) }}" 
+                                    class="w-full h-full object-cover rounded-full">
+                                    @else
+                                    <span class="flex w-full h-full items-center justify-center rounded-full text-4xl text-white">
+                                        <span style="font-size: 12px;">No Image Uploaded</span>
+                                    </span>
+                                    @endif
+                                    <!--                                     @if ($teacher && $teacher->profile_image)
+                                    <img src="{{ asset('storage/' . $teacher->profile_image) }}" 
+                                    class="w-full h-full object-cover rounded-full">
+                                    @else
+                                    <span class="flex w-full h-full items-center justify-center rounded-full text-4xl text-white">
+                                    <span style="font-size: 12px;">No Image Uploaded</span>
+                                    </span>
+                                    @endif -->
+                                </span>
+                                <!-- Play Button Badge (bottom center) -->
+                                <span 
+                                class="absolute -top-2 bg-warning right-0 left-1/2 transform -translate-x-1/2 flex items-center justify-center w-8 h-8 bg-red-600 text-white rounded-full shadow-lg z-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"></path>
+                                </svg>
                                 </span>
                             </span>
                             <!-- Bootstrap Modal -->
