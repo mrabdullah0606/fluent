@@ -128,7 +128,7 @@
 
                     {{-- Teaching Style --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="teaching_style" class="block text-lg font-semibold mb-2">Teaching Style</label>
+                        <label for="teaching_style" class="block text-lg font-semibold mb-2">Specialities (E.g., Conversational, Grammar-Focused)</label>
                         <input type="text" id="teaching_style" name="teaching_style" class="form-control rounded-md"
                             placeholder="E.g., Conversational, Grammar-Focused"
                             value="{{ old('teaching_style', $teacher?->teaching_style) }}">

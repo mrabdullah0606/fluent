@@ -415,7 +415,7 @@
                                         <h4 class="font-bold text-lg text-foreground">{{ $package->number_of_lessons }}
                                             Lessons</h4>
                                         @if ($package->number_of_lessons >= 20)
-                                            <p class="text-sm font-semibold text-green-600">Save 20%</p>
+                                            <p class="text-sm font-semibold text-green-600">Save 15%</p>
                                         @elseif ($package->number_of_lessons >= 10)
                                             <p class="text-sm font-semibold text-green-600">Save 10%</p>
                                         @elseif ($package->number_of_lessons >= 5)

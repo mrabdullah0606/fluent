@@ -106,7 +106,7 @@ class HomeController extends Controller
     public function tutor($id): View
     {
         $teacher = User::with('teacherSettings', 'teacherProfile')->where('id', $id)->where('role', 'teacher')->firstOrFail();
-         $profileImage = \DB::table('teachers')
+        $profileImage = \DB::table('teachers')
         ->where('user_id', $id)
         ->value('profile_image');
         $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
@@ -157,7 +157,7 @@ class HomeController extends Controller
         $discountMap = [
             1 => 5,
             2 => 10,
-            3 => 20,
+            3 => 15,
         ];
 
         foreach ($teacher->lessonPackages as $package) {

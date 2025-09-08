@@ -288,7 +288,18 @@
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
                                     </svg> Specialties</h2>
                                 <div class="flex flex-wrap gap-2">
-                                    <div
+                                @foreach(explode(',', $teacher?->teacherProfile?->teaching_style ?? '') as $style)
+                                @if(trim($style) != '')
+                                <div
+                                class="inline-flex items-center rounded-full border px-2.5 py-0.5 
+                                text-xs font-semibold transition-colors focus:outline-none 
+                                focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent 
+                                bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                                {{ trim(ucwords($style)) }}
+                                </div>
+                                @endif
+                                @endforeach
+                                    <!-- <div
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
                                         Conversational Russian</div>
                                     <div
@@ -299,7 +310,7 @@
                                         Cultural Immersion</div>
                                     <div
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                        Pronunciation</div>
+                                        Pronunciation</div> -->
                                 </div>
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"
@@ -338,7 +349,7 @@
                                                 $discountMap = [
                                                     1 => 5,
                                                     2 => 10,
-                                                    3 => 20,
+                                                    3 => 15,
                                                 ];
                                                 $discountPercentage = $discountMap[$package->package_number] ?? 0;
                                                 $originalPrice = (float) $package->price;
@@ -423,7 +434,7 @@
 
                         {{-- <div  class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
                                         <h3 class="font-semibold text-red-600 text-lg">20-Lesson Package</h3>
-                                        <p class="text-sm font-bold text-green-600">Save 20%</p>
+                                        <p class="text-sm font-bold text-green-600">Save 15%</p>
                                         <ul class="text-xs text-gray-500 space-y-1 my-2">
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width                                    ="24" height="24" viewBox="0 0 24 24" fill="none"

@@ -193,7 +193,7 @@
                         Conversational & Business English Expert
                     </p>
                     <div class="mb-2">
-                        ⭐ <strong>4.9</strong> (180 reviews)
+                        ⭐ <strong>4.9</strong> (180 reviewss)
                     </div>
                     <span class="active-badge">Active Now</span>
                 </div>
@@ -253,7 +253,7 @@
                 <!-- Specialties -->
                 <div class="bg-white rounded shadow-sm p-4">
                     <div class="icon-heading mb-2">
-                        <span class="yellow-icon">🏅</span> Specialties
+                        <span class="yellow-icon">🏅</span> Specialtiess
                     </div>
                     <div class="d-flex flex-wrap">
                         <span class="badge-specialty">Conversational English</span>
@@ -548,14 +548,71 @@
                                 {{ $user->name ?? 'Unnamed Teacher' }}
                             </h1>
                             <p class="text-primary text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}</p>
-                            <div class="flex items-center mt-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
+                            <div class="flex items-center mt-2 text-gray-700">
+                               <!--  <svg xmlns="http://www.w3.org/2000/svg"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                     class="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1">
                                     <polygon
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
-                                </svg><span class="font-semibold">4.9</span><span class="ml-1">(180 reviews)</span></div>
+                                </svg> -->
+                                <!-- <span class="font-semibold">4.9</span><span class="ml-1">(180 reviewss)</span> -->
+                                 <div class="flex items-center mt-2 text-gray-700">
+                                    @php
+                                    $fullStars = floor($averageRating);
+                                    $halfStar = ($averageRating - $fullStars) >= 0.5;
+                                    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                    @endphp
+
+                                    {{-- Full Stars --}}
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1" viewBox="0 0 24 24">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14
+                                        18.18 21.02 12 17.77 5.82 21.02
+                                        7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                    @endfor
+
+                                    {{-- Half Star --}}
+                                    @if ($halfStar)
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-1" viewBox="0 0 24 24">
+                                        <defs>
+                                            <linearGradient id="half-grad">
+                                                <stop offset="50%" stop-color="currentColor"/>
+                                                <stop offset="50%" stop-color="transparent"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <polygon fill="url(#half-grad)" stroke="currentColor" stroke-width="2"
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14
+                                        18.18 21.02 12 17.77 5.82 21.02
+                                        7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                    @endif
+
+                                    {{-- Empty Stars --}}
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 mr-1" viewBox="0 0 24 24">
+                                        <polygon fill="none" stroke="currentColor" stroke-width="2"
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14
+                                        18.18 21.02 12 17.77 5.82 21.02
+                                        7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                    @endfor
+
+                                    {{-- Rating & Review Count --}}
+                                    <div class="flex items-center ml-2">
+                                        @if ($reviewsCount > 0)
+                                        <span class="font-semibold text-yellow-500">{{ $averageRating }}</span>
+                                        <span class="ml-1 text-gray-600">
+                                            ({{ $reviewsCount }} {{ Str::plural('review', $reviewsCount) }})
+                                        </span>
+                                        @else
+                                        <span class="text-gray-500">No ratings yet</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                             <div
                                 class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent mt-3 bg-green-500 hover:bg-green-600 text-white">
                                 Active Now</div>
@@ -663,7 +720,18 @@
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
                                     </svg> Specialties</h2>
                                 <div class="flex flex-wrap gap-2">
-                                    <div
+                                @foreach(explode(',', $teacher?->teaching_style ?? '') as $style)
+                                @if(trim($style) != '')
+                                <div
+                                class="inline-flex items-center rounded-full border px-2.5 py-0.5 
+                                text-xs font-semibold transition-colors focus:outline-none 
+                                focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent 
+                                bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                                {{ trim(ucwords($style)) }}
+                                </div>
+                                @endif
+                                @endforeach
+                                    <!-- <div
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
                                         Conversational English</div>
                                     <div
@@ -674,7 +742,7 @@
                                         IELTS Prep</div>
                                     <div
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                        Pronunciation</div>
+                                        Pronunciation</div> -->
                                 </div>
                             </div>
                         </div>

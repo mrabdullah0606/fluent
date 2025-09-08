@@ -63,6 +63,13 @@
                         value="{{ old('groups.' . $index . '.price_per_student', $group['price_per_student'] ?? '') }}"
                         required>
                 </div>
+                 <div class="col-12">
+                    <label class="form-label small" for="group_{{ $index }}_features"><strong>Features</strong></label>
+                    <input type="number" class="form-control" name="groups[{{ $index }}][features]"
+                        id="group_{{ $index }}_features" placeholder="Interactive role-plays,Cultural insights"
+                        value="{{ old('groups.' . $index . '.features', $group['features'] ?? '') }}"
+                        required>
+                </div>
             </div>
 
             <!-- Days -->

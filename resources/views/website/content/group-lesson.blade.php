@@ -71,7 +71,7 @@
             </div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-5">
                 @foreach ($courses as $course)
                     @php
                         // Count enrolled students for this course
@@ -103,9 +103,7 @@
                                 </div>
                             </div>
                             <div class="p-4 space-y-3 flex-grow">
-                                <p class="text-muted-foreground text-sm line-clamp-3">Master the basics of French
-                                    conversation
-                                    in a fun, interactive group setting. Perfect for absolute beginners aiming for A1 level.
+                                <p class="text-muted-foreground text-sm line-clamp-3">{{ $course->description }}
                                 </p>
                                 <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-foreground">
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"

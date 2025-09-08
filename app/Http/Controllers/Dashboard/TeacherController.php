@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\BookingRule;
 use App\Models\Language;
 use App\Models\Teacher;
+use App\Models\Review;
 use App\Models\User;
 use App\Models\ZoomMeeting;
 use App\Models\Payment;
@@ -211,7 +212,16 @@ class TeacherController extends Controller
         ->select('reviews.*', 'users.name as student_name')
         ->latest()
         ->get();
-        return view('teacher.content.profile.public', compact('user', 'teacher','introVideo','reviews'));
+         $review = Review::with('student')
+            ->where('teacher_id', $teacher->id)
+            ->where('is_approved', true) // ✅ only approved
+            ->latest()
+            ->get();
+        $reviewsCount = $review->count();
+        $averageRating = $reviewsCount > 0 
+        ? round($reviews->avg('rating'), 1) 
+        : 0;
+        return view('teacher.content.profile.public', compact('user', 'teacher','introVideo','reviews','review', 'reviewsCount','averageRating'));
     }
 
 

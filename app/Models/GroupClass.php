@@ -13,6 +13,7 @@ class GroupClass extends Model
         'teacher_id',
         'title',
         'description',
+        'features',
         'duration_per_class',
         'lessons_per_week',
         'max_students',

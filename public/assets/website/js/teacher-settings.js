@@ -4,6 +4,13 @@ class TeacherSettings {
         this.addGroupBtn = document.getElementById("addGroupBtn");
         this.groupCounter = 1;
 
+        // discount rules for packages
+        this.packageDiscounts = {
+            1: 0.05, // 5%
+            2: 0.10, // 10%
+            3: 0.15  // 15%
+        };
+
         this.init();
     }
 
@@ -16,6 +23,52 @@ class TeacherSettings {
 
         // Initialize form validation
         this.initFormValidation();
+
+        // Initialize lesson package pricing logic
+        this.initPackagePricing();
+    }
+
+    /* ---------------- PACKAGE PRICING ---------------- */
+    initPackagePricing() {
+        const durationInput = document.querySelector("#duration_60");
+        if (!durationInput) return;
+
+        // Update on base price change
+        durationInput.addEventListener("input", () => this.updatePackagePrices());
+
+        // Update when number of lessons changes
+        document.querySelectorAll("[id^=package_][id$=_lessons]").forEach(input => {
+            input.addEventListener("input", () => this.updatePackagePrices());
+        });
+
+        // Run once at start
+        this.updatePackagePrices();
+    }
+
+    updatePackagePrices() {
+        const durationInput = document.querySelector("#duration_60");
+        if (!durationInput) return;
+
+        const basePrice = parseFloat(durationInput.value) || 0;
+
+        Object.keys(this.packageDiscounts).forEach(i => {
+            const lessonsInput = document.querySelector(`#package_${i}_lessons`);
+            const priceInput = document.querySelector(`#package_${i}_price`);
+
+            if (lessonsInput && priceInput) {
+                const lessons = parseInt(lessonsInput.value) || 0;
+
+                // Calculate total
+                let total = basePrice * lessons;
+
+                // Apply discount
+                let discount = this.packageDiscounts[i] || 0;
+                let finalPrice = total - (total * discount);
+
+                // Update field
+                priceInput.value = finalPrice.toFixed(2);
+            }
+        });
     }
 
     initializeExistingGroups() {
