@@ -219,7 +219,7 @@
                                                         </svg>
                                                         {{ $teacher->duration_60 ?? 'N/A' }}/hour
                                                     </p>
-                                                    <p class="text-primary font-semibold text-sm mb-2">Trial: $5</p>
+                                                    {{-- <p class="text-primary font-semibold text-sm mb-2">Trial: $5</p> --}}
                                                     <button
                                                         class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 btn-red w-full text-sm py-2">
                                                         <a href="{{ route('tutor', ['id' => $teacher->id]) }}" class="...">View Profile &amp;

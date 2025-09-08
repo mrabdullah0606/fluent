@@ -34,6 +34,7 @@ class SettingsController extends Controller
                     'duration_per_class' => $group->duration_per_class,
                     'lessons_per_week' => $group->lessons_per_week,
                     'max_students' => $group->max_students,
+                     'features' => $group->features,
                     'price_per_student' => $group->price_per_student,
                     'is_active' => $group->is_active,
                     'days' => $group->days->pluck('day')->toArray()
@@ -119,52 +120,64 @@ class SettingsController extends Controller
         }
     }
 
-    private function updateGroupClasses($teacherId, array $data)
-    {
-        if (!isset($data['groups'])) {
-            return;
-        }
+   private function updateGroupClasses($teacherId, array $data)
+{
+    if (!isset($data['groups'])) {
+        return;
+    }
 
-        GroupClass::where('teacher_id', $teacherId)->delete();
+    GroupClass::where('teacher_id', $teacherId)->delete();
 
-        foreach ($data['groups'] as $groupData) {
-            if (!empty($groupData['title'])) {
-                $maxStudents = isset($groupData['max_students']) ? (int) $groupData['max_students'] : 1;
-                if ($maxStudents < 1) {
-                    $maxStudents = 1;
-                } elseif ($maxStudents > 100) {
-                    $maxStudents = 100;
+    // Remove this line - it's stopping execution!
+    //  dd($groupData);  
+
+    foreach ($data['groups'] as $groupData) {
+        if (!empty($groupData['title'])) {
+            $maxStudents = isset($groupData['max_students']) ? (int) $groupData['max_students'] : 1;
+            if ($maxStudents < 1) {
+                $maxStudents = 1;
+            } elseif ($maxStudents > 100) {
+                $maxStudents = 100;
+            }
+
+            // Clean and validate description
+            $description = null;
+            if (isset($groupData['description']) && !empty(trim($groupData['description']))) {
+                $description = trim($groupData['description']);
+                if (strlen($description) > 500) {
+                    $description = substr($description, 0, 500);
                 }
+                $description = strip_tags($description);
+            }
 
-                // Clean and validate description
-                $description = null;
-                if (isset($groupData['description']) && !empty(trim($groupData['description']))) {
-                    $description = trim($groupData['description']);
-                    // Limit description to 500 characters
-                    if (strlen($description) > 500) {
-                        $description = substr($description, 0, 500);
-                    }
-                    // Optional: Strip HTML tags for security
-                    $description = strip_tags($description);
+            // Clean features
+            $features = null;
+            if (isset($groupData['features']) && !empty(trim($groupData['features']))) {
+                $features = trim($groupData['features']);
+                if (strlen($features) > 500) { // limit to 500 chars
+                    $features = substr($features, 0, 500);
                 }
+                $features = strip_tags($features);
+            }
 
-                $group = GroupClass::create([
-                    'teacher_id' => $teacherId,
-                    'title' => $groupData['title'],
-                    'description' => $description, // Add description field
-                    'duration_per_class' => $groupData['duration_per_class'],
-                    'lessons_per_week' => $groupData['lessons_per_week'],
-                    'max_students' => $maxStudents, // Use validated value
-                    'price_per_student' => $groupData['price_per_student'],
-                    'is_active' => isset($groupData['is_active']) ? 1 : 0,
-                ]);
+            $group = GroupClass::create([
+                'teacher_id' => $teacherId,
+                'title' => $groupData['title'],
+                'description' => $description,
+                'duration_per_class' => $groupData['duration_per_class'],
+                'lessons_per_week' => $groupData['lessons_per_week'],
+                'max_students' => $maxStudents,
+                'price_per_student' => $groupData['price_per_student'],
+                'features' => $features, // This will now save properly
+                'is_active' => isset($groupData['is_active']) ? 1 : 0,
+            ]);
 
-                if (isset($groupData['days']) && is_array($groupData['days'])) {
-                    foreach ($groupData['days'] as $day) {
-                        $group->days()->create(['day' => $day]);
-                    }
+            if (isset($groupData['days']) && is_array($groupData['days'])) {
+                foreach ($groupData['days'] as $day) {
+                    $group->days()->create(['day' => $day]);
                 }
             }
         }
     }
+}
 }

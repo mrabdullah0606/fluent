@@ -39,6 +39,7 @@ class SettingsRequest extends FormRequest
             'groups.*.is_active' => 'nullable|boolean',
             'groups.*.days' => 'required_with:groups.*.title|array|min:1',
             'groups.*.days.*' => 'string|in:Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+            'groups.*.features.*' => 'string|nullable|max.500',
         ];
     }
 

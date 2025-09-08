@@ -63,14 +63,18 @@
                         value="{{ old('groups.' . $index . '.price_per_student', $group['price_per_student'] ?? '') }}"
                         required>
                 </div>
-                 <div class="col-12">
-                    <label class="form-label small" for="group_{{ $index }}_features"><strong>Features</strong></label>
-                    <input type="number" class="form-control" name="groups[{{ $index }}][features]"
-                        id="group_{{ $index }}_features" placeholder="Interactive role-plays,Cultural insights"
-                        value="{{ old('groups.' . $index . '.features', $group['features'] ?? '') }}"
-                        required>
+                <div class="col-12">
+                    <label class="form-label small"
+                        for="group_{{ $index }}_features"><strong>Features</strong></label>
+                    <input type="text" class="form-control" name="features"
+                        id="group_{{ $index }}_features" placeholder="Interactive role-plays, Cultural insights"
+                        value="{{ old('groups.' . $index . '.features', $group['features'] ?? '') }}">
+                    <div class="form-text text-muted small">
+                        Separate multiple features with commas
+                    </div>
                 </div>
             </div>
+
 
             <!-- Days -->
             <div class="mb-2 fw-bold text-dark mt-3">Days</div>

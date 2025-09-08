@@ -22,9 +22,10 @@ class GroupClass extends Model
     ];
 
     protected $casts = [
-        'price_per_student' => 'decimal:2',
-        'is_active' => 'boolean'
-    ];
+    'price_per_student' => 'decimal:2',
+    'is_active' => 'boolean',
+    
+];
 
     public function teacher()
     {

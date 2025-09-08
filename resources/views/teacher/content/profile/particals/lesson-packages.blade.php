@@ -35,8 +35,9 @@
                     <label class="form-label small" for="package_{{ $i }}_price">Total Price ($)</label>
                     <input type="number" name="packages[{{ $i }}][price]"
                         id="package_{{ $i }}_price" class="form-control" step="0.01" min="0"
-                        value="{{ old('packages.' . $i . '.price', $packages[$i]['price'] ?? '') }}" required>
+                        value="{{ old('packages.' . $i . '.price', $packages[$i]['price'] ?? '') }}" readonly>
                 </div>
+
             </div>
 
             <input type="hidden" name="packages[{{ $i }}][name]" value="Package {{ $i }}">

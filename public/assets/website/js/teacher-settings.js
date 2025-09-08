@@ -273,7 +273,7 @@ class TeacherSettings {
         // Initial count
         updateCounter();
     }
-
+ 
     bindDayButtons(daysContainer, lessonsPerWeekSelect) {
         const dayButtons = daysContainer.querySelectorAll(".day-btn");
 
