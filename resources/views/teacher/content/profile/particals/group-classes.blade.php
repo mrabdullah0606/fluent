@@ -76,20 +76,13 @@
             </div>
 
 
-            <!-- Days -->
-            <div class="mb-2 fw-bold text-dark mt-3">Days</div>
-            <div class="d-flex flex-wrap gap-2 days-container">
-                @foreach (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $day)
-                    @php
-                        $isSelected = in_array($day, old('groups.' . $index . '.days', $group['days'] ?? []));
-                    @endphp
-                    <label class="btn btn-outline-secondary day-btn {{ $isSelected ? 'selected' : '' }}">
-                        <input type="checkbox" name="groups[{{ $index }}][days][]" value="{{ $day }}"
-                            class="d-none" {{ $isSelected ? 'checked' : '' }}>
-                        {{ $day }}
-                    </label>
-                @endforeach
-            </div>
+            <!-- Day -->
+<div class="mb-2 fw-bold text-dark mt-3">Select Date</div>
+<input 
+    type="date" 
+    name="groups[{{ $index }}][date]" 
+    class="form-control"
+    value="{{ old('groups.' . $index . '.date', $group['date'] ?? '') }}">
 
             <!-- Toggle Switch -->
             <div class="form-check form-switch position-absolute top-0 end-0 mt-2 me-3">

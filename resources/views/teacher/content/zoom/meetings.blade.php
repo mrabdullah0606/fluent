@@ -76,7 +76,7 @@
                         <div class="mb-3">
                             <label for="duration" class="form-label">{{ __('Duration (minutes)') }} <code>*</code></label>
                             <input type="number" id="duration" name="duration" class="form-control"
-                                value="{{ old('duration', 30) }}" min="1" max="480" required>
+                                value="{{ old('duration', 60) }}" min="1" max="480" required>
                             @error('duration')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror

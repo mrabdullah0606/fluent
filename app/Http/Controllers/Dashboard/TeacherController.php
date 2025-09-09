@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\TeacherSetting;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\BookingRule;
 use App\Models\Language;
@@ -197,32 +198,45 @@ class TeacherController extends Controller
     //         ->with('success', 'Profile updated successfully.');
     // }
 
-    public function publicProfile(): View
-    {   
+ public function publicProfile(): View
+{   
+    $user = auth()->user();
 
-        $user = auth()->user();
-        $teacher = $user->teacherProfile;
-         $introVideo = \DB::table('teachers')
+    // ✅ load the user (teacher) together with lessonPackages
+    $teacher = User::with(['teacherProfile', 'lessonPackages'])
+        ->where('id', $user->id)
+        ->where('role', 'teacher')
+        ->firstOrFail();
+
+    $introVideo = \DB::table('teachers')
         ->where('user_id', $user->id)
         ->value('intro_video');
-        $reviews = \DB::table('reviews')
+
+    $reviews = \DB::table('reviews')
         ->join('users', 'reviews.student_id', '=', 'users.id')
         ->where('reviews.teacher_id', $teacher->id)
-        ->where('reviews.is_approved', 1) // ✅ correct column name
+        ->where('reviews.is_approved', 1)
         ->select('reviews.*', 'users.name as student_name')
         ->latest()
         ->get();
-         $review = Review::with('student')
-            ->where('teacher_id', $teacher->id)
-            ->where('is_approved', true) // ✅ only approved
-            ->latest()
-            ->get();
-        $reviewsCount = $review->count();
-        $averageRating = $reviewsCount > 0 
+
+    $review = Review::with('student')
+        ->where('teacher_id', $teacher->id)
+        ->where('is_approved', true)
+        ->latest()
+        ->get();
+
+    $reviewsCount = $review->count();
+    $averageRating = $reviewsCount > 0 
         ? round($reviews->avg('rating'), 1) 
         : 0;
-        return view('teacher.content.profile.public', compact('user', 'teacher','introVideo','reviews','review', 'reviewsCount','averageRating'));
-    }
+
+    return view('teacher.content.profile.public', compact(
+        'user', 'teacher', 'introVideo', 'reviews', 'review', 'reviewsCount', 'averageRating'
+    ));
+}
+
+
 
 
     public function calendar(): View
@@ -287,4 +301,21 @@ class TeacherController extends Controller
     {
         return view('teacher.content.wallet.index');
     }
+
+
+
+
+    public function show($id)
+{
+    $teacher = Teacher::with('user')->findOrFail($id);
+
+    $settings = TeacherSetting::where('teacher_id', $teacher->id)
+        ->pluck('value', 'key')
+        ->toArray();
+
+    return view('teacher.profile.show', compact('teacher', 'settings'));
 }
+}
+
+
+

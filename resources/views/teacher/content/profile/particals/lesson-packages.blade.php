@@ -22,7 +22,8 @@
                         (mins)</label>
                     <select name="packages[{{ $i }}][duration_per_lesson]"
                         id="package_{{ $i }}_duration" class="form-select" required>
-                        @foreach ([30, 60, 90, 120] as $duration)
+                        @foreach ([60] as $duration)
+                        
                             <option value="{{ $duration }}"
                                 {{ old('packages.' . $i . '.duration_per_lesson', $packages[$i]['duration_per_lesson'] ?? '') == $duration ? 'selected' : '' }}>
                                 {{ $duration }} mins

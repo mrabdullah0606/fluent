@@ -331,4 +331,29 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+################################   Notification Ping on Lesson  #####################################
+
+
+
+Route::post('/lesson-tracking/deduct/{id}', [LessonTrackingController::class, 'deductLesson'])
+    ->name('student.lesson.deduct')  ->middleware('auth');
+Route::get('/teacher/lesson-notifications/unread-count', [App\Http\Controllers\Dashboard\LessonTrackingController::class, 'unreadLessonNotificationsCount'])
+    ->name('teacher.notifications.unread-count')->middleware('auth');
+
+
+// Teacher lesson notifications page
+Route::get('/teacher/lesson-notifications', [App\Http\Controllers\Dashboard\LessonTrackingController::class, 'lessonNotificationsPage'])
+    ->name('teacher.lesson.notifications')->middleware('auth');
+
+
+// Mark single notification read
+Route::post('/teacher/notifications/mark-read/{id}', [LessonTrackingController::class, 'markSingleNotificationRead'])
+    ->name('teacher.notifications.mark-read');
+
+// Mark all notifications read
+Route::post('/teacher/notifications/mark-all-read', [LessonTrackingController::class, 'markAllNotificationsRead'])
+    ->name('teacher.notifications.mark-all-read');
+
+
+
 require __DIR__ . '/auth.php';

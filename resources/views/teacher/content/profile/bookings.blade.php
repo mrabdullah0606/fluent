@@ -210,12 +210,12 @@
                                         <small class="text-muted">Toggle if you are open to new student bookings.</small>
                                     </div>
                                 </div>
-                                <div class="form-check form-switch mt-3 mt-md-0">
-                                    <!-- Hidden input to ensure false value is sent when unchecked -->
-                                    <input type="hidden" name="accepting_new_students" value="0">
-                                    <input class="form-check-input" type="checkbox" name="accepting_new_students"
-                                        value="1" {{ $rule->accepting_new_students ? 'checked' : '' }}>
-                                </div>
+                               <div class="form-check form-switch mt-3 mt-md-0">
+    <!-- Hidden input to ensure false value is sent when unchecked -->
+    <input type="hidden" name="accepting_new_students" value="0">
+    <input class="form-check-input" type="checkbox" name="accepting_new_students" value="1">
+</div>
+
                             </div>
 
                             <!-- Save Button -->
