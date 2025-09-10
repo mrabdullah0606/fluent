@@ -15,6 +15,8 @@ use App\Models\Payment;
 use App\Models\Review;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
+use App\Models\UserLessonTracking;
+use App\Models\LessonAttendance;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -73,10 +75,16 @@ class StudentController extends Controller
             return Carbon::parse($meeting['start_time'])->isToday() ||
                 Carbon::parse($meeting['start_time'])->isFuture();
         })->values();
+$lessonSummary = $this->getLessonSummary($student->id);
 
-        // dd($upcomingMeetings,$meetingDetails);
-        return response()->view('student.content.dashboard', compact('student', 'meetingDetails', 'totalTeachers', 'upcomingMeetings'));
-    }
+return response()->view('student.content.dashboard', compact(
+    'student', 
+    'meetingDetails', 
+    'totalTeachers', 
+    'upcomingMeetings',
+    'lessonSummary'
+));
+ }
 
 
     // public function index(): Response
@@ -429,4 +437,40 @@ class StudentController extends Controller
     //         'review'  => $review
     //     ]);
     // }
+
+    
+protected function getLessonSummary($studentId)
+{
+    $today = now()->startOfDay();
+    $endOfWeek = now()->endOfWeek();
+
+    // Fetch all lessons (1-on-1 or group) purchased by student
+    $lessonTrackings = UserLessonTracking::with(['attendanceRecords', 'teacher'])
+        ->where('student_id', $studentId)
+        ->get();
+
+    $completed = 0;
+    $upcoming = 0;
+
+    foreach ($lessonTrackings as $tracking) {
+        // Count completed lessons
+        $completed += $tracking->attendanceRecords()
+            ->where('attendance_status', 'attended')
+            ->whereBetween('created_at', [$today, $endOfWeek])
+            ->count();
+
+        // Count upcoming lessons (scheduled this week, not attended yet)
+        $upcoming += $tracking->attendanceRecords()
+            ->where('attendance_status', 'pending')
+            ->whereBetween('created_at', [$today, $endOfWeek])
+            ->count();
+    }
+
+    return [
+        'total_this_week' => $completed + $upcoming,
+        'completed' => $completed,
+        'upcoming' => $upcoming
+    ];
+}
+
 }

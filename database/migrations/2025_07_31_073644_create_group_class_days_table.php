@@ -11,7 +11,8 @@ return new class extends Migration
         Schema::create('group_class_days', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_class_id')->constrained()->onDelete('cascade');
-            $table->string('day');
+            $table->date('day');        // store full date instead of just day name
+            $table->time('time')->nullable(); // store class start time
             $table->timestamps();
 
             $table->index('group_class_id');

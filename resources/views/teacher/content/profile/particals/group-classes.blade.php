@@ -68,7 +68,7 @@
                         for="group_{{ $index }}_features"><strong>Features</strong></label>
                     <input type="text" class="form-control" name="features"
                         id="group_{{ $index }}_features" placeholder="Interactive role-plays, Cultural insights"
-                        value="{{ old('groups.' . $index . '.features', $group['features'] ?? '') }}">
+                        value="{{ old('groups.' . $index . '.features', is_array($group['features']) ? implode(', ', $group['features']) : ($group['features'] ?? '')) }}">
                     <div class="form-text text-muted small">
                         Separate multiple features with commas
                     </div>
@@ -76,13 +76,26 @@
             </div>
 
 
-            <!-- Day -->
-<div class="mb-2 fw-bold text-dark mt-3">Select Date</div>
-<input 
-    type="date" 
-    name="groups[{{ $index }}][date]" 
-    class="form-control"
-    value="{{ old('groups.' . $index . '.date', $group['date'] ?? '') }}">
+@foreach($group['days'] ?? [] as $i => $day)
+    <!-- Date -->
+    <div class="mb-2 fw-bold text-dark mt-3">Select Date</div>
+    <input 
+        type="date" 
+        name="groups[{{ $index }}][days][{{ $i }}]" 
+        class="form-control"
+        value="{{ old('groups.' . $index . '.days.' . $i, is_array($day) ? '' : $day) }}">
+
+    <!-- Time -->
+    <div class="mb-2 fw-bold text-dark mt-2">Select Time</div>
+    <input 
+        type="time" 
+        name="groups[{{ $index }}][times][{{ $i }}]" 
+        class="form-control"
+        value="{{ old('groups.' . $index . '.times.' . $i, is_array($group['times'][$i] ?? '') ? '' : ($group['times'][$i] ?? '')) }}">
+@endforeach
+
+
+
 
             <!-- Toggle Switch -->
             <div class="form-check form-switch position-absolute top-0 end-0 mt-2 me-3">

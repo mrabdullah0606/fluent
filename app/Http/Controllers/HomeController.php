@@ -12,6 +12,8 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Carbon\Carbon;
+
 
 class HomeController extends Controller
 {
@@ -109,6 +111,14 @@ class HomeController extends Controller
         $profileImage = \DB::table('teachers')
         ->where('user_id', $id)
         ->value('profile_image');
+
+         $teacherProfile = \App\Models\Teacher::where('user_id', $id)->first();
+    $introVideo = $teacherProfile?->intro_video;
+$languages = [];
+    if (!empty($teacherProfile?->teaches)) {
+        $languages = \App\Models\Language::whereIn('id', $teacherProfile->teaches)->pluck('name')->toArray();
+    }
+
         $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
         // $reviews = Review::where('teacher_id', $id)->with('student')->get();
         $reviews = Review::with('student')
@@ -122,7 +132,7 @@ class HomeController extends Controller
         : 0;
         // dd($teacher->toArray(), $duration60Rate);
         // dd($reviews->toArray());
-        return view('website.content.tutor', compact('teacher', 'duration60Rate', 'reviews', 'reviewsCount', 'profileImage','averageRating'));
+        return view('website.content.tutor', compact('teacher','languages','introVideo', 'duration60Rate', 'reviews', 'reviewsCount', 'profileImage','averageRating'));
     }
 
     // public function tutorBooking($id): View
@@ -546,14 +556,32 @@ class HomeController extends Controller
     //     return view('website.content.one-to-one', compact('teachers', 'languages', 'countries'));
     // }
 
+public function groupLesson(): View
+{
+    // Fetch courses with teacher and days
+    $courses = GroupClass::with('teacher', 'days')->get();
 
-    public function groupLesson(): View
-    {
-        $courses = GroupClass::with('teacher', 'days')->get();
-        $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
-        // dd($courses->toArray());
-        return view('website.content.group-lesson', compact('teachers', 'courses'));
+    // Fetch all teachers
+    $teachers = User::with('teacherProfile')
+                    ->where('role', 'teacher')
+                    ->get();
+
+    // Fetch all languages
+    $languages = Language::all();
+
+    // Ensure features are always arrays (even if null or plain string)
+    foreach ($courses as $course) {
+        if (empty($course->features)) {
+            $course->features = [];
+        } elseif (is_string($course->features)) {
+            // Convert comma-separated string to array (for older data)
+            $course->features = array_map('trim', explode(',', $course->features));
+        }
     }
+
+    return view('website.content.group-lesson', compact('teachers', 'courses', 'languages'));
+}
+
 
     public function adminLogin(): View
     {

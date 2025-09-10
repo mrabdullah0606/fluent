@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\BookingRule;
 use App\Models\Language;
 use App\Models\Teacher;
+use App\Models\UserLessonTracking;
 use App\Models\Review;
 use App\Models\User;
 use App\Models\ZoomMeeting;
@@ -31,81 +32,120 @@ class TeacherController extends Controller
     //     return response()->view('teacher.content.dashboard', compact('teacher'));
     // }
     public function index(): Response
-    {
-        $teacher = auth()->user();
+{
+    $teacher = auth()->user();
 
-        $wallet = TeacherWallet::where('teacher_id', $teacher->id)->first();
-        // dd($wallet);
-        // Get all Zoom meetings by this teacher, ordered by start_time
-        $zoomMeetings = ZoomMeeting::with('group')
-            ->where('teacher_id', $teacher->id)
-            ->orderBy('start_time', 'asc')
+    // Teacher wallet
+    $wallet = TeacherWallet::where('teacher_id', $teacher->id)->first();
+
+    // Get all Zoom meetings by this teacher, ordered by start_time
+    $zoomMeetings = ZoomMeeting::with('group')
+        ->where('teacher_id', $teacher->id)
+        ->orderBy('start_time', 'asc')
+        ->get();
+
+    \Log::info('Zoom Meetings Count: ' . $zoomMeetings->count());
+
+    // Prepare meeting details array
+    $meetingDetails = [];
+
+    foreach ($zoomMeetings as $meeting) {
+        \Log::info('Processing meeting: ' . $meeting->topic);
+
+        $payments = Payment::where('teacher_id', $teacher->id)
+            ->where('type', $meeting->meeting_type)
             ->get();
 
-        // Debug: Check if meetings exist
-        \Log::info('Zoom Meetings Count: ' . $zoomMeetings->count());
-
-        // Prepare meeting details array
-        $meetingDetails = [];
-
-        foreach ($zoomMeetings as $meeting) {
-            \Log::info('Processing meeting: ' . $meeting->topic);
-
-            // Check if we have payment records or just show all meetings
-            $payments = Payment::where('teacher_id', $teacher->id)
-                ->where('type', $meeting->meeting_type)
-                ->get();
-
-            if ($payments->count() > 0) {
-                // If payments exist, process with payment logic
-                foreach ($payments as $payment) {
-                    if ($payment->type === 'duration') {
-                        $student = User::find($payment->student_id);
-                        $meetingDetails[] = [
-                            'meeting_type' => $payment->type,
-                            'student_name' => $student->name ?? 'N/A',
-                            'topic' => $meeting->topic,
-                            'start_time' => $meeting->start_time,
-                            'duration' => $meeting->duration,
-                            'join_url' => $meeting->join_url,
-                        ];
-                    } elseif ($payment->type === 'group') {
-                        $groupClass = \App\Models\GroupClass::where('teacher_id', auth()->id())->first();
-                        $groupName = $groupClass ? $groupClass->title : 'Group Class';
-                        $meetingDetails[] = [
-                            'meeting_type' => $payment->type,
-                            'group_name' => $groupName,
-                            'topic' => $meeting->topic,
-                            'start_time' => $meeting->start_time,
-                            'duration' => $meeting->duration,
-                            'join_url' => $meeting->join_url,
-                        ];
-                    }
+        if ($payments->count() > 0) {
+            foreach ($payments as $payment) {
+                if ($payment->type === 'duration') {
+                    $student = User::find($payment->student_id);
+                    $meetingDetails[] = [
+                        'meeting_type' => $payment->type,
+                        'student_name' => $student->name ?? 'N/A',
+                        'topic' => $meeting->topic,
+                        'start_time' => $meeting->start_time,
+                        'duration' => $meeting->duration,
+                        'join_url' => $meeting->join_url,
+                    ];
+                } elseif ($payment->type === 'group') {
+                    $groupClass = GroupClass::where('teacher_id', auth()->id())->first();
+                    $groupName = $groupClass ? $groupClass->title : 'Group Class';
+                    $meetingDetails[] = [
+                        'meeting_type' => $payment->type,
+                        'group_name' => $groupName,
+                        'topic' => $meeting->topic,
+                        'start_time' => $meeting->start_time,
+                        'duration' => $meeting->duration,
+                        'join_url' => $meeting->join_url,
+                    ];
                 }
-            } else {
-                // If no payments, just show the meeting (fallback)
-                $meetingDetails[] = [
-                    'meeting_type' => 'general',
-                    'student_name' => 'General Meeting',
-                    'topic' => $meeting->topic,
-                    'start_time' => $meeting->start_time,
-                    'duration' => $meeting->duration,
-                    'join_url' => $meeting->join_url,
-                ];
+            }
+        } else {
+            $meetingDetails[] = [
+                'meeting_type' => 'general',
+                'student_name' => 'General Meeting',
+                'topic' => $meeting->topic,
+                'start_time' => $meeting->start_time,
+                'duration' => $meeting->duration,
+                'join_url' => $meeting->join_url,
+            ];
+        }
+    }
+
+    \Log::info('Meeting Details Count: ' . count($meetingDetails));
+
+    $visibleMeetings = array_slice($meetingDetails, 0, 4);
+    $hiddenMeetings = array_slice($meetingDetails, 4);
+
+    \Log::info('Visible Meetings: ' . count($visibleMeetings));
+    \Log::info('Hidden Meetings: ' . count($hiddenMeetings));
+
+    // Total unique students
+    $totalEnrollers = Payment::where('teacher_id', $teacher->id)->distinct('student_id')->count('student_id');
+
+    // -----------------------------
+    // Calculate Lessons This Week
+    // -----------------------------
+    $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
+    $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
+
+    $lessonTrackings = UserLessonTracking::where('teacher_id', $teacher->id)
+        ->with('attendanceRecords')
+        ->get();
+
+    $completedLessons = 0;
+    $upcomingLessons = 0;
+
+    foreach ($lessonTrackings as $tracking) {
+        foreach ($tracking->attendanceRecords as $attendance) {
+            $lessonDate = \Carbon\Carbon::parse($attendance->lesson_date);
+            if ($lessonDate->between($startOfWeek, $endOfWeek)) {
+                if ($attendance->attendance_status === 'attended') {
+                    $completedLessons++;
+                } elseif ($attendance->attendance_status === 'pending') {
+                    $upcomingLessons++;
+                }
             }
         }
-
-        \Log::info('Meeting Details Count: ' . count($meetingDetails));
-
-        // Separate visible and hidden meetings
-        $visibleMeetings = array_slice($meetingDetails, 0, 4); // Show first 4
-        $hiddenMeetings = array_slice($meetingDetails, 4); // Rest will be hidden
-
-        \Log::info('Visible Meetings: ' . count($visibleMeetings));
-        \Log::info('Hidden Meetings: ' . count($hiddenMeetings));
-        $totalEnrollers = Payment::where('teacher_id', $teacher->id)->distinct('student_id')->count('student_id');
-        return response()->view('teacher.content.dashboard', compact('teacher', 'visibleMeetings', 'hiddenMeetings', 'wallet', 'totalEnrollers'));
     }
+
+    $totalLessonsThisWeek = $completedLessons + $upcomingLessons;
+
+    // -----------------------------
+    // Return view
+    // -----------------------------
+    return response()->view('teacher.content.dashboard', compact(
+        'teacher',
+        'visibleMeetings',
+        'hiddenMeetings',
+        'wallet',
+        'totalEnrollers',
+        'completedLessons',
+        'upcomingLessons',
+        'totalLessonsThisWeek'
+    ));
+}
 
     public function editProfile(): View
     {
@@ -198,43 +238,51 @@ class TeacherController extends Controller
     //         ->with('success', 'Profile updated successfully.');
     // }
 
- public function publicProfile(): View
+public function publicProfile(): View
 {   
     $user = auth()->user();
 
-    // ✅ load the user (teacher) together with lessonPackages
+    // Load user with teacher (profile) and lesson packages
     $teacher = User::with(['teacherProfile', 'lessonPackages'])
         ->where('id', $user->id)
         ->where('role', 'teacher')
         ->firstOrFail();
 
-    $introVideo = \DB::table('teachers')
-        ->where('user_id', $user->id)
-        ->value('intro_video');
+    $teacherProfile = \App\Models\Teacher::where('user_id', $user->id)->first();
+    $introVideo = $teacherProfile?->intro_video;
 
-    $reviews = \DB::table('reviews')
-        ->join('users', 'reviews.student_id', '=', 'users.id')
-        ->where('reviews.teacher_id', $teacher->id)
-        ->where('reviews.is_approved', 1)
-        ->select('reviews.*', 'users.name as student_name')
-        ->latest()
-        ->get();
+    // Languages the teacher teaches
+    $languages = [];
+    if (!empty($teacherProfile?->teaches)) {
+        $languages = \App\Models\Language::whereIn('id', $teacherProfile->teaches)->pluck('name')->toArray();
+    }
 
+    // Fetch approved reviews with student relationship
     $review = Review::with('student')
-        ->where('teacher_id', $teacher->id)
+        ->where('teacher_id', $teacherProfile->id)
         ->where('is_approved', true)
         ->latest()
         ->get();
 
+    // Keep $reviews variable for Blade
+    $reviews = $review;
+
     $reviewsCount = $review->count();
-    $averageRating = $reviewsCount > 0 
-        ? round($reviews->avg('rating'), 1) 
-        : 0;
+    $averageRating = $reviewsCount > 0 ? round($review->avg('rating'), 1) : 0;
 
     return view('teacher.content.profile.public', compact(
-        'user', 'teacher', 'introVideo', 'reviews', 'review', 'reviewsCount', 'averageRating'
+        'user', 
+        'teacher', 
+        'teacherProfile', 
+        'introVideo', 
+        'reviews', 
+        'languages', 
+        'review', 
+        'reviewsCount', 
+        'averageRating'
     ));
 }
+
 
 
 

@@ -191,6 +191,77 @@
                     @endif
                 </div>
             </div>
+            {{-- -All Transaction History --}}
+            {{-- Transactions Table --}}
+<div class="card mt-5">
+    <div class="card-header">
+        <h5 class="mb-0">All Wallet Transactions</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Teacher</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Balance After</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($transactions as $txn)
+                        <tr>
+                            <td>
+                                {{ $txn->created_at->format('M j, Y') }}
+                                <br><small class="text-muted">{{ $txn->created_at->format('g:i A') }}</small>
+                            </td>
+                            <td>
+                                {{ $txn->teacher->name ?? 'N/A' }}
+                                <br><small class="text-muted">ID: {{ $txn->teacher_id }}</small>
+                            </td>
+                            <td>
+                                {{ $txn->description }}
+                                @if($txn->payment_id)
+                                    <br><small class="text-primary">Payment #{{ $txn->payment_id }}</small>
+                                @endif
+                                @if($txn->withdrawal_id)
+                                    <br><small class="text-purple">Withdrawal #{{ $txn->withdrawal_id }}</small>
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge {{ $txn->type == 'credit' ? 'bg-success' : 'bg-danger' }}">
+                                    {{ ucfirst($txn->type) }}
+                                </span>
+                                <br>
+                                <small class="text-muted">{{ ucfirst($txn->category) }}</small>
+                            </td>
+                            <td class="fw-bold {{ $txn->type == 'credit' ? 'text-success' : 'text-danger' }}">
+                                {{ $txn->type == 'credit' ? '+' : '-' }}${{ number_format($txn->amount, 2) }}
+                            </td>
+                            <td>${{ number_format($txn->balance_after, 2) }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                No transactions found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Pagination --}}
+        @if($transactions->hasPages())
+            <div class="card-footer bg-light">
+                {{ $transactions->appends(request()->query())->links() }}
+            </div>
+        @endif
+    </div>
+</div>
 
         </div>
     </main>
@@ -269,6 +340,7 @@
             </div>
         </div>
     </div>
+    
 
     <script>
         function viewWithdrawal(id) {

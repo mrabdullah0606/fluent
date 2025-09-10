@@ -27,28 +27,30 @@
                             </div>
                             <div class="p-6 pt-0">
                                 <div class="text-2xl font-bold">{{ $totalTeachers ?? 0 }}</div>
-                                <p class="text-xs text-muted-foreground">+1 new this month</p>
+                                <p class="text-xs text-muted-foreground">Updated recently</p>
                             </div>
                         </div>
                     </div>
 
                     <div style="opacity: 1; transform: none;">
-                        <div
-                            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
-                            <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-                                <h3 class="tracking-tight text-sm font-medium">Lessons This Week</h3>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                </svg>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <div class="text-2xl font-bold">12</div>
-                                <p class="text-xs text-muted-foreground">3 completed, 9 upcoming</p>
-                            </div>
-                        </div>
+                       <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
+    <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
+        <h3 class="tracking-tight text-sm font-medium">Lessons This Week</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+    </div>
+    <div class="p-6 pt-0">
+        <div class="text-2xl font-bold">{{ $lessonSummary['total_this_week'] }}</div>
+        <p class="text-xs text-muted-foreground">
+            {{ $lessonSummary['completed'] }} completed, {{ $lessonSummary['upcoming'] }} upcoming
+        </p>
+    </div>
+</div>
+
                     </div>
                 </div>
 
@@ -116,7 +118,7 @@
                                 @endforeach
                             @endif
 
-                            <!-- Hidden Lessons (Initially Hidden) -->
+                            <!-- Hidden (Initially Hidden) -->
                             @if (isset($hiddenMeetings))
                                 @foreach ($hiddenMeetings as $meeting)
                                     <div class="lesson-item hidden-lesson rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow"

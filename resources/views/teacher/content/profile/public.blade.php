@@ -507,69 +507,74 @@
                             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
                                 {{ $user->name ?? 'Unnamed Teacher' }}
                             </h1>
-                            <p class="text-primary text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}</p>
+                           <p class="text-primary text-md mt-1">
+    {{ $teacherProfile?->headline ?? 'No headline added yet' }}
+</p>
 
                             <!-- Ratings -->
-                            <div class="flex items-center mt-2 text-gray-700">
-                                @php
-                                    $fullStars = floor($averageRating);
-                                    $halfStar = ($averageRating - $fullStars) >= 0.5;
-                                    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-                                @endphp
+                         <!-- <div class="flex items-center mt-2 text-gray-700">
+    @php
+        $fullStars = floor($averageRating);
+        $halfStar = ($averageRating - $fullStars) >= 0.5;
+        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+    @endphp
 
-                                {{-- Full Stars --}}
-                                @for ($i = 0; $i < $fullStars; $i++)
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1"
-                                            viewBox="0 0 24 24">
-                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14
-                                    18.18 21.02 12 17.77 5.82 21.02
-                                    7 14.14 2 9.27 8.91 8.26 12 2" />
-                                        </svg>
-                                @endfor
+    {{-- Full Stars --}}
+    @for ($i = 0; $i < $fullStars; $i++)
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 fill-yellow-500 mr-1"
+            viewBox="0 0 24 24">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14
+                18.18 21.02 12 17.77 5.82 21.02
+                7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+    @endfor
 
-                                {{-- Half Star --}}
-                                @if ($halfStar)
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-1"
-                                            viewBox="0 0 24 24">
-                                            <defs>
-                                                <linearGradient id="half-grad">
-                                                    <stop offset="50%" stop-color="currentColor" />
-                                                    <stop offset="50%" stop-color="transparent" />
-                                                </linearGradient>
-                                            </defs>
-                                            <polygon fill="url(#half-grad)" stroke="currentColor" stroke-width="2" points="12 2 15.09 8.26 22 9.27 17 14.14
-                                    18.18 21.02 12 17.77 5.82 21.02
-                                    7 14.14 2 9.27 8.91 8.26 12 2" />
-                                        </svg>
-                                @endif
+    {{-- Half Star --}}
+    @if ($halfStar)
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 mr-1"
+            viewBox="0 0 24 24">
+            <defs>
+                <linearGradient id="half-grad">
+                    <stop offset="50%" stop-color="currentColor" />
+                    <stop offset="50%" stop-color="transparent" />
+                </linearGradient>
+            </defs>
+            <polygon fill="url(#half-grad)" stroke="currentColor" stroke-width="2"
+                points="12 2 15.09 8.26 22 9.27 17 14.14
+                18.18 21.02 12 17.77 5.82 21.02
+                7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+    @endif
 
-                                {{-- Empty Stars --}}
-                                @for ($i = 0; $i < $emptyStars; $i++)
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 mr-1"
-                                            viewBox="0 0 24 24">
-                                            <polygon fill="none" stroke="currentColor" stroke-width="2" points="12 2 15.09 8.26 22 9.27 17 14.14
-                                    18.18 21.02 12 17.77 5.82 21.02
-                                    7 14.14 2 9.27 8.91 8.26 12 2" />
-                                        </svg>
-                                @endfor
+    {{-- Empty Stars --}}
+    @for ($i = 0; $i < $emptyStars; $i++)
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300 mr-1"
+            viewBox="0 0 24 24">
+            <polygon fill="none" stroke="currentColor" stroke-width="2"
+                points="12 2 15.09 8.26 22 9.27 17 14.14
+                18.18 21.02 12 17.77 5.82 21.02
+                7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+    @endfor
 
-                                {{-- Rating & Review Count --}}
-                                <div class="flex items-center ml-2">
-                                    @if ($reviewsCount > 0)
-                                        <span class="font-semibold text-yellow-500">{{ $averageRating }}</span>
-                                        <span class="ml-1 text-gray-600">
-                                            ({{ $reviewsCount }} {{ Str::plural('review', $reviewsCount) }})
-                                        </span>
-                                    @else
-                                        <span class="text-gray-500">No ratings yet</span>
-                                    @endif
-                                </div>
-                            </div>
+    {{-- Rating & Review Count --}}
+    <div class="flex items-center ml-2">
+        @if ($reviewsCount > 0)
+            <span class="font-semibold text-yellow-500">{{ $averageRating }}</span>
+            <span class="ml-1 text-gray-600">
+                ({{ $reviewsCount }} {{ Str::plural('review', $reviewsCount) }})
+            </span>
+        @else
+            <span class="text-gray-500">No ratings yet</span>
+        @endif
+    </div>
+</div> -->
 
-                            <div
+
+                            <!-- <div
                                 class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent mt-3 bg-green-500 hover:bg-green-600 text-white">
                                 Active Now
-                            </div>
+                            </div> -->
                         </div>
 
                         <!-- Right Section -->
@@ -580,68 +585,62 @@
                                 <!-- Left: Text Info -->
                                 <div class="grid grid-cols-2 sm:grid-cols-2 gap-4 text-sm">
                                     <div class="flex items-center text-gray-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                                            <circle cx="12" cy="10" r="3"></circle>
-                                        </svg>
-                                        From: {{ $teacher?->country ?? 'N/A' }}
-                                    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+        class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+    </svg>
+    From: {{ $teacherProfile?->country ?? 'N/A' }}
+</div>
+
 
                                     <div class="flex items-center text-gray-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="m5 8 6 6"></path>
-                                            <path d="m4 14 6-6 2-3"></path>
-                                            <path d="M2 5h12"></path>
-                                            <path d="M7 2h1"></path>
-                                            <path d="m22 22-5-10-5 10"></path>
-                                            <path d="M14 18h6"></path>
-                                        </svg>
-                                        @php
-                                            use App\Models\Language;
-                                            $languageNames = Language::whereIn('id', (array) $teacher->teaches)
-                                                ->pluck('name')
-                                                ->toArray();
-                                        @endphp
-                                        Teaches: {{ implode(', ', $languageNames) ?: 'N/A' }}
-                                    </div>
+     <svg xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="h-5 w-5 mr-2 text-primary">
+                                        <path d="m5 8 6 6"></path>
+                                        <path d="m4 14 6-6 2-3"></path>
+                                        <path d="M2 5h12"></path>
+                                        <path d="M7 2h1"></path>
+                                        <path d="m22 22-5-10-5 10"></path>
+                                        <path d="M14 18h6"></path>
+                                    </svg>
+    Teaches: {{ !empty($teacherProfile?->teaches) ? implode(', ', $languages) : 'N/A' }}
+</div>
 
                                     <div class="flex items-center text-gray-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="8" r="6"></circle>
-                                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                        </svg>
-                                        Experience: {{ $teacher?->experience ?? 'N/A' }}
-                                    </div>
+    <svg xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="h-10 w-10 mr-2 text-primary">
+                                        <circle cx="12" cy="8" r="6"></circle>
+                                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                                    </svg>
+    Experience: {{ $teacherProfile?->experience ?? 'N/A' }}
+</div>
 
-                                    <div class="flex items-center text-gray-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="2" x2="22" y1="12" y2="12"></line>
-                                            <path
-                                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                                            </path>
-                                        </svg>
-                                        Speaks: {{ $teacher?->speaks ?? 'N/A' }}
-                                    </div>
+<div class="flex items-center text-gray-700">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+        class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" x2="22" y1="12" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+    </svg>
+    Speaks: {{ !empty($languages) ? implode(', ', $languages) : 'N/A' }}
+</div>
 
-                                    <div class="flex items-center text-gray-700 col-span-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <line x1="12" x2="12" y1="2" y2="22"></line>
-                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                        </svg>
-                                        Rate: ${{ $settings['duration_60'] ?? '0.00' }}/hour
-                                    </div>
-
+                            <div class="flex items-center text-gray-700 col-span-2">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+        class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" x2="12" y1="2" y2="22"></line>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+    </svg>
+    Rate: ${{ number_format($teacherProfile?->rate_per_hour ?? 0, 2) }}/hour
+</div>
 
                                 </div>
 
@@ -715,44 +714,40 @@
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg> About Me</h2>
-                                <p class="text-gray-600 leading-relaxed whitespace-pre-line">
-                                    {{ $teacher?->about_me ?? 'No information provided yet.' }}
-                                </p>
+                               <p class="text-gray-600 leading-relaxed whitespace-pre-line">
+    {{ $teacherProfile?->about_me ?? 'No information provided yet.' }}
+</p>
+
                             </div>
-                            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
-                                style="opacity: 1; transform: none;">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="mr-2 h-6 w-6 text-primary">
-                                        <circle cx="12" cy="8" r="6"></circle>
-                                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                    </svg> Specialties</h2>
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach(explode(',', $teacher?->teaching_style ?? '') as $style)
-                                        @if(trim($style) != '')
-                                            <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 
-                                            text-xs font-semibold transition-colors focus:outline-none 
-                                            focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent 
-                                            bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                                {{ trim(ucwords($style)) }}
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                    <!-- <div
-                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                            Conversational English</div>
-                                        <div
-                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                            Business English</div>
-                                        <div
-                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                            IELTS Prep</div>
-                                        <div
-                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                            Pronunciation</div> -->
-                                </div>
-                            </div>
+                           <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="mr-2 h-6 w-6 text-primary">
+            <circle cx="12" cy="8" r="6"></circle>
+            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+        </svg>
+        Specialties
+    </h2>
+
+    <div class="flex flex-wrap gap-2">
+        @if(!empty($teacherProfile?->teaching_style))
+            @foreach(explode(',', $teacherProfile->teaching_style) as $style)
+                @if(trim($style) != '')
+                    <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 
+                        text-xs font-semibold transition-colors focus:outline-none 
+                        focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent 
+                        bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                        {{ trim(ucwords($style)) }}
+                    </div>
+                @endif
+            @endforeach
+        @else
+            <span class="text-gray-500">No specialties added yet.</span>
+        @endif
+    </div>
+</div>
+
                         </div>
                         <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200" style="opacity: 1; transform: none;">
     <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
@@ -833,46 +828,47 @@
                     </div>
                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200 mt-12">
     <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-7 w-7 text-primary" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor">
-            <polygon
-                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-        Student Reviews ({{ $reviews->count() }})
-    </h2>
+    <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-7 w-7 text-primary" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+    Student Reviews ({{ $reviewsCount }})
+</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        @forelse($reviews as $review)
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <div class="flex justify-between items-start">
-                    <div class="flex items-center">
-                        <span class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3">
-                            <span class="flex h-full w-full items-center justify-center rounded-full bg-muted text-gray-700">
-                                {{ strtoupper(substr($review->student->name ?? 'S', 0, 1)) }}
-                            </span>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    @forelse($reviews as $review)
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="flex justify-between items-start">
+                <div class="flex items-center">
+                    <span class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3">
+                        <span class="flex h-full w-full items-center justify-center rounded-full bg-muted text-gray-700">
+                            {{ strtoupper(substr($review->student->name ?? 'S', 0, 1)) }}
                         </span>
-                        <div>
-                            <p class="font-semibold text-gray-800">{{ $review->student->name ?? 'Anonymous' }}</p>
-                            <p class="text-xs text-gray-500">{{ $review->created_at->format('M d, Y') }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        @for($i = 1; $i <= 5; $i++)
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="h-4 w-4 {{ $i <= $review->rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300' }}"
-                                 viewBox="0 0 24 24" fill="currentColor">
-                                <polygon
-                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                            </svg>
-                        @endfor
+                    </span>
+                    <div>
+                        <p class="font-semibold text-gray-800">{{ $review->student->name ?? 'Anonymous' }}</p>
+                        <p class="text-xs text-gray-500">{{ $review->created_at->format('M d, Y') }}</p>
                     </div>
                 </div>
-                <p class="text-sm text-gray-600 italic mt-3">"{{ $review->comment }}"</p>
+                <div class="flex items-center">
+                    @for($i = 1; $i <= 5; $i++)
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-4 w-4 {{ $i <= $review->rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300' }}"
+                             viewBox="0 0 24 24" fill="currentColor">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                    @endfor
+                </div>
             </div>
-        @empty
-            <p class="text-gray-500">No reviews yet.</p>
-        @endforelse
-    </div>
+            <p class="text-sm text-gray-600 italic mt-3">"{{ $review->comment }}"</p>
+        </div>
+    @empty
+        <p class="text-gray-500">No reviews yet.</p>
+    @endforelse
+</div>
+
 </div>
 
                     <!--static data -->

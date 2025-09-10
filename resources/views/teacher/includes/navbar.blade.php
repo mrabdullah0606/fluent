@@ -162,7 +162,7 @@
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="lessonDropdown" style="width: 300px;">
         <li class="dropdown-header">Recent Lesson Notifications</li>
         <div id="lesson-notifications-list" style="max-height: 300px; overflow-y: auto;">
-            @foreach(auth()->user()->unreadNotifications->where('type','App\Notifications\LessonDeductedNotification')->take(5) as $notification)
+            @forelse(auth()->user()->unreadNotifications->where('type','App\Notifications\LessonDeductedNotification')->take(5) as $notification)
                 <li>
                     <a class="dropdown-item small lesson-link" 
                        data-id="{{ $notification->id }}" 
@@ -172,11 +172,13 @@
                         <span class="text-muted small">{{ $notification->created_at->diffForHumans() }}</span>
                     </a>
                 </li>
-            @endforeach
-            
+            @empty
+                <li class="dropdown-item small text-muted">No new notifications</li>
+            @endforelse
         </div>
     </ul>
 </li>
+
 <script>
 function updateLessonNotificationCount() {
     fetch('{{ route('teacher.notifications.unread-count') }}')
@@ -231,9 +233,9 @@ document.addEventListener('DOMContentLoaded', updateLessonNotificationCount);
 
 // ✅ Mark single notification as read before redirect
 document.addEventListener('click', function(e) {
-    if (e.target.closest('.lesson-link')) {
+    const link = e.target.closest('.lesson-link');
+    if (link) {
         e.preventDefault();
-        const link = e.target.closest('.lesson-link');
         const notifId = link.dataset.id;
         const targetUrl = link.href;
 
@@ -247,7 +249,23 @@ document.addEventListener('click', function(e) {
         });
     }
 });
+
+// ✅ Redirect main Lessons link if no notifications
+document.addEventListener('DOMContentLoaded', function() {
+    const lessonDropdown = document.getElementById('lessonDropdown');
+
+    lessonDropdown.addEventListener('click', function(e) {
+        const hasNotifications = document.querySelectorAll('#lesson-notifications-list .lesson-link').length > 0;
+
+        if (!hasNotifications) {
+            // No notifications, follow link normally
+            window.location.href = this.href;
+        }
+        // else: let Bootstrap open dropdown normally
+    });
+});
 </script>
+
 
 
                  <li class="nav-item me-3">

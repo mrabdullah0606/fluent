@@ -14,35 +14,55 @@ use Illuminate\Support\Facades\Auth;
 class SettingsController extends Controller
 {
     public function index()
-    {
-        $teacher = Auth::user();
-        $settings = TeacherSetting::where('teacher_id', $teacher->id)
-            ->pluck('value', 'key')
-            ->toArray();
-        $packages = LessonPackage::where('teacher_id', $teacher->id)
-            ->orderBy('id')
-            ->get()
-            ->keyBy('package_number')
-            ->toArray();
-        $groups = GroupClass::where('teacher_id', $teacher->id)
-            ->with('days')
-            ->get()
-            ->map(function ($group) {
-                return [
-                    'title' => $group->title,
-                    'description' => $group->description, // Add description field
-                    'duration_per_class' => $group->duration_per_class,
-                    'lessons_per_week' => $group->lessons_per_week,
-                    'max_students' => $group->max_students,
-                     'features' => $group->features,
-                    'price_per_student' => $group->price_per_student,
-                    'is_active' => $group->is_active,
-                    'days' => $group->days->pluck('day')->toArray()
-                ];
-            });
+{
+    $teacher = Auth::user();
 
-        return view('teacher.content.profile.settings', compact('settings', 'packages', 'groups'));
-    }
+    // Fetch teacher settings
+    $settings = TeacherSetting::where('teacher_id', $teacher->id)
+        ->pluck('value', 'key')
+        ->toArray();
+
+    // Fetch lesson packages
+    $packages = LessonPackage::where('teacher_id', $teacher->id)
+        ->orderBy('id')
+        ->get()
+        ->keyBy('package_number')
+        ->toArray();
+
+    // Fetch group classes with days
+    $groups = GroupClass::where('teacher_id', $teacher->id)
+    ->with('days')
+    ->get()
+    ->map(function ($group) {
+        // Ensure features is always array
+        $features = $group->features ?? [];
+
+        // Normalize days and times as strings
+        $days = [];
+        $times = [];
+        foreach ($group->days as $d) {
+            $days[] = $d->day instanceof \Carbon\Carbon ? $d->day->format('Y-m-d') : (string)$d->day;
+            $times[] = $d->time ?? '';
+        }
+
+        return [
+            'title' => $group->title,
+            'description' => $group->description,
+            'duration_per_class' => $group->duration_per_class,
+            'lessons_per_week' => $group->lessons_per_week,
+            'max_students' => $group->max_students,
+            'features' => $features,
+            'price_per_student' => $group->price_per_student,
+            'is_active' => $group->is_active,
+            'days' => $days,
+            'times' => $times,
+        ];
+    });
+
+
+    return view('teacher.content.profile.settings', compact('settings', 'packages', 'groups'));
+}
+
 
     public function update(SettingsRequest $request)
     {
@@ -120,61 +140,54 @@ class SettingsController extends Controller
         }
     }
 
-   private function updateGroupClasses($teacherId, array $data)
+  private function updateGroupClasses($teacherId, array $data)
 {
     if (!isset($data['groups'])) {
         return;
     }
 
+    // Remove old groups for the teacher
     GroupClass::where('teacher_id', $teacherId)->delete();
-
-    // Remove this line - it's stopping execution!
-    //  dd($groupData);  
 
     foreach ($data['groups'] as $groupData) {
         if (!empty($groupData['title'])) {
             $maxStudents = isset($groupData['max_students']) ? (int) $groupData['max_students'] : 1;
-            if ($maxStudents < 1) {
-                $maxStudents = 1;
-            } elseif ($maxStudents > 100) {
-                $maxStudents = 100;
-            }
+            $maxStudents = max(1, min($maxStudents, 100));
 
             // Clean and validate description
-            $description = null;
-            if (isset($groupData['description']) && !empty(trim($groupData['description']))) {
-                $description = trim($groupData['description']);
-                if (strlen($description) > 500) {
-                    $description = substr($description, 0, 500);
+            $description = isset($groupData['description']) ? strip_tags(substr(trim($groupData['description']), 0, 500)) : null;
+
+            // Clean and store features as array
+            $features = [];
+            if (!empty($groupData['features'])) {
+                if (is_array($groupData['features'])) {
+                    $features = $groupData['features'];
+                } else {
+                    $features = array_map('trim', explode(',', $groupData['features']));
                 }
-                $description = strip_tags($description);
             }
 
-            // Clean features
-            $features = null;
-            if (isset($groupData['features']) && !empty(trim($groupData['features']))) {
-                $features = trim($groupData['features']);
-                if (strlen($features) > 500) { // limit to 500 chars
-                    $features = substr($features, 0, 500);
-                }
-                $features = strip_tags($features);
-            }
-
+            // Create GroupClass
             $group = GroupClass::create([
                 'teacher_id' => $teacherId,
                 'title' => $groupData['title'],
                 'description' => $description,
-                'duration_per_class' => $groupData['duration_per_class'],
-                'lessons_per_week' => $groupData['lessons_per_week'],
+                'duration_per_class' => $groupData['duration_per_class'] ?? 60,
+                'lessons_per_week' => $groupData['lessons_per_week'] ?? 1,
                 'max_students' => $maxStudents,
-                'price_per_student' => $groupData['price_per_student'],
-                'features' => $features, // This will now save properly
+                'price_per_student' => $groupData['price_per_student'] ?? 0,
+                'features' => $features,
                 'is_active' => isset($groupData['is_active']) ? 1 : 0,
             ]);
 
+            // Save days with optional time
             if (isset($groupData['days']) && is_array($groupData['days'])) {
-                foreach ($groupData['days'] as $day) {
-                    $group->days()->create(['day' => $day]);
+                foreach ($groupData['days'] as $i => $day) {
+                    $time = $groupData['times'][$i] ?? null;
+                    $group->days()->create([
+                        'day' => $day,
+                        'time' => $time
+                    ]);
                 }
             }
         }

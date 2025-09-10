@@ -5,261 +5,226 @@
         <div class="bg-white min-h-screen py-8 md:py-12">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div style="opacity: 1; transform: none;">
-                    <div
-                        class="bg-gray-50 p-6 md:p-8 rounded-xl shadow-lg border border-yellow-300 mb-8 md:flex items-center">
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 mb-8 md:flex items-center">
                         <div
                             class="md:w-1/3 flex flex-col items-center md:items-start text-center md:text-left mb-6 md:mb-0">
-                            {{-- <span
-                                class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400">
+                            <!-- Profile Image -->
+                            <span
+                                class="relative flex shrink-0 rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400 cursor-pointer">
                                 <span
-                                    class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white">
-                                    <img src="{{ asset('storage/' . $teacher->teacherProfile->profile_image) }}"
-                                        alt="">
-                                </span>
-                            </span> --}}
-                            <!-- Profile Image (clickable) -->
-                            <!-- Profile Image -->
-                            <span 
-                            class="relative flex shrink-0 rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400 cursor-pointer" 
-                            data-bs-toggle="modal" data-bs-target="#introVideoModal">
-                            <!-- Profile Image -->
-                                <span class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white overflow-hidden">
-                                    @if ($profileImage)
-                                    <img src="{{ asset('storage/' . $profileImage) }}" 
-                                    class="w-full h-full object-cover rounded-full">
+                                    class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white overflow-hidden">
+                                    @if ($teacher && $teacher->profile_image)
+                                        <img src="{{ asset('storage/' . $teacher->profile_image) }}"
+                                            class="w-full h-full object-cover rounded-full">
                                     @else
-                                    <span class="flex w-full h-full items-center justify-center rounded-full text-4xl text-white">
-                                        <span style="font-size: 12px;">No Image Uploaded</span>
-                                    </span>
+                                        <span
+                                            class="flex w-full h-full items-center justify-center rounded-full text-4xl text-white">
+                                            <span style="font-size: 12px;">No Image Uploaded</span>
+                                        </span>
                                     @endif
-                                    <!--                                     @if ($teacher && $teacher->profile_image)
-                                    <img src="{{ asset('storage/' . $teacher->profile_image) }}" 
-                                    class="w-full h-full object-cover rounded-full">
-                                    @else
-                                    <span class="flex w-full h-full items-center justify-center rounded-full text-4xl text-white">
-                                    <span style="font-size: 12px;">No Image Uploaded</span>
-                                    </span>
-                                    @endif -->
-                                </span>
-                                <!-- Play Button Badge (bottom center) -->
-                                <span 
-                                class="absolute -top-2 bg-warning right-0 left-1/2 transform -translate-x-1/2 flex items-center justify-center w-8 h-8 bg-red-600 text-white rounded-full shadow-lg z-10">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M8 5v14l11-7z"></path>
-                                </svg>
                                 </span>
                             </span>
-                            <!-- Bootstrap Modal -->
-                            <div class="modal fade" id="introVideoModal" tabindex="-1" aria-labelledby="introVideoLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered">
-                                    <div class="modal-content border-0 rounded-3 shadow">
-                                        <div class="modal-header border-0">
-                                            <h5 class="modal-title d-flex align-items-center" id="introVideoLabel">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="me-2 text-warning">
-                                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                                </svg>
-                                                Intro
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            @if ($teacher?->teacherProfile?->intro_video)
-                                                <video class="w-100 rounded border" controls>
-                                                    <source
-                                                        src="{{ asset('storage/' . $teacher->teacherProfile->intro_video) }}"
-                                                        type="video/mp4">
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            @else
-                                                <p class="text-muted">No introduction video available.</p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $teacher->name }}</h1>
-                            <p class="text-yellow-600 text-md mt-1">
-                                {{ $teacher?->teacherProfile?->headline ?? 'No headline added yet' }}
-                            </p>
-                               <!--  <div class="flex items-center mt-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
-                                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    class="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                    </polygon>
-                                </svg>
-                                    <div class="flex items-center">
-                                        @if ($reviewsCount > 0)
-                                        <span class="font-semibold text-yellow-500">{{ $averageRating }}</span>
-                                        <span class="ml-1 text-gray-600">({{ $reviewsCount }} reviews)</span>
-                                        @else
-                                        <span class="text-gray-500">No ratings yet</span>
-                                        @endif
-                                    </div>
-                                </div> -->
-                                <div class="flex items-center mt-2 text-gray-700">
-                                    @php
+                            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+                                {{ $user->name ?? 'Unnamed Teacher' }}
+                            </h1>
+                            <p class="text-primary text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}</p>
+
+                            <!-- Ratings -->
+                            <div class="flex items-center mt-2 text-gray-700">
+                                @php
                                     $fullStars = floor($averageRating);
                                     $halfStar = ($averageRating - $fullStars) >= 0.5;
                                     $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-                                    @endphp
+                                @endphp
 
-                                    {{-- Full Stars --}}
-                                    @for ($i = 0; $i < $fullStars; $i++)
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1" viewBox="0 0 24 24">
-                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14
-                                        18.18 21.02 12 17.77 5.82 21.02
-                                        7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                    </svg>
-                                    @endfor
+                                {{-- Full Stars --}}
+                                @for ($i = 0; $i < $fullStars; $i++)
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1"
+                                            viewBox="0 0 24 24">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14
+                                    18.18 21.02 12 17.77 5.82 21.02
+                                    7 14.14 2 9.27 8.91 8.26 12 2" />
+                                        </svg>
+                                @endfor
 
-                                    {{-- Half Star --}}
-                                    @if ($halfStar)
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-1" viewBox="0 0 24 24">
-                                        <defs>
-                                            <linearGradient id="half-grad">
-                                                <stop offset="50%" stop-color="currentColor"/>
-                                                <stop offset="50%" stop-color="transparent"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <polygon fill="url(#half-grad)" stroke="currentColor" stroke-width="2"
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14
-                                        18.18 21.02 12 17.77 5.82 21.02
-                                        7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                    </svg>
-                                    @endif
+                                {{-- Half Star --}}
+                                @if ($halfStar)
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-1"
+                                            viewBox="0 0 24 24">
+                                            <defs>
+                                                <linearGradient id="half-grad">
+                                                    <stop offset="50%" stop-color="currentColor" />
+                                                    <stop offset="50%" stop-color="transparent" />
+                                                </linearGradient>
+                                            </defs>
+                                            <polygon fill="url(#half-grad)" stroke="currentColor" stroke-width="2" points="12 2 15.09 8.26 22 9.27 17 14.14
+                                    18.18 21.02 12 17.77 5.82 21.02
+                                    7 14.14 2 9.27 8.91 8.26 12 2" />
+                                        </svg>
+                                @endif
 
-                                    {{-- Empty Stars --}}
-                                    @for ($i = 0; $i < $emptyStars; $i++)
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 mr-1" viewBox="0 0 24 24">
-                                        <polygon fill="none" stroke="currentColor" stroke-width="2"
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14
-                                        18.18 21.02 12 17.77 5.82 21.02
-                                        7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                    </svg>
-                                    @endfor
+                                {{-- Empty Stars --}}
+                                @for ($i = 0; $i < $emptyStars; $i++)
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 mr-1"
+                                            viewBox="0 0 24 24">
+                                            <polygon fill="none" stroke="currentColor" stroke-width="2" points="12 2 15.09 8.26 22 9.27 17 14.14
+                                    18.18 21.02 12 17.77 5.82 21.02
+                                    7 14.14 2 9.27 8.91 8.26 12 2" />
+                                        </svg>
+                                @endfor
 
-                                    {{-- Rating & Review Count --}}
-                                    <div class="flex items-center ml-2">
-                                        @if ($reviewsCount > 0)
+                                {{-- Rating & Review Count --}}
+                                <div class="flex items-center ml-2">
+                                    @if ($reviewsCount > 0)
                                         <span class="font-semibold text-yellow-500">{{ $averageRating }}</span>
                                         <span class="ml-1 text-gray-600">
                                             ({{ $reviewsCount }} {{ Str::plural('review', $reviewsCount) }})
                                         </span>
-                                        @else
+                                    @else
                                         <span class="text-gray-500">No ratings yet</span>
-                                        @endif
-                                    </div>
+                                    @endif
                                 </div>
+                            </div>
 
                             <div
                                 class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent mt-3 bg-green-500 hover:bg-green-600 text-white">
-                                Active Now</div>
+                                Active Now
+                            </div>
                         </div>
+
+                        <!-- Right Section -->
                         <div class="md:w-2/3 md:pl-8 space-y-4">
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
-                                <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
-                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
-                                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                                        <circle cx="12" cy="10" r="3"></circle>
-                                    </svg> From: {{ $teacher?->teacherProfile?->country ?? 'N/A' }}</div>
-                                <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
-                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
-                                        <path d="m5 8 6 6"></path>
-                                        <path d="m4 14 6-6 2-3"></path>
-                                        <path d="M2 5h12"></path>
-                                        <path d="M7 2h1"></path>
-                                        <path d="m22 22-5-10-5 10"></path>
-                                        <path d="M14 18h6"></path>
+                            <!-- Two-column layout: text info (left) + video (right) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+
+                                <!-- Left: Text Info -->
+                                <div class="grid grid-cols-2 sm:grid-cols-2 gap-4 text-sm">
+                                    <div class="flex items-center text-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                        From: {{ $teacher?->country ?? 'N/A' }}
+                                    </div>
+
+                                    <div class="flex items-center text-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m5 8 6 6"></path>
+                                            <path d="m4 14 6-6 2-3"></path>
+                                            <path d="M2 5h12"></path>
+                                            <path d="M7 2h1"></path>
+                                            <path d="m22 22-5-10-5 10"></path>
+                                            <path d="M14 18h6"></path>
+                                        </svg>
                                         @php
                                             use App\Models\Language;
                                             $languageNames = Language::whereIn('id', (array) $teacher->teaches)
                                                 ->pluck('name')
                                                 ->toArray();
                                         @endphp
-
-                                    </svg> Teaches: {{ implode(', ', $languageNames) ?: 'N/A' }}</div>
-                                <div class="flex items-center text-gray-700 col-span-2 sm:col-span-1"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="2" x2="22" y1="12" y2="12"></line>
-                                        <path
-                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                                        </path>
-                                    </svg> Speaks: {{ $teacher?->teacherProfile?->speaks ?? 'N/A' }}</div>
-                                <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
-                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
-                                        <circle cx="12" cy="8" r="6"></circle>
-                                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                    </svg> Experience:{{ $teacher?->teacherProfile?->experience ?? 'N/A' }} years</div>
-                                <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
-                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="h-5 w-5 mr-2 text-yellow-500">
-                                        <line x1="12" x2="12" y1="2" y2="22"></line>
-                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg>${{ $duration60Rate ?? '0' }}/hour</div>
-                            </div>
-                            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
-                                <a href="{{ route('tutor.booking', ['id' => $teacher->id]) }}">
-                                    <button
-                                        class="inline-flex items-center justify-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md"><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5">
-                                            <rect width="18" height="18" x="3" y="4" rx="2"
-                                                ry="2">
-                                            </rect>
-                                            <line x1="16" x2="16" y1="2" y2="6"></line>
-                                            <line x1="8" x2="8" y1="2" y2="6"></line>
-                                            <line x1="3" x2="21" y1="10" y2="10"></line>
-                                            <path d="M8 14h.01"></path>
-                                            <path d="M12 14h.01"></path>
-                                            <path d="M16 14h.01"></path>
-                                            <path d="M8 18h.01"></path>
-                                            <path d="M12 18h.01"></path>
-                                            <path d="M16 18h.01"></path>
-                                        </svg>
-                                        Book Lesson
-                                    </button>
-                                </a>
-                                @auth
-                                    <a href="{{ route('student.chat.index', $teacher->id) }}" class="btn">
-                                        <button
-                                            class="inline-flex items-center justify-center font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-9 rounded-md px-3 w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground text-xs"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 mr-1.5">
-                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                            </svg> Message {{ $teacher->name }}</button>
-                                    </a>
-                                @endauth
-                                @guest
-                                    <div>
-                                        Please <a href="{{ route('student.login') }}"><button
-                                                class="btn btn-dark">Login</button></a> to chat with this
-                                        teacher.
+                                        Teaches: {{ implode(', ', $languageNames) ?: 'N/A' }}
                                     </div>
-                                @endguest
 
+                                    <div class="flex items-center text-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="8" r="6"></circle>
+                                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                                        </svg>
+                                        Experience: {{ $teacher?->experience ?? 'N/A' }}
+                                    </div>
+
+                                    <div class="flex items-center text-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="2" x2="22" y1="12" y2="12"></line>
+                                            <path
+                                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                                            </path>
+                                        </svg>
+                                       Speaks: {{ !empty($languages) ? implode(', ', $languages) : 'N/A' }}
+
+                                    </div>
+
+                                    <div class="flex items-center text-gray-700 col-span-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" x2="12" y1="2" y2="22"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                        Rate: ${{ number_format($teacher->teacherProfile->rate_per_hour ?? 0, 2) }}/hour
+
+                                    </div>
+
+
+                                </div>
+
+                                <!-- Right: Video -->
+                                <div>
+                                    @if ($introVideo)
+                                        <!-- Uploaded Video -->
+                                        <video controls class="w-full h-48 md:h-64 rounded-lg shadow-md">
+                                            <source src="{{ asset('storage/' . $introVideo) }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    @else
+                                                               
+                                                                
+                                       <iframe width="100%" height="315"
+                                            src="https://www.youtube.com/embed/AbkEmIgJMcU?si=2NiijR0Ia01GfgRN"
+                                            title="YouTube video player"
+                                            frameborder="0"
+                                            class="w-full h-48 md:h-64 rounded-lg shadow-md"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            referrerpolicy="strict-origin-when-cross-origin"
+                                            allowfullscreen>
+                                        </iframe>
+                                    @endif
+                                </div>
+
+                            </div>
+
+                            <!-- Action Buttons under both -->
+                            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
+                                <button
+                                    class="inline-flex items-center justify-center text-sm h-10 w-full sm:w-auto bg-red-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md"
+                                    disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="mr-2 h-5 w-5">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"> </rect>
+                                        <line x1="16" x2="16" y1="2" y2="6"></line>
+                                        <line x1="8" x2="8" y1="2" y2="6"></line>
+                                        <line x1="3" x2="21" y1="10" y2="10"></line>
+                                        <path d="M8 14h.01"></path>
+                                        <path d="M12 14h.01"></path>
+                                        <path d="M16 14h.01"></path>
+                                        <path d="M8 18h.01"></path>
+                                        <path d="M12 18h.01"></path>
+                                        <path d="M16 18h.01"></path>
+                                    </svg> Book Lesson
+                                </button>
+                                <button
+                                    class="inline-flex items-center justify-center text-sm h-10 w-full sm:w-auto border border-primary text-primary font-semibold py-3 px-6 rounded-lg"
+                                    disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="mr-2 h-5 w-5">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    </svg> Message Tutor
+                                </button>
                             </div>
                         </div>
+
                     </div>
                     <div class="grid md:grid-cols-3 gap-8">
                         <div class="md:col-span-2 space-y-8">

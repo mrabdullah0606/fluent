@@ -26,12 +26,16 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                     <div>
             <label class="text-sm font-medium text-foreground">Language</label>
-            <div class="mt-1">
-                <select name="learn_language" class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-                    <option value="">Select Language</option>
-                    <option value="">Select Language</option>
-                                    </select>
-            </div>
+<div class="mt-1">
+    <select name="learn_language" 
+            class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+        <option value="">Select Language</option>
+        @foreach($languages as $language)
+            <option value="{{ $language->id }}">{{ $language->name }}</option>
+        @endforeach
+    </select>
+</div>
+
             </div>
                     <div><label
                             class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium text-foreground"
@@ -172,26 +176,29 @@
                                         </svg> Spots: {{ $enrolledStudents }}/{{ $course->max_students }}</div>
                                 </div>
                                 <div class="pt-2">
-                                    <h4 class="text-xs font-semibold text-primary mb-1">Key Features:</h4>
-                                    <ul class="space-y-1">
-                                        <li class="flex items-center text-xs text-muted-foreground"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="h-3 w-3 mr-1.5 text-green-500 flex-shrink-0">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                            </svg> Interactive role-plays</li>
-                                        <li class="flex items-center text-xs text-muted-foreground"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="h-3 w-3 mr-1.5 text-green-500 flex-shrink-0">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                            </svg> Cultural insights</li>
-                                    </ul>
-                                </div>
+    <h4 class="text-xs font-semibold text-primary mb-1">Key Features:</h4>
+    <ul class="space-y-1">
+        @if(!empty($course->features) && is_array($course->features))
+            @foreach($course->features as $feature)
+                <li class="flex items-center text-xs text-muted-foreground">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="h-3 w-3 mr-1.5 text-green-500 flex-shrink-0">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    {{ $feature }}
+                </li>
+            @endforeach
+        @else
+            <li class="text-xs text-muted-foreground">No features listed.</li>
+        @endif
+    </ul>
+</div>
+
+
+
                             </div>
                             <div class="flex items-center p-4 mt-auto"><button
                                     class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full btn-red"

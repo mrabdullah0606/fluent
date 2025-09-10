@@ -22,6 +22,7 @@ class GroupClass extends Model
     ];
 
     protected $casts = [
+          'features' => 'array', 
     'price_per_student' => 'decimal:2',
     'is_active' => 'boolean',
     

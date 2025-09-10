@@ -11,7 +11,13 @@ class GroupClassDay extends Model
 
     protected $fillable = [
         'group_class_id',
-        'day'
+        'day',
+        'time'
+    ];
+
+    protected $casts = [
+        'day' => 'date',    // automatically cast to Carbon instance
+        'time' => 'string', // time can be cast as string
     ];
 
     public function groupClass()

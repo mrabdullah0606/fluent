@@ -18,19 +18,24 @@ class AdminWalletController extends Controller
     }
 
     public function withdrawals(Request $request)
-    {
-        $query = WithdrawalRequest::with(['teacher'])
-            ->orderBy('created_at', 'desc');
+{
+    $query = WithdrawalRequest::with(['teacher'])
+        ->orderBy('created_at', 'desc');
 
-        // Filter by status
-        if ($request->has('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
-        }
-
-        $withdrawals = $query->paginate(50);
-
-        return view('admin.content.withdrawals.index', compact('withdrawals'));
+    // Filter by status
+    if ($request->has('status') && $request->status !== 'all') {
+        $query->where('status', $request->status);
     }
+
+    $withdrawals = $query->paginate(50);
+
+    // ✅ Also fetch latest wallet transactions
+    $transactions = \App\Models\WalletTransaction::with(['teacher', 'payment', 'withdrawalRequest'])
+        ->orderBy('created_at', 'desc')
+        ->paginate(20, ['*'], 'transactions_page'); // keep pagination separate
+
+    return view('admin.content.withdrawals.index', compact('withdrawals', 'transactions'));
+}
 
     public function showWithdrawal($id)
     {
