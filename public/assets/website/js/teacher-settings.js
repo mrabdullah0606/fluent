@@ -220,18 +220,31 @@ class TeacherSettings {
         }, 300);
     }
 
-    initGroup(groupElement) {
-        const daysContainer = groupElement.querySelector(".days-container");
-        const lessonsPerWeekSelect = groupElement.querySelector(
-            '[name*="lessons_per_week"]'
-        );
+initGroup(groupElement) {
+    const daysContainer = groupElement.querySelector(".days-container");
+    const lessonsPerWeekSelect = groupElement.querySelector(
+        '[name*="lessons_per_week"]'
+    );
 
-        if (!daysContainer || !lessonsPerWeekSelect) return;
+    if (!daysContainer || !lessonsPerWeekSelect) return;
 
-        this.bindDayButtons(daysContainer, lessonsPerWeekSelect);
-        this.bindLessonsPerWeekChange(daysContainer, lessonsPerWeekSelect);
-        this.initDescriptionCounter(groupElement);
-    }
+    // Bind interactions
+    this.bindDayButtons(daysContainer, lessonsPerWeekSelect);
+    this.bindLessonsPerWeekChange(daysContainer, lessonsPerWeekSelect);
+
+    // 🔽 Sync visual "selected" state with already-checked checkboxes
+    const dayButtons = groupElement.querySelectorAll(".day-btn");
+    dayButtons.forEach((btn) => {
+        const checkbox = btn.querySelector('input[type="checkbox"]');
+        if (checkbox && checkbox.checked) {
+            btn.classList.add("selected");
+        }
+    });
+
+    // Init description counter
+    this.initDescriptionCounter(groupElement);
+}
+
 
     initDescriptionCounter(groupElement) {
         const textarea = groupElement.querySelector(
@@ -396,49 +409,60 @@ class TeacherSettings {
         return true;
     }
 
-    handleFormSubmit(e) {
-        let isValid = true;
+handleFormSubmit(e) {
+    let isValid = true;
+    const form = e.target;
 
-        // Validate all required fields
-        const requiredFields = e.target.querySelectorAll("[required]");
-        requiredFields.forEach((field) => {
-            if (!this.validateField(field)) {
-                isValid = false;
-            }
-        });
+    // Validate all required fields
+    const requiredFields = form.querySelectorAll("[required]");
+    requiredFields.forEach((field) => {
+        if (!this.validateField(field)) {
+            isValid = false;
+        }
+    });
 
-        // Validate description fields
-        const descriptionFields = e.target.querySelectorAll(
-            'textarea[name*="description"]'
+    // Validate description fields
+    const descriptionFields = form.querySelectorAll(
+        'textarea[name*="description"]'
+    );
+    descriptionFields.forEach((field) => {
+        if (!this.validateDescriptionField(field)) {
+            isValid = false;
+        }
+    });
+
+    // Validate that each group has at least one day selected (supports both day-buttons and date inputs)
+    const groupContainers = form.querySelectorAll(".group-container");
+    groupContainers.forEach((container) => {
+        // 1) Check for any checked checkbox-style day inputs (e.g. groups[x][days][])
+        const checkedCheckboxDays = container.querySelectorAll(
+            'input[type="checkbox"][name*="[days]"]:checked'
         );
-        descriptionFields.forEach((field) => {
-            if (!this.validateDescriptionField(field)) {
-                isValid = false;
-            }
-        });
 
-        // Validate that each group has at least one day selected
-        const groupContainers = e.target.querySelectorAll(".group-container");
-        groupContainers.forEach((container) => {
-            const selectedDays =
-                container.querySelectorAll(".day-btn.selected");
-            if (selectedDays.length === 0) {
-                this.showAlert(
-                    "Each group must have at least one day selected.",
-                    "danger"
-                );
-                isValid = false;
-            }
-        });
+        // 2) Check for any date inputs with a non-empty value (e.g. groups[x][days][0])
+        const dateInputs = container.querySelectorAll(
+            'input[type="date"][name*="[days]"]'
+        );
+        const hasDateValue = Array.from(dateInputs).some((d) => (d.value || '').trim() !== '');
 
-        if (!isValid) {
-            e.preventDefault();
+        if (checkedCheckboxDays.length === 0 && !hasDateValue) {
             this.showAlert(
-                "Please fill in all required fields and fix any errors.",
+                "Each group must have at least one day selected.",
                 "danger"
             );
+            isValid = false;
         }
+    });
+
+    if (!isValid) {
+        e.preventDefault();
+        this.showAlert(
+            "Please fill in all required fields and fix any errors.",
+            "danger"
+        );
     }
+}
+
 
     showAlert(message, type = "info") {
         // Create alert element

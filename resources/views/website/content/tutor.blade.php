@@ -13,22 +13,19 @@
                                 class="relative flex shrink-0 rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400 cursor-pointer">
                                 <span
                                     class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white overflow-hidden">
-                                    @if ($teacher && $teacher->profile_image)
-                                        <img src="{{ asset('storage/' . $teacher->profile_image) }}"
-                                            class="w-full h-full object-cover rounded-full">
-                                    @else
-                                        <span
-                                            class="flex w-full h-full items-center justify-center rounded-full text-4xl text-white">
-                                            <span style="font-size: 12px;">No Image Uploaded</span>
-                                        </span>
-                                    @endif
+                                   @if ($profileImage)
+    <img src="{{ asset('storage/' . $profileImage) }}" alt="Profile Image">
+@else
+    <span>No Image Uploaded</span>
+@endif
+
                                 </span>
                             </span>
 
                             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
-                                {{ $user->name ?? 'Unnamed Teacher' }}
+                              {{ $teacher->name }}
                             </h1>
-                            <p class="text-primary text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}</p>
+                            <!-- <p class="text-primary text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}</p> -->
 
                             <!-- Ratings -->
                             <div class="flex items-center mt-2 text-gray-700">
@@ -121,13 +118,7 @@
                                             <path d="m22 22-5-10-5 10"></path>
                                             <path d="M14 18h6"></path>
                                         </svg>
-                                        @php
-                                            use App\Models\Language;
-                                            $languageNames = Language::whereIn('id', (array) $teacher->teaches)
-                                                ->pluck('name')
-                                                ->toArray();
-                                        @endphp
-                                        Teaches: {{ implode(', ', $languageNames) ?: 'N/A' }}
+                                       <p>Teaches: {{ implode(', ', $languages) ?: 'N/A' }}</p>
                                     </div>
 
                                     <div class="flex items-center text-gray-700">
@@ -161,8 +152,7 @@
                                             <line x1="12" x2="12" y1="2" y2="22"></line>
                                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                         </svg>
-                                        Rate: ${{ number_format($teacher->teacherProfile->rate_per_hour ?? 0, 2) }}/hour
-
+                                       <p>Rate: ${{ number_format($teacherProfile->rate_per_hour ?? $duration60Rate, 2) }}/hour</p>
                                     </div>
 
 
@@ -239,7 +229,7 @@
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg> About Me</h2>
                                 <p class="text-gray-600 leading-relaxed whitespace-pre-line">
-                                    {{ $teacher?->teacherProfile?->about_me ?? 'No information provided yet.' }}
+                                   {{ $teacherProfile?->about_me ?? 'No information provided yet.' }}
                                 </p>
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"
@@ -526,7 +516,9 @@
                                                     </div>
                                                 </div>
 
-                                                @php $rating = $review->rating; @endphp
+                                                @if ($reviewsCount > 0)
+    <p>Average Rating: {{ $averageRating }} ({{ $reviewsCount }} reviews)</p>
+@endif
                                                 <div class="flex items-center">
                                                     @for ($i = 1; $i <= 5; $i++)
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24"

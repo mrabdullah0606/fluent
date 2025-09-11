@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SettingsController extends Controller
 {
-    public function index()
+public function index()
 {
     $teacher = Auth::user();
 
@@ -31,37 +31,47 @@ class SettingsController extends Controller
 
     // Fetch group classes with days
     $groups = GroupClass::where('teacher_id', $teacher->id)
-    ->with('days')
-    ->get()
-    ->map(function ($group) {
-        // Ensure features is always array
-        $features = $group->features ?? [];
+        ->with('days')
+        ->get()
+        ->map(function ($group) {
+            // Ensure features is always an array
+            $features = $group->features;
+            if (is_string($features)) {
+                $features = array_map('trim', explode(',', $features));
+            }
+            if (!is_array($features)) {
+                $features = [];
+            }
 
-        // Normalize days and times as strings
-        $days = [];
-        $times = [];
-        foreach ($group->days as $d) {
-            $days[] = $d->day instanceof \Carbon\Carbon ? $d->day->format('Y-m-d') : (string)$d->day;
-            $times[] = $d->time ?? '';
-        }
+            // Normalize days and times as strings
+            $days = [];
+            $times = [];
+            foreach ($group->days as $d) {
+                $days[] = $d->day instanceof \Carbon\Carbon
+                    ? $d->day->format('Y-m-d')
+                    : (string) $d->day;
 
-        return [
-            'title' => $group->title,
-            'description' => $group->description,
-            'duration_per_class' => $group->duration_per_class,
-            'lessons_per_week' => $group->lessons_per_week,
-            'max_students' => $group->max_students,
-            'features' => $features,
-            'price_per_student' => $group->price_per_student,
-            'is_active' => $group->is_active,
-            'days' => $days,
-            'times' => $times,
-        ];
-    });
+                $times[] = $d->time ?? '';
+            }
 
+            return [
+                'title'             => $group->title,
+                'description'       => $group->description,
+                'duration_per_class'=> $group->duration_per_class,
+                'lessons_per_week'  => $group->lessons_per_week,
+                'max_students'      => $group->max_students,
+                'features'          => $features,
+                'price_per_student' => $group->price_per_student,
+                'is_active'         => $group->is_active,
+                'days'              => $days,
+                'times'             => $times,
+            ];
+        })
+        ->toArray(); // 👈 convert collection to plain array for Blade
 
     return view('teacher.content.profile.settings', compact('settings', 'packages', 'groups'));
 }
+
 
 
     public function update(SettingsRequest $request)
@@ -181,15 +191,16 @@ class SettingsController extends Controller
             ]);
 
             // Save days with optional time
-            if (isset($groupData['days']) && is_array($groupData['days'])) {
-                foreach ($groupData['days'] as $i => $day) {
-                    $time = $groupData['times'][$i] ?? null;
-                    $group->days()->create([
-                        'day' => $day,
-                        'time' => $time
-                    ]);
-                }
-            }
+if (isset($groupData['days']) && is_array($groupData['days'])) {
+    foreach ($groupData['days'] as $i => $day) {
+        $time = $groupData['times'][$i] ?? null;   // 👈 unsafe here
+        $group->days()->create([
+            'day' => $day,
+            'time' => $time
+        ]);
+    }
+}
+
         }
     }
 }

@@ -64,15 +64,22 @@
                         required>
                 </div>
                 <div class="col-12">
-                    <label class="form-label small"
-                        for="group_{{ $index }}_features"><strong>Features</strong></label>
-                    <input type="text" class="form-control" name="features"
-                        id="group_{{ $index }}_features" placeholder="Interactive role-plays, Cultural insights"
-                        value="{{ old('groups.' . $index . '.features', is_array($group['features']) ? implode(', ', $group['features']) : ($group['features'] ?? '')) }}">
-                    <div class="form-text text-muted small">
-                        Separate multiple features with commas
-                    </div>
-                </div>
+    <label class="form-label small" for="group_{{ $index }}_features">
+        <strong>Features</strong>
+    </label>
+    <input 
+        type="text" 
+        class="form-control" 
+        name="groups[{{ $index }}][features]"
+        id="group_{{ $index }}_features" 
+        placeholder="Interactive role-plays, Cultural insights"
+        value="{{ old('groups.' . $index . '.features', is_array($group['features']) ? implode(', ', $group['features']) : ($group['features'] ?? '')) }}"
+    >
+    <div class="form-text text-muted small">
+        Separate multiple features with commas
+    </div>
+</div>
+
             </div>
 
 

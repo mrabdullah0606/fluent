@@ -105,35 +105,51 @@ class HomeController extends Controller
         return view('website.content.find-tutor');
     }
 
-    public function tutor($id): View
-    {
-        $teacher = User::with('teacherSettings', 'teacherProfile')->where('id', $id)->where('role', 'teacher')->firstOrFail();
-        $profileImage = \DB::table('teachers')
-        ->where('user_id', $id)
-        ->value('profile_image');
+   public function tutor($id): View
+{
+    // Fetch teacher user with relations
+    $teacher = User::with(['teacherProfile', 'lessonPackages', 'teacherSettings'])
+        ->where('id', $id)
+        ->where('role', 'teacher')
+        ->firstOrFail();
 
-         $teacherProfile = \App\Models\Teacher::where('user_id', $id)->first();
+    // Teacher profile details
+    $teacherProfile = \App\Models\Teacher::where('user_id', $id)->first();
     $introVideo = $teacherProfile?->intro_video;
-$languages = [];
+    $profileImage = $teacherProfile?->profile_image;
+
+    // Languages they teach
+    $languages = [];
     if (!empty($teacherProfile?->teaches)) {
         $languages = \App\Models\Language::whereIn('id', $teacherProfile->teaches)->pluck('name')->toArray();
     }
 
-        $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
-        // $reviews = Review::where('teacher_id', $id)->with('student')->get();
-        $reviews = Review::with('student')
-            ->where('teacher_id', $teacher->id)
-            ->where('is_approved', true) // ✅ only approved
-            ->latest()
-            ->get();
-        $reviewsCount = $reviews->count();
-        $averageRating = $reviewsCount > 0 
-        ? round($reviews->avg('rating'), 1) 
-        : 0;
-        // dd($teacher->toArray(), $duration60Rate);
-        // dd($reviews->toArray());
-        return view('website.content.tutor', compact('teacher','languages','introVideo', 'duration60Rate', 'reviews', 'reviewsCount', 'profileImage','averageRating'));
-    }
+    // Rates (example from teacherSettings)
+    $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
+
+    // Reviews
+    $reviews = Review::with('student')
+        ->where('teacher_id', $teacher->id)
+        ->where('is_approved', true)
+        ->latest()
+        ->get();
+
+    $reviewsCount = $reviews->count();
+    $averageRating = $reviewsCount > 0 ? round($reviews->avg('rating'), 1) : 0;
+
+    return view('website.content.tutor', compact(
+        'teacher',
+        'teacherProfile',
+        'introVideo',
+        'profileImage',
+        'languages',
+        'duration60Rate',
+        'reviews',
+        'reviewsCount',
+        'averageRating'
+    ));
+}
+
 
     // public function tutorBooking($id): View
     // {

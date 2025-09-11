@@ -492,15 +492,10 @@
                                 class="relative flex shrink-0 rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-yellow-400 cursor-pointer">
                                 <span
                                     class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-yellow-400 text-white overflow-hidden">
-                                    @if ($teacher && $teacher->profile_image)
-                                        <img src="{{ asset('storage/' . $teacher->profile_image) }}"
+                                  
+                                        <img src="{{ asset('storage/' . $teacherProfile->profile_image) }}"
                                             class="w-full h-full object-cover rounded-full">
-                                    @else
-                                        <span
-                                            class="flex w-full h-full items-center justify-center rounded-full text-4xl text-white">
-                                            <span style="font-size: 12px;">No Image Uploaded</span>
-                                        </span>
-                                    @endif
+                                  
                                 </span>
                             </span>
 
