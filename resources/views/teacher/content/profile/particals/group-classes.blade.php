@@ -4,7 +4,8 @@
     </h5>
     <p class="text-muted">Set up and manage your group classes.</p>
 
-    @forelse($groups ?? [collect()] as $index => $group)
+   @forelse($groups ?? [[]] as $index => $group)
+
         <div class="group-container">
             <input type="text" name="groups[{{ $index }}][title]"
                 class="form-control fw-bold editable-heading mb-3"
@@ -156,16 +157,20 @@
                 </div>
             </div>
 
-            <!-- Days -->
-            <div class="mb-2 fw-bold text-dark mt-3">Days</div>
-            <div class="d-flex flex-wrap gap-2 days-container">
-                @foreach (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $day)
-                    <label class="btn btn-outline-secondary day-btn">
-                        <input type="checkbox" name="groups[0][days][]" value="{{ $day }}" class="d-none">
-                        {{ $day }}
-                    </label>
-                @endforeach
-            </div>
+           <!-- Date -->
+<div class="mb-2 fw-bold text-dark mt-3">Select Date</div>
+<input 
+    type="date" 
+    name="groups[0][days][0]" 
+    class="form-control">
+
+<!-- Time -->
+<div class="mb-2 fw-bold text-dark mt-2">Select Time</div>
+<input 
+    type="time" 
+    name="groups[0][times][0]" 
+    class="form-control">
+
 
             <!-- Toggle Switch -->
             <div class="form-check form-switch position-absolute top-0 end-0 mt-2 me-3">

@@ -139,19 +139,21 @@
                      });
                  </script>
 
-    <li class="nav-item dropdown me-3">
-    <a class="nav-link position-relative dropdown-toggle d-flex align-items-center" 
+    <li class="nav-item dropdown me-3 position-relative">
+    @php
+        $lessonNotifications = auth()->user()->unreadNotifications()
+            ->where('type', 'App\Notifications\LessonDeductedNotification');
+        $lessonCount = $lessonNotifications->count();
+    @endphp
+
+    <!-- Lessons link / bell -->
+    <a class="nav-link position-relative d-flex align-items-center" 
        href="{{ route('teacher.zoom.meetings.index') }}" 
        id="lessonDropdown" 
        role="button" 
-       data-bs-toggle="dropdown" 
+       data-bs-toggle="{{ $lessonCount > 0 ? 'dropdown' : '' }}" 
        aria-expanded="false">
         <i class="bi bi-bell me-1"></i> Lessons
-        @php
-            $lessonCount = auth()->user()->unreadNotifications()
-                ->where('type','App\Notifications\LessonDeductedNotification')
-                ->count();
-        @endphp
         @if($lessonCount > 0)
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge lesson-notification-badge">
                 {{ $lessonCount > 99 ? '99+' : $lessonCount }}
@@ -159,10 +161,11 @@
         @endif
     </a>
 
+    @if($lessonCount > 0)
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="lessonDropdown" style="width: 300px;">
         <li class="dropdown-header">Recent Lesson Notifications</li>
         <div id="lesson-notifications-list" style="max-height: 300px; overflow-y: auto;">
-            @forelse(auth()->user()->unreadNotifications->where('type','App\Notifications\LessonDeductedNotification')->take(5) as $notification)
+            @foreach($lessonNotifications->take(5) as $notification)
                 <li>
                     <a class="dropdown-item small lesson-link" 
                        data-id="{{ $notification->id }}" 
@@ -172,66 +175,69 @@
                         <span class="text-muted small">{{ $notification->created_at->diffForHumans() }}</span>
                     </a>
                 </li>
-            @empty
-                <li class="dropdown-item small text-muted">No new notifications</li>
-            @endforelse
+            @endforeach
+            @if($lessonCount > 5)
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-center small" href="{{ route('teacher.lesson.notifications') }}">View All</a></li>
+            @endif
         </div>
     </ul>
+    @endif
 </li>
 
 <script>
-function updateLessonNotificationCount() {
-    fetch('{{ route('teacher.notifications.unread-count') }}')
+// Mark a notification as read
+async function markNotificationRead(id) {
+    await fetch(`/teacher/notifications/mark-read/${id}`, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+    });
+}
+
+// Update badge and dropdown dynamically
+function updateLessonDropdown() {
+    fetch('{{ route("teacher.notifications.unread-count") }}')
         .then(res => res.json())
         .then(data => {
             const badge = document.querySelector('.lesson-notification-badge');
             const list = document.getElementById('lesson-notifications-list');
-            const teacherZoomRoute = @json(route('teacher.zoom.meetings.index'));
+            const dropdown = document.getElementById('lessonDropdown');
 
             if (data.unread_count > 0) {
-                if (badge) {
-                    badge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
-                } else {
-                    const aTag = document.getElementById('lessonDropdown');
+                // Update or create badge
+                if (badge) badge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
+                else {
                     const span = document.createElement('span');
                     span.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge lesson-notification-badge';
                     span.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
-                    aTag.appendChild(span);
+                    dropdown.appendChild(span);
                 }
 
-                list.innerHTML = '';
-                data.notifications.slice(0,5).forEach(notif => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<a class="dropdown-item small lesson-link" data-id="${notif.id}" href="${teacherZoomRoute}">
-                                        ${notif.message} <br>
-                                        <span class="text-muted small">${notif.time}</span>
-                                    </a>`;
-                    list.appendChild(li);
-                });
-
-                if (data.unread_count > 5) {
-                    const divider = document.createElement('li');
-                    divider.innerHTML = '<hr class="dropdown-divider">';
-                    list.appendChild(divider);
-
-                    const viewAll = document.createElement('li');
-                    viewAll.innerHTML = `<a class="dropdown-item text-center small" href="{{ route('teacher.lesson.notifications') }}">View All</a>`;
-                    list.appendChild(viewAll);
+                // Update list
+                if (list) {
+                    list.innerHTML = '';
+                    data.notifications.slice(0,5).forEach(notif => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<a class="dropdown-item small lesson-link" data-id="${notif.id}" href="${dropdown.href}">
+                                            ${notif.message}<br>
+                                            <span class="text-muted small">${notif.time}</span>
+                                        </a>`;
+                        list.appendChild(li);
+                    });
                 }
 
             } else {
                 if (badge) badge.remove();
-                list.innerHTML = '<li class="dropdown-item small text-muted">No new notifications</li>';
+                if (list) list.innerHTML = '<li class="dropdown-item small text-muted">No new notifications</li>';
             }
-        })
-        .catch(err => console.error('Error fetching lesson notifications:', err));
+        });
 }
 
-// Poll every 15 seconds
-setInterval(updateLessonNotificationCount, 15000);
-document.addEventListener('DOMContentLoaded', updateLessonNotificationCount);
+// Poll every 15 seconds for new notifications
+setInterval(updateLessonDropdown, 15000);
+document.addEventListener('DOMContentLoaded', updateLessonDropdown);
 
-// ✅ Mark single notification as read before redirect
+// Handle clicks on individual notifications
 document.addEventListener('click', function(e) {
     const link = e.target.closest('.lesson-link');
     if (link) {
@@ -239,32 +245,35 @@ document.addEventListener('click', function(e) {
         const notifId = link.dataset.id;
         const targetUrl = link.href;
 
-        fetch(`/teacher/notifications/mark-read/${notifId}`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        markNotificationRead(notifId).then(() => {
+            // Remove clicked notification from dropdown
+            link.parentElement.remove();
+
+            // Remove badge if no notifications left
+            const remaining = document.querySelectorAll('#lesson-notifications-list .lesson-link').length;
+            if (remaining === 0) {
+                const badge = document.querySelector('.lesson-notification-badge');
+                if (badge) badge.remove();
+                const list = document.getElementById('lesson-notifications-list');
+                if (list) list.innerHTML = '<li class="dropdown-item small text-muted">No new notifications</li>';
             }
-        }).then(() => {
+
+            // Redirect to the lessons page
             window.location.href = targetUrl;
         });
     }
 });
 
-// ✅ Redirect main Lessons link if no notifications
-document.addEventListener('DOMContentLoaded', function() {
-    const lessonDropdown = document.getElementById('lessonDropdown');
-
-    lessonDropdown.addEventListener('click', function(e) {
-        const hasNotifications = document.querySelectorAll('#lesson-notifications-list .lesson-link').length > 0;
-
-        if (!hasNotifications) {
-            // No notifications, follow link normally
-            window.location.href = this.href;
-        }
-        // else: let Bootstrap open dropdown normally
-    });
+// Clicking bell with no notifications goes directly to Lessons
+document.getElementById('lessonDropdown').addEventListener('click', function(e) {
+    const hasNotifications = document.querySelectorAll('#lesson-notifications-list .lesson-link').length > 0;
+    if (!hasNotifications) {
+        window.location.href = this.href;
+    }
 });
 </script>
+
+
 
 
 

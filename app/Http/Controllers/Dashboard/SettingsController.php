@@ -75,28 +75,18 @@ public function index()
 
 
     public function update(SettingsRequest $request)
-    {
-        try {
-            DB::beginTransaction();
+{
+    DB::beginTransaction();
+    $teacher = Auth::user();
 
-            $teacher = Auth::user();
+    $this->updateIndividualPricing($teacher->id, $request->validated());
+    $this->updateLessonPackages($teacher->id, $request->validated());
+    
+    $this->updateGroupClasses($teacher->id, $request->validated());
 
-            $this->updateIndividualPricing($teacher->id, $request->validated());
-            $this->updateLessonPackages($teacher->id, $request->validated());
-            $this->updateGroupClasses($teacher->id, $request->validated());
+    DB::commit();
+}
 
-            DB::commit();
-
-            return redirect()->route('teacher.settings.index')
-                ->with('success', 'Settings updated successfully!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Failed to update settings. Please try again.');
-        }
-    }
 
     // private function updateIndividualPricing($teacherId, array $data)
     // {
@@ -136,7 +126,7 @@ public function index()
         LessonPackage::where('teacher_id', $teacherId)->delete();
 
         foreach ($data['packages'] as $packageNumber => $packageData) {
-            if (!empty($packageData['number_of_lessons']) && !empty($packageData['price'])) {
+            if (isset($packageData['number_of_lessons']) && !empty($packageData['price'])) {
                 LessonPackage::create([
                     'teacher_id' => $teacherId,
                     'package_number' => $packageNumber,
@@ -150,7 +140,7 @@ public function index()
         }
     }
 
-  private function updateGroupClasses($teacherId, array $data)
+private function updateGroupClasses($teacherId, array $data)
 {
     if (!isset($data['groups'])) {
         return;
@@ -164,44 +154,49 @@ public function index()
             $maxStudents = isset($groupData['max_students']) ? (int) $groupData['max_students'] : 1;
             $maxStudents = max(1, min($maxStudents, 100));
 
-            // Clean and validate description
-            $description = isset($groupData['description']) ? strip_tags(substr(trim($groupData['description']), 0, 500)) : null;
+            // Clean description
+            $description = isset($groupData['description'])
+                ? strip_tags(substr(trim($groupData['description']), 0, 500))
+                : null;
 
-            // Clean and store features as array
+            // Normalize features
             $features = [];
             if (!empty($groupData['features'])) {
-                if (is_array($groupData['features'])) {
-                    $features = $groupData['features'];
-                } else {
-                    $features = array_map('trim', explode(',', $groupData['features']));
-                }
+                $features = is_array($groupData['features'])
+                    ? $groupData['features']
+                    : array_map('trim', explode(',', $groupData['features']));
             }
 
             // Create GroupClass
             $group = GroupClass::create([
-                'teacher_id' => $teacherId,
-                'title' => $groupData['title'],
-                'description' => $description,
-                'duration_per_class' => $groupData['duration_per_class'] ?? 60,
-                'lessons_per_week' => $groupData['lessons_per_week'] ?? 1,
-                'max_students' => $maxStudents,
+                'teacher_id'        => $teacherId,
+                'title'             => $groupData['title'],
+                'description'       => $description,
+                'duration_per_class'=> $groupData['duration_per_class'] ?? 60,
+                'lessons_per_week'  => $groupData['lessons_per_week'] ?? 1,
+                'max_students'      => $maxStudents,
                 'price_per_student' => $groupData['price_per_student'] ?? 0,
-                'features' => $features,
-                'is_active' => isset($groupData['is_active']) ? 1 : 0,
+                'features'          => json_encode($features), // ✅ safer for DB text
+                'is_active'         => isset($groupData['is_active']) ? 1 : 0,
             ]);
 
-            // Save days with optional time
-if (isset($groupData['days']) && is_array($groupData['days'])) {
-    foreach ($groupData['days'] as $i => $day) {
-        $time = $groupData['times'][$i] ?? null;   // 👈 unsafe here
-        $group->days()->create([
-            'day' => $day,
-            'time' => $time
-        ]);
-    }
+
+            // Save days + times (match index, not value)
+            if (isset($groupData['days'], $groupData['times']) &&
+                is_array($groupData['days']) && is_array($groupData['times'])) {
+
+               foreach ($groupData['days'] as $i => $day) {
+    $time = $groupData['times'][$i] ?? null;
+    $group->days()->create([
+        'day' => $day,
+        'time' => $time
+    ]);
 }
 
+            }
         }
     }
+    
 }
+
 }

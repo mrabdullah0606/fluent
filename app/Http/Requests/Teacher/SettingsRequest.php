@@ -11,45 +11,42 @@ class SettingsRequest extends FormRequest
         return true;
     }
 
-    public function rules()
-    {
-        return [
-            // Individual lesson pricing
-            'duration_30' => 'nullable|numeric|min:0',
-            'duration_60' => 'nullable|numeric|min:0',
-            'duration_90' => 'nullable|numeric|min:0',
-            'duration_120' => 'nullable|numeric|min:0',
+   public function rules()
+{
+    return [
+        'duration_60' => 'nullable|numeric|min:0',
 
-            // Lesson packages validation
-            'packages' => 'nullable|array',
-            'packages.*.name' => 'required_with:packages.*.number_of_lessons|string|max:255',
-            'packages.*.number_of_lessons' => 'required_with:packages.*.name|integer|min:1|max:100',
-            'packages.*.duration_per_lesson' => 'required_with:packages.*.name|integer|in:30,60,90,120',
-            'packages.*.price' => 'required_with:packages.*.name|numeric|min:0',
-            'packages.*.is_active' => 'nullable|boolean',
+        'packages' => 'array',
+        'packages.*.number_of_lessons' => 'required|integer|min:1',
+        'packages.*.duration_per_lesson' => 'required|integer|in:60,90',
+        'packages.*.price' => 'required|numeric|min:0',
+        'packages.*.name' => 'required|string|max:255',
+        'packages.*.is_active' => 'nullable|boolean',
 
-            // Group classes validation
-            'groups' => 'nullable|array',
-            'groups.*.title' => 'required_with:groups|string|max:255',
-            'groups.*.description' => 'nullable|string|max:500', // Add description validation
-            'groups.*.duration_per_class' => 'required_with:groups.*.title|integer|in:60,90',
-            'groups.*.lessons_per_week' => 'required_with:groups.*.title|integer|min:1|max:5',
-            'groups.*.max_students' => 'required_with:groups.*|integer|min:1|max:100',
-            'groups.*.price_per_student' => 'required_with:groups.*.title|numeric|min:0',
-            'groups.*.is_active' => 'nullable|boolean',
-            'groups.*.days' => 'required_with:groups.*.title|array|min:1',
-            'groups.*.days.*' => 'string|in:Mon,Tue,Wed,Thu,Fri,Sat,Sun',
-            'groups.*.features.*' => 'string|nullable|max.500',
-        ];
-    }
+        'groups' => 'array',
+        'groups.*.title' => 'required|string|max:255',
+        'groups.*.description' => 'nullable|string|max:500',
+        'groups.*.duration_per_class' => 'required|integer|in:60,90',
+        'groups.*.lessons_per_week' => 'required|integer|min:1|max:5',
+        'groups.*.max_students' => 'required|integer|min:1|max:100',
+        'groups.*.price_per_student' => 'required|numeric|min:0',
+        'groups.*.features' => 'nullable|string',
+        'groups.*.days' => 'array',
+        'groups.*.days.*' => 'nullable|string',
+        'groups.*.times' => 'array',
+        'groups.*.times.*' => 'nullable|string',
+        'groups.*.is_active' => 'nullable|boolean',
+    ];
+}
+
 
     public function messages()
     {
         return [
             // Individual pricing messages
-            'duration_30.numeric' => 'Duration 30 min price must be a valid number.',
-            'duration_60.numeric' => 'Duration 60 min price must be a valid number.',
-            'duration_90.numeric' => 'Duration 90 min price must be a valid number.',
+            'duration_30.numeric'  => 'Duration 30 min price must be a valid number.',
+            'duration_60.numeric'  => 'Duration 60 min price must be a valid number.',
+            'duration_90.numeric'  => 'Duration 90 min price must be a valid number.',
             'duration_120.numeric' => 'Duration 120 min price must be a valid number.',
 
             // Package messages
@@ -68,30 +65,37 @@ class SettingsRequest extends FormRequest
             'groups.*.max_students.min' => 'Maximum students must be at least 1.',
             'groups.*.max_students.max' => 'Maximum students cannot exceed 100.',
             'groups.*.price_per_student.required_with' => 'Price per student is required.',
-            'groups.*.days.required_with' => 'At least one day must be selected for each group.',
-            'groups.*.days.min' => 'At least one day must be selected for each group.',
+            'groups.*.days.required_with' => 'At least one date must be selected for each group.',
+            'groups.*.days.min' => 'At least one date must be selected for each group.',
+            'groups.*.times.required_with' => 'Time is required for each selected day.',
         ];
     }
 
     protected function prepareForValidation()
     {
-        // Convert checkbox values to boolean and clean up data
+        // Normalize packages
         if ($this->has('packages')) {
             $packages = $this->input('packages');
             foreach ($packages as $key => $package) {
-                $packages[$key]['is_active'] = isset($package['is_active']) ? true : false;
+                $packages[$key]['is_active'] = isset($package['is_active']);
             }
             $this->merge(['packages' => $packages]);
         }
 
+        // Normalize groups
         if ($this->has('groups')) {
             $groups = $this->input('groups');
             foreach ($groups as $key => $group) {
-                $groups[$key]['is_active'] = isset($group['is_active']) ? true : false;
+                $groups[$key]['is_active'] = isset($group['is_active']);
 
-                // Ensure max_students is properly formatted as integer
+                // Ensure max_students is an integer
                 if (isset($group['max_students'])) {
                     $groups[$key]['max_students'] = (int) $group['max_students'];
+                }
+
+                // Convert features string -> array
+                if (!empty($group['features']) && is_string($group['features'])) {
+                    $groups[$key]['features'] = array_map('trim', explode(',', $group['features']));
                 }
             }
             $this->merge(['groups' => $groups]);

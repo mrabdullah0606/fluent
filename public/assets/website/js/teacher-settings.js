@@ -410,6 +410,8 @@ initGroup(groupElement) {
     }
 
 handleFormSubmit(e) {
+    e.preventDefault(); // always prevent default first
+
     let isValid = true;
     const form = e.target;
 
@@ -422,44 +424,35 @@ handleFormSubmit(e) {
     });
 
     // Validate description fields
-    const descriptionFields = form.querySelectorAll(
-        'textarea[name*="description"]'
-    );
+    const descriptionFields = form.querySelectorAll('textarea[name*="description"]');
     descriptionFields.forEach((field) => {
         if (!this.validateDescriptionField(field)) {
             isValid = false;
         }
     });
 
-    // Validate that each group has at least one day selected (supports both day-buttons and date inputs)
+    // Validate that each group has at least one day selected
     const groupContainers = form.querySelectorAll(".group-container");
     groupContainers.forEach((container) => {
-        // 1) Check for any checked checkbox-style day inputs (e.g. groups[x][days][])
         const checkedCheckboxDays = container.querySelectorAll(
             'input[type="checkbox"][name*="[days]"]:checked'
         );
 
-        // 2) Check for any date inputs with a non-empty value (e.g. groups[x][days][0])
-        const dateInputs = container.querySelectorAll(
-            'input[type="date"][name*="[days]"]'
-        );
+        const dateInputs = container.querySelectorAll('input[type="date"][name*="[days]"]');
         const hasDateValue = Array.from(dateInputs).some((d) => (d.value || '').trim() !== '');
 
         if (checkedCheckboxDays.length === 0 && !hasDateValue) {
-            this.showAlert(
-                "Each group must have at least one day selected.",
-                "danger"
-            );
+            this.showAlert("Each group must have at least one day selected.", "danger");
             isValid = false;
         }
     });
 
-    if (!isValid) {
-        e.preventDefault();
-        this.showAlert(
-            "Please fill in all required fields and fix any errors.",
-            "danger"
-        );
+    // Only submit if everything is valid
+    if (isValid) {
+        console.log("✅ submitting form now...");
+        form.submit(); // submit **once**, after all validation
+    } else {
+        this.showAlert("Please fill in all required fields and fix any errors.", "danger");
     }
 }
 
