@@ -20,12 +20,9 @@ class WalletController extends Controller
         $this->walletService = $walletService;
     }
 
-    // REQUIREMENT 2: Show teacher wallet with balance and allow withdrawal request
     public function index()
     {
         $teacher = Auth::user();
-
-        // Get or create wallet
         $wallet = TeacherWallet::firstOrCreate(
             ['teacher_id' => $teacher->id],
             [
@@ -34,20 +31,15 @@ class WalletController extends Controller
                 'total_withdrawn' => 0.00,
             ]
         );
-
-        // Get recent transactions
         $transactions = WalletTransaction::where('teacher_id', $teacher->id)
             ->with(['payment', 'withdrawalRequest'])
             ->orderBy('created_at', 'desc')
             ->paginate(20);
-
-        // Get payment settings
         $paymentSettings = TeacherPaymentSetting::where('teacher_id', $teacher->id)->first();
 
         return view('teacher.content.wallet.index', compact('wallet', 'transactions', 'paymentSettings'));
     }
 
-    // REQUIREMENT 2: Teacher makes withdrawal request
     public function withdraw(Request $request)
     {
         $request->validate([
@@ -64,24 +56,17 @@ class WalletController extends Controller
             $teacher = Auth::user();
             $wallet = TeacherWallet::where('teacher_id', $teacher->id)->first();
 
-            // Check if user has sufficient balance
             if (!$wallet || $wallet->balance < $request->amount) {
                 return redirect()->back()->with('error', 'Insufficient balance for withdrawal.');
             }
-
-            // Check if payment settings are configured for the selected method
             $paymentSettings = TeacherPaymentSetting::where('teacher_id', $teacher->id)->first();
             if (!$paymentSettings) {
                 return redirect()->back()->with('error', 'Please configure your payment settings first.');
             }
-
-            // Validate method-specific settings
             $methodField = $this->getMethodField($request->method);
             if (!$paymentSettings->$methodField) {
                 return redirect()->back()->with('error', 'Please configure your ' . ucfirst($request->method) . ' account first.');
             }
-
-            // Create withdrawal request (amount not deducted yet)
             $withdrawal = $this->walletService->processWithdrawal(
                 $teacher->id,
                 $request->amount,

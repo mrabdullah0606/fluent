@@ -13,11 +13,9 @@ use Illuminate\Support\Facades\Log;
 
 class WalletService
 {
-    // REQUIREMENT 1: Add earning to teacher wallet
     public function addEarning($teacherId, $amount, $description, $paymentId = null)
     {
         DB::transaction(function () use ($teacherId, $amount, $description, $paymentId) {
-            // Get or create teacher wallet
             $wallet = TeacherWallet::firstOrCreate(
                 ['teacher_id' => $teacherId],
                 [
@@ -30,13 +28,11 @@ class WalletService
             $balanceBefore = $wallet->balance;
             $balanceAfter = $balanceBefore + $amount;
 
-            // Update wallet: add to balance and total_earned
             $wallet->update([
                 'balance' => $balanceAfter,
                 'total_earned' => $wallet->total_earned + $amount,
             ]);
 
-            // Create transaction record
             WalletTransaction::create([
                 'teacher_id' => $teacherId,
                 'payment_id' => $paymentId,
@@ -48,7 +44,6 @@ class WalletService
                 'description' => $description,
             ]);
 
-            // Mark payment as processed
             if ($paymentId) {
                 Payment::where('id', $paymentId)->update([
                     'wallet_processed' => true,
@@ -64,7 +59,6 @@ class WalletService
         });
     }
 
-    // REQUIREMENT 2: Process withdrawal request (don't deduct yet, just create request)
     public function processWithdrawal($teacherId, $amount, $method)
     {
         return DB::transaction(function () use ($teacherId, $amount, $method) {
@@ -78,11 +72,7 @@ class WalletService
             if (!$paymentSettings) {
                 throw new Exception('Payment settings not configured');
             }
-
-            // Get account details for selected method
             $accountDetails = $this->getAccountDetails($paymentSettings, $method);
-
-            // Create withdrawal request (status: pending)
             $withdrawalRequest = WithdrawalRequest::create([
                 'teacher_id' => $teacherId,
                 'amount' => $amount,
@@ -96,7 +86,6 @@ class WalletService
         });
     }
 
-    // REQUIREMENT 3: Complete withdrawal - deduct from wallet when admin approves
     public function completeWithdrawal($withdrawalId, $transactionId = null)
     {
         return DB::transaction(function () use ($withdrawalId, $transactionId) {
@@ -114,21 +103,16 @@ class WalletService
 
             $balanceBefore = $wallet->balance;
             $balanceAfter = $balanceBefore - $withdrawal->amount;
-
-            // REQUIREMENT 3: Deduct withdrawal amount from wallet
             $wallet->update([
                 'balance' => $balanceAfter,
                 'total_withdrawn' => $wallet->total_withdrawn + $withdrawal->amount,
             ]);
-
-            // Update withdrawal status
             $withdrawal->update([
                 'status' => 'completed',
                 'processed_date' => now(),
                 'transaction_id' => $transactionId,
             ]);
 
-            // Create debit transaction record
             WalletTransaction::create([
                 'teacher_id' => $withdrawal->teacher_id,
                 'withdrawal_id' => $withdrawal->id,

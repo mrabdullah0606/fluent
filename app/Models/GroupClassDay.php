@@ -25,8 +25,7 @@ class GroupClassDay extends Model
         return $this->belongsTo(GroupClass::class);
     }
     public function days()
-{
-    return $this->hasMany(GroupClassDay::class);
-}
-
+    {
+        return $this->hasMany(GroupClassDay::class);
+    }
 }
