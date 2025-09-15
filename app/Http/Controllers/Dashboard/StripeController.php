@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Dashboard;
- 
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
@@ -17,21 +17,16 @@ class StripeController extends Controller
     {
         $tutorId = session('tutor_id');
         \Stripe\Stripe::setApiKey('sk_test_51R1qO3PJIQTNOZWvvlzloOaq4XLLUKuv2lFl0xrjJ7I2lBeKrBFmEXA6T5uXoRGD1cDS6e1BsVTaNPycW9wfxlHl00fcCmlT4H');
-
         $summary = $request->summary;
         $basePrice = $request->calculated_price;
         $fee = $request->fee;
         $total = $request->total;
         $paymentMethod = $request->payment;
         $type = $request->type;
-
-        // Handle demo payment separately
         if ($paymentMethod === 'demo') {
             $this->recordPayment($request, 'successful');
             return redirect()->route('student.dashboard')->with('success', 'Payment successful! Your lesson package has been activated.');
         }
-
-        // Store payment data in session temporarily
         session([
             'pending_payment' => [
                 'student_id' => auth()->id(),
@@ -44,8 +39,6 @@ class StripeController extends Controller
                 'payment_method' => 'stripe'
             ]
         ]);
-
-        // Stripe expects amounts in cents
         $lineItems = [[
             'price_data' => [
                 'currency' => 'usd',
@@ -85,27 +78,17 @@ class StripeController extends Controller
         if (!$sessionId) {
             return redirect()->route('student.dashboard')->with('error', 'Invalid payment session.');
         }
-
         try {
             \Stripe\Stripe::setApiKey('sk_test_51R1qO3PJIQTNOZWvvlzloOaq4XLLUKuv2lFl0xrjJ7I2lBeKrBFmEXA6T5uXoRGD1cDS6e1BsVTaNPycW9wfxlHl00fcCmlT4H');
-
-            // Retrieve the session from Stripe
             $session = Session::retrieve($sessionId);
-
-            // Check if payment was actually successful
             if ($session->payment_status === 'paid') {
                 $pendingPayment = session('pending_payment');
 
                 if (!$pendingPayment) {
                     return redirect()->route('student.dashboard')->with('error', 'Payment data not found.');
                 }
-
-                // Create mock request object with pending payment data
                 $mockRequest = new Request($pendingPayment);
-
                 $this->recordPayment($mockRequest, 'successful', $session->payment_intent);
-
-                // Clear the pending payment from session
                 session()->forget('pending_payment');
 
                 return redirect()->route('student.dashboard')->with('success', 'Payment successful! Your lesson package has been activated.');
@@ -120,7 +103,6 @@ class StripeController extends Controller
 
     public function cancel()
     {
-        // Clear pending payment data
         session()->forget('pending_payment');
 
         return redirect()->route('student.dashboard')->with('info', 'Payment was cancelled. You can try again anytime.');
@@ -129,7 +111,6 @@ class StripeController extends Controller
     private function recordPayment(Request $request, $status = 'successful', $stripePaymentIntentId = null)
     {
         try {
-            // Create payment record
             $payment = Payment::create([
                 'student_id'     => $request->input('student_id') ?? auth()->id(),
                 'teacher_id'     => $request->input('teacher_id'),
@@ -140,12 +121,9 @@ class StripeController extends Controller
                 'type'           => $request->input('type'),
                 'payment_method' => $request->input('payment_method', 'stripe'),
                 'status'         => $status,
-                'stripe_payment_intent_id' => $stripePaymentIntentId, // Store Stripe payment intent ID
+                'stripe_payment_intent_id' => $stripePaymentIntentId,
             ]);
-
-            // Create lesson tracking record for packages and duration lessons
             $this->createLessonTracking($payment, $request);
-
             Log::info('Payment and lesson tracking recorded successfully', [
                 'payment_id' => $payment->id,
                 'student_id' => $request->input('student_id') ?? auth()->id(),
@@ -168,7 +146,6 @@ class StripeController extends Controller
         $teacherId = $request->input('teacher_id');
 
         if ($type === 'package') {
-            // Extract lesson count from summary (e.g., "10-Lesson Package" -> 10)
             $summary = $payment->summary;
             preg_match('/(\d+)-Lesson/', $summary, $matches);
             $totalLessons = isset($matches[1]) ? intval($matches[1]) : 1;
@@ -187,7 +164,7 @@ class StripeController extends Controller
                 'price_per_lesson' => $pricePerLesson,
                 'status' => 'active',
                 'purchase_date' => now(),
-                'expiry_date' => now()->addMonths(6) // 6 months validity
+                'expiry_date' => now()->addMonths(6)
             ]);
         } elseif ($type === 'duration') {
             UserLessonTracking::create([
@@ -207,7 +184,6 @@ class StripeController extends Controller
         }
     }
 
-    // Webhook handler for additional security (recommended)
     public function webhook(Request $request)
     {
         $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
@@ -225,13 +201,10 @@ class StripeController extends Controller
             Log::error('Invalid signature in Stripe webhook');
             return response('Invalid signature', 400);
         }
-
-        // Handle the event
         switch ($event['type']) {
             case 'checkout.session.completed':
                 $session = $event['data']['object'];
                 Log::info('Checkout session completed', ['session_id' => $session['id']]);
-                // Additional webhook processing can be done here
                 break;
             case 'payment_intent.succeeded':
                 $paymentIntent = $event['data']['object'];

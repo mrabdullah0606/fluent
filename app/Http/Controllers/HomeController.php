@@ -112,7 +112,6 @@ class HomeController extends Controller
             ->where('id', $id)
             ->where('role', 'teacher')
             ->firstOrFail();
-
         // Teacher profile details
         $teacherProfile = \App\Models\Teacher::where('user_id', $id)->first();
         $introVideo = $teacherProfile?->intro_video;

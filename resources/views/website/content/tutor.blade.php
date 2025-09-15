@@ -156,7 +156,7 @@
                                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                         </svg>
                                         <p>Rate:
-                                            ${{ number_format($teacherProfile->rate_per_hour ?? $duration60Rate, 2) }}/hour
+                                            ${{ number_format($duration60Rate ?? 'N/A', 2) }}/hour
                                         </p>
                                     </div>
 
@@ -299,17 +299,17 @@
                                         @endif
                                     @endforeach
                                     <!-- <div
-                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                            Conversational Russian</div>
-                                        <div
-                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                            English for Beginners</div>
-                                        <div
-                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                            Cultural Immersion</div>
-                                        <div
-                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                            Pronunciation</div> -->
+                                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
+                                                        Conversational Russian</div>
+                                                    <div
+                                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
+                                                        English for Beginners</div>
+                                                    <div
+                                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
+                                                        Cultural Immersion</div>
+                                                    <div
+                                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
+                                                        Pronunciation</div> -->
                                 </div>
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"

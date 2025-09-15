@@ -1,5 +1,3 @@
-
-// Initialize Pusher
 const pusher = new Pusher('{{ config("broadcasting.connections.pusher.key") }}', {
     cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}',
     encrypted: true,
@@ -31,22 +29,15 @@ class ChatManager {
     }
 
     subscribeToChannel() {
-        // Create channel name with sorted user IDs
         const user1 = Math.min(this.currentUserId, this.chatUserId);
         const user2 = Math.max(this.currentUserId, this.chatUserId);
         const channelName = `private-chat.${user1}.${user2}`;
-        
         console.log('Subscribing to channel:', channelName);
-        
         this.channel = pusher.subscribe(channelName);
-        
-        // Listen for message events
         this.channel.bind('message.sent', (data) => {
             console.log('Message received:', data);
             this.addMessageToChat(data);
         });
-
-        // Handle subscription errors
         this.channel.bind('pusher:subscription_error', (error) => {
             console.error('Subscription error:', error);
         });
@@ -62,7 +53,6 @@ class ChatManager {
                 e.preventDefault();
                 this.sendMessage();
             });
-
             this.messageInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -74,15 +64,11 @@ class ChatManager {
 
     async sendMessage() {
         const message = this.messageInput.value.trim();
-        
         if (!message) {
             return;
         }
-
-        // Disable send button temporarily
         this.sendButton.disabled = true;
         this.sendButton.innerHTML = '<svg class="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
-
         try {
             const response = await fetch('{{ route("teacher.chat.send") }}', {
                 method: 'POST',
@@ -100,10 +86,7 @@ class ChatManager {
             const result = await response.json();
 
             if (result.success) {
-                // Clear input
                 this.messageInput.value = '';
-                
-                // Add message to chat immediately (optimistic update)
                 this.addMessageToChat(result.data, true);
             } else {
                 console.error('Send message error:', result.error);
@@ -113,7 +96,6 @@ class ChatManager {
             console.error('Network error:', error);
             this.showError('Network error. Please try again.');
         } finally {
-            // Re-enable send button
             this.sendButton.disabled = false;
             this.sendButton.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
@@ -125,7 +107,6 @@ class ChatManager {
     }
 
     addMessageToChat(messageData, isOptimistic = false) {
-        // Don't add duplicate messages from broadcast if we already added optimistically
         if (!isOptimistic && messageData.sender_id === this.currentUserId) {
             return;
         }
@@ -176,7 +157,6 @@ class ChatManager {
     }
 
     showError(message) {
-        // Create a simple error notification
         const errorDiv = document.createElement('div');
         errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50';
         errorDiv.textContent = message;
@@ -188,7 +168,6 @@ class ChatManager {
     }
 }
 
-// Initialize chat when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof pusher !== 'undefined') {
         new ChatManager();

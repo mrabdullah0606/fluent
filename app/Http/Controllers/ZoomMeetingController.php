@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ZoomMeetingInvitationMail;
+use App\Models\UserLessonTracking;
 use App\Models\ZoomMeeting;
 use Illuminate\Http\Request;
 use App\Services\ZoomService;

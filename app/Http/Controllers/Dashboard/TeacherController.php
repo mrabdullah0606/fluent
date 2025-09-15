@@ -246,7 +246,7 @@ class TeacherController extends Controller
             ->where('id', $user->id)
             ->where('role', 'teacher')
             ->firstOrFail();
-
+        // dd($teacher);
         $teacherProfile = Teacher::where('user_id', $user->id)->first();
 
         $introVideo = $teacherProfile?->intro_video;
@@ -274,7 +274,7 @@ class TeacherController extends Controller
             $reviewsCount = $review->count();
             $averageRating = $reviewsCount > 0 ? round($review->avg('rating'), 1) : 0;
         }
-
+        $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
         return view('teacher.content.profile.public', compact(
             'user',
             'teacher',
@@ -283,7 +283,8 @@ class TeacherController extends Controller
             'reviews',
             'languages',
             'reviewsCount',
-            'averageRating'
+            'averageRating',
+            'duration60Rate',
         ));
     }
     // public function publicProfile(): View

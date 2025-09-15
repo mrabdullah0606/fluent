@@ -35,7 +35,6 @@
                         </div>
 
                         <div class="p-6 space-y-6">
-                            <!-- Order Summary -->
                             <div class="border border-input rounded-lg p-4 bg-background">
                                 <h3 class="text-lg font-semibold text-foreground mb-4 flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
@@ -48,11 +47,9 @@
                                 </h3>
 
                                 <div class="space-y-3">
-                                    <!-- Package/Service Line -->
                                     <div class="flex justify-between items-start">
                                         <div class="flex-1">
                                             <p class="font-medium text-foreground">{{ $summary }}</p>
-
                                             @if (isset($additionalData) && $type === 'package')
                                                 <div class="text-xs text-muted-foreground mt-1 space-y-1">
                                                     @if (isset($additionalData['number_of_lessons']))
@@ -64,7 +61,6 @@
                                                     @endif
                                                 </div>
                                             @endif
-
                                             @if (isset($additionalData) && $type === 'duration')
                                                 <div class="text-xs text-muted-foreground mt-1">
                                                     @if (isset($additionalData['selected_date']))
@@ -75,15 +71,12 @@
                                                 </div>
                                             @endif
                                         </div>
-
                                         <div class="text-right ml-4">
                                             <span class="text-foreground font-bold text-lg">
                                                 ${{ number_format($calculatedPrice, 2) }}
                                             </span>
                                         </div>
                                     </div>
-
-                                    <!-- Processing Fee Line -->
                                     <div class="flex justify-between items-center text-muted-foreground">
                                         <div class="flex items-center">
                                             <p>Processing Fee (3%)</p>
@@ -98,18 +91,13 @@
                                             ${{ number_format($fee, 2) }}
                                         </span>
                                     </div>
-
-                                    <!-- Divider -->
                                     <hr class="border-t border-gray-200">
-
-                                    <!-- Total Line -->
                                     <div class="flex justify-between items-center font-bold text-foreground text-lg">
                                         <p>Total Amount</p>
                                         <span class="text-primary text-xl">
                                             ${{ number_format($total, 2) }}
                                         </span>
                                     </div>
-
                                     @if ($type === 'package' && isset($additionalData['number_of_lessons']) && $additionalData['number_of_lessons'] > 0)
                                         <div class="bg-green-50 border border-green-200 rounded-lg p-3 mt-3">
                                             <p class="text-sm text-green-800 font-medium">
@@ -120,8 +108,6 @@
                                         </div>
                                     @endif
                                 </div>
-
-                                <!-- Hidden Fields for Form Submission -->
                                 <input type="hidden" name="summary" value="{{ $summary }}">
                                 <input type="hidden" name="calculated_price" value="{{ $calculatedPrice }}">
                                 <input type="hidden" name="fee" value="{{ $fee }}">
@@ -131,8 +117,6 @@
                                     <input type="hidden" name="teacher_id" value="{{ $teacherId }}">
                                 @endif
                             </div>
-
-                            <!-- Payment Method -->
                             <div>
                                 <label class="text-lg font-semibold text-foreground mb-3 block flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
@@ -170,8 +154,6 @@
                                     </p>
                                 </div>
                             </div>
-
-                            <!-- Submit Button -->
                             <div class="pt-4">
                                 <button type="submit" id="checkoutBtn"
                                     class="inline-flex items-center justify-center rounded-md font-bold bg-warning h-12 px-6 w-full text-lg transition-all duration-200 shadow-lg">
@@ -185,8 +167,6 @@
                                     Pay ${{ number_format($total, 2) }} Securely
                                 </button>
                             </div>
-
-                            <!-- Trust Indicators -->
                             <div class="flex items-center justify-center space-x-4 pt-2">
                                 <div class="flex items-center text-xs text-gray-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="none"
@@ -216,7 +196,6 @@
                                     Money Back Guarantee
                                 </div>
                             </div>
-
                             <p class="text-xs text-muted-foreground text-center">
                                 By completing this purchase, you agree to our
                                 <a href="#" class="text-primary hover:underline font-medium">Terms of Service</a>
@@ -231,11 +210,8 @@
     </form>
 
     <script>
-        // Enhanced checkout button functionality
         document.getElementById('checkoutBtn')?.addEventListener('click', function(e) {
             e.preventDefault();
-
-            // Disable button and show loading state
             this.disabled = true;
             this.innerHTML = `
                 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -244,20 +220,14 @@
                 </svg>
                 Processing Payment...
             `;
-
-            // Create and submit form
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = "{{ route('student.stripe.checkout') }}";
-
-            // Add CSRF token
             const token = document.createElement('input');
             token.type = 'hidden';
             token.name = '_token';
             token.value = "{{ csrf_token() }}";
             form.appendChild(token);
-
-            // Create comprehensive order summary
             const orderSummary = {
                 description: @json($summary),
                 base_price: {{ $calculatedPrice }},
@@ -267,15 +237,11 @@
                 teacher_id: {{ $teacherId ?? 'null' }},
                 timestamp: new Date().toISOString()
             };
-
-            // Add order summary as JSON
             const summaryInput = document.createElement('input');
             summaryInput.type = 'hidden';
             summaryInput.name = 'order_summary';
             summaryInput.value = JSON.stringify(orderSummary);
             form.appendChild(summaryInput);
-
-            // Add individual fields
             const fields = [{
                     name: 'summary',
                     value: @json($summary)
@@ -308,8 +274,6 @@
                     value: {{ $teacherId }}
                 });
             @endif
-
-            // Create hidden inputs for all fields
             fields.forEach(field => {
                 const input = document.createElement('input');
                 input.type = 'hidden';
@@ -317,15 +281,11 @@
                 input.value = field.value;
                 form.appendChild(input);
             });
-
-            // Submit form
             document.body.appendChild(form);
             form.submit();
         });
 
-        // Optional: Add form validation or additional checkout logic here
         function validateCheckout() {
-            // Add any pre-checkout validation if needed
             return true;
         }
     </script>

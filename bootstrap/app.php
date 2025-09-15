@@ -15,7 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'isAdmin' => \App\Http\Middleware\IsAdmin::class,
             'isTeacher' => \App\Http\Middleware\IsTeacher::class,
             'isStudent' => \App\Http\Middleware\IsStudent::class,
+            'roleDashboard' => \App\Http\Middleware\RedirectLoginToRoleDashboard::class,
         ]);
+        $middleware->appendToGroup('web', \App\Http\Middleware\RedirectLoginToRoleDashboard::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

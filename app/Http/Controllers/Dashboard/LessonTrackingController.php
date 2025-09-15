@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Mail\LessonDeductionRequestMail;
 use App\Models\UserLessonTracking;
 use App\Models\LessonAttendance;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\LessonDeductedNotification;
+use Illuminate\Support\Facades\Mail;
 
 class LessonTrackingController extends Controller
 {
@@ -29,7 +31,7 @@ class LessonTrackingController extends Controller
         $lessonTracking = \DB::table('user_lesson_trackings')
             ->where('student_id', $studentId)
             ->where('status', 'active')
-            ->where('payment_type', 'package')
+            // ->where('payment_type', 'package')
             ->get();
 
         $totalPurchased = $lessonTracking->sum('total_lessons_purchased');
@@ -45,95 +47,126 @@ class LessonTrackingController extends Controller
         ));
     }
 
-public function deductLesson($id)
-{
-    try {
-        $studentId = auth()->id();
+    // public function deductLesson($id)
+    // {
+    //     try {
+    //         $studentId = auth()->id();
 
-        $package = UserLessonTracking::with('teacher')
-            ->where('id', $id)
-            ->where('student_id', $studentId)
-            ->first();
+    //         $package = UserLessonTracking::with('teacher')
+    //             ->where('id', $id)
+    //             ->where('student_id', $studentId)
+    //             ->first();
 
-        if (!$package) {
-            return response()->json(['error' => 'Package not found'], 404);
+    //         if (!$package) {
+    //             return response()->json(['error' => 'Package not found'], 404);
+    //         }
+
+    //         // ✅ Only notify teacher, do not deduct
+    //         $package->teacher->notify(new \App\Notifications\LessonDeductedNotification($package, auth()->user()));
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Teacher has been notified to deduct the lesson!'
+    //         ]);
+    //     } catch (\Throwable $e) {
+    //         \Log::error("Error sending lesson deduction notification: " . $e->getMessage(), [
+    //             'trace' => $e->getTraceAsString()
+    //         ]);
+    //         return response()->json(['error' => 'Something went wrong.'], 500);
+    //     }
+    // }
+    public function deductLesson($id)
+    {
+        try {
+            $student = auth()->user();
+
+            $package = UserLessonTracking::with('teacher')
+                ->where('id', $id)
+                ->where('student_id', $student->id)
+                ->first();
+
+            if (!$package) {
+                return response()->json(['error' => 'Package not found'], 404);
+            }
+
+            // Send email to teacher
+            Mail::to($package->teacher->email)
+                ->queue(new LessonDeductionRequestMail($package, $student));
+
+            // (Optional) still notify via Laravel notifications
+            $package->teacher->notify(new \App\Notifications\LessonDeductedNotification($package, $student));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Teacher has been notified by email to deduct the lesson!'
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error("Error sending lesson deduction mail: " . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => 'Something went wrong.'], 500);
         }
+    }
 
-        // ✅ Only notify teacher, do not deduct
-        $package->teacher->notify(new \App\Notifications\LessonDeductedNotification($package, auth()->user()));
+    public function unreadLessonNotificationsCount()
+    {
+        $teacher = auth()->user();
+
+        $notifications = $teacher->unreadNotifications()
+            ->where('type', 'App\Notifications\LessonDeductedNotification')
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(function ($notif) {
+                return [
+                    'id' => $notif->id, // keep ID for marking read
+                    'message' => $notif->data['message'],
+                    'time' => $notif->created_at->diffForHumans(),
+                ];
+            });
 
         return response()->json([
-            'success' => true,
-            'message' => 'Teacher has been notified to deduct the lesson!'
+            'unread_count' => $teacher->unreadNotifications()
+                ->where('type', 'App\Notifications\LessonDeductedNotification')
+                ->count(),
+            'notifications' => $notifications,
         ]);
-
-    } catch (\Throwable $e) {
-        \Log::error("Error sending lesson deduction notification: ".$e->getMessage(), [
-            'trace' => $e->getTraceAsString()
-        ]);
-        return response()->json(['error' => 'Something went wrong.'], 500);
     }
-}
 
-public function unreadLessonNotificationsCount()
-{
-    $teacher = auth()->user();
+    public function lessonNotificationsPage()
+    {
+        $teacher = auth()->user();
 
-    $notifications = $teacher->unreadNotifications()
-        ->where('type', 'App\Notifications\LessonDeductedNotification')
-        ->latest()
-        ->take(10)
-        ->get()
-        ->map(function ($notif) {
-            return [
-                'id' => $notif->id, // keep ID for marking read
-                'message' => $notif->data['message'],
-                'time' => $notif->created_at->diffForHumans(),
-            ];
-        });
-
-    return response()->json([
-        'unread_count' => $teacher->unreadNotifications()
+        // ✅ Mark all lesson notifications as read
+        $teacher->unreadNotifications
             ->where('type', 'App\Notifications\LessonDeductedNotification')
-            ->count(),
-        'notifications' => $notifications,
-    ]);
-}
+            ->markAsRead();
 
-public function lessonNotificationsPage()
-{
-    $teacher = auth()->user();
+        $notifications = $teacher->notifications()->latest()->paginate(20);
 
-    // ✅ Mark all lesson notifications as read
-    $teacher->unreadNotifications
-        ->where('type', 'App\Notifications\LessonDeductedNotification')
-        ->markAsRead();
-
-    $notifications = $teacher->notifications()->latest()->paginate(20);
-
-    return view('teacher.lesson.notifications', compact('notifications'));
-}
-
-public function markSingleNotificationRead($id)
-{
-    $teacher = auth()->user();
-    $notification = $teacher->unreadNotifications()->find($id);
-
-    if ($notification) {
-        $notification->markAsRead();
+        return view('teacher.lesson.notifications', compact('notifications'));
     }
 
-    return response()->json(['success' => true]);
-}
+    public function markSingleNotificationRead($id)
+    {
+        $teacher = auth()->user();
+        $notification = $teacher->unreadNotifications()->find($id);
 
-public function markAllNotificationsRead()
-{
-    auth()->user()->unreadNotifications()
-        ->where('type', 'App\Notifications\LessonDeductedNotification')
-        ->update(['read_at' => now()]);
+        if ($notification) {
+            $notification->markAsRead();
+        }
 
-    return response()->json(['success' => true]);
-}
+        return response()->json(['success' => true]);
+    }
+
+    public function markAllNotificationsRead()
+    {
+        auth()->user()->unreadNotifications()
+            ->where('type', 'App\Notifications\LessonDeductedNotification')
+            ->update(['read_at' => now()]);
+
+        return response()->json(['success' => true]);
+    }
 
 
     // public function join($id)

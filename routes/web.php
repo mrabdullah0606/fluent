@@ -79,7 +79,7 @@ Route::prefix('student')->group(function () {
         Route::post('resend-code', [StudentAuthController::class, 'resendCode'])->name('student.resend.code');
     });
 
-    Route::middleware(['auth', 'isStudent'])->group(function () {
+    Route::middleware(['auth', 'isStudent', 'roleDashboard'])->group(function () {
         Route::get('dashboard', [StudentController::class, 'index'])->name('student.dashboard');
         Route::get('public-profile', [StudentController::class, 'publicProfile'])->name('student.public.profile');
         Route::get('profile/edit', [StudentController::class, 'editProfile'])->name('student.profile.edit');
@@ -135,7 +135,7 @@ Route::prefix('teacher')->group(function () {
         Route::post('resend-code', [TeacherAuthController::class, 'resendCode'])->name('teacher.resend.code');
     });
 
-    Route::middleware(['auth', 'isTeacher'])->group(function () {
+    Route::middleware(['auth', 'isTeacher', 'roleDashboard'])->group(function () {
         Route::get('dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
         Route::get('public-profile', [TeacherController::class, 'publicProfile'])->name('teacher.public.profile');
         Route::get('profile/edit', [TeacherController::class, 'editProfile'])->name('teacher.profile.edit');
@@ -219,7 +219,7 @@ Route::prefix('admin')->group(function () {
         Route::post('login', [AdminController::class, 'login'])->name('admin.login.submit');
     });
 
-    Route::middleware(['auth', 'isAdmin'])->group(function () {
+    Route::middleware(['auth', 'isAdmin', 'roleDashboard'])->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('test', [AdminController::class, 'testEmbed'])->name('admin.test');
 
@@ -336,7 +336,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::post('/lesson-tracking/deduct/{id}', [LessonTrackingController::class, 'deductLesson'])
-    ->name('student.lesson.deduct')  ->middleware('auth');
+    ->name('student.lesson.deduct')->middleware('auth');
 Route::get('/teacher/lesson-notifications/unread-count', [App\Http\Controllers\Dashboard\LessonTrackingController::class, 'unreadLessonNotificationsCount'])
     ->name('teacher.notifications.unread-count')->middleware('auth');
 
