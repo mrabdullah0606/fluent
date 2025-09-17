@@ -275,15 +275,17 @@
                                     </svg> From: {{ $teacher->teacherProfile->country ?? 'N/A' }}</p>
                             </div>
                             @auth
-                                <a href="{{ route('student.chat.index', $teacher->id) }}" class="btn">
-                                    <button
-                                        class="inline-flex items-center justify-center font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-9 rounded-md px-3 w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground text-xs"><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 mr-1.5">
-                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                        </svg> Message {{ $teacher->name }}</button>
-                                </a>
+                                <div>
+                                    <a href="{{ route('student.chat.index', $teacher->id) }}" class="btn">
+                                        <button
+                                            class="inline-flex items-center justify-center font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-9 rounded-md px-3 w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground text-xs"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 mr-1.5">
+                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                            </svg> Message {{ $teacher->name }}</button>
+                                    </a>
+                                </div>
                             @endauth
                             @guest
                                 <div>
@@ -293,8 +295,7 @@
                                 </div>
                             @endguest
                             <div>
-                                @if ($teacher->teacherProfile->intro_video)
-                                    <!-- Uploaded Video -->
+                                @if ($teacher->teacherProfile && $teacher->teacherProfile->intro_video)
                                     <video controls class="w-75 h-30 md:h-64 rounded-lg shadow-md ms-3 my-2">
                                         <source src="{{ asset('storage/' . $teacher->teacherProfile->intro_video) }}"
                                             type="video/mp4">

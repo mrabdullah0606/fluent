@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +24,12 @@ use Illuminate\Http\Response as HttpResponse;
 
 class AdminController extends Controller
 {
+    protected $walletService;
 
+    public function __construct(WalletService $walletService)
+    {
+        $this->walletService = $walletService;
+    }
     /**
      * Show student login form.
      */
@@ -57,6 +63,10 @@ class AdminController extends Controller
      */
     public function index(): Response
     {
+        $walletStats = $this->walletService->getAdminWalletStats();
+        $balance = $walletStats['balance'];
+        $totalWithdrawn = $walletStats['total_withdrawn'];
+
         $teachers = User::with('teacherProfile')
             ->where('role', 'teacher')
             ->get();
@@ -71,7 +81,7 @@ class AdminController extends Controller
             ->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->count();
-        return response()->view('admin.content.dashboard', compact('students', 'teachers', 'newTeachersThisMonth', 'newStudentsThisMonth'));
+        return response()->view('admin.content.dashboard', compact('students', 'teachers', 'newTeachersThisMonth', 'newStudentsThisMonth', 'totalWithdrawn', 'balance'));
     }
 
     /**

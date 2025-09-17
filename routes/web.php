@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminChatController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminWalletController;
+use App\Http\Controllers\Admin\AdminWalletDashboardController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Auth\StudentAuthController;
 use App\Http\Controllers\Auth\TeacherAuthController;
@@ -263,6 +264,11 @@ Route::prefix('admin')->group(function () {
         });
         /* ******************************** Career Management End ******************************** */
         Route::prefix('wallet')->name('admin.wallet.')->group(function () {
+            // Admin Wallet Dashboard
+            Route::get('/', [AdminWalletDashboardController::class, 'index'])->name('index');
+            Route::get('/transactions', [AdminWalletDashboardController::class, 'transactions'])->name('transactions');
+            Route::get('/analytics', [AdminWalletDashboardController::class, 'analytics'])->name('analytics');
+
             Route::get('/withdrawals', [AdminWalletController::class, 'withdrawals'])->name('withdrawals.index');
             Route::get('/withdrawals/{id}', [AdminWalletController::class, 'showWithdrawal'])->name('withdrawals.show');
             Route::post('/withdrawals/{id}/approve', [AdminWalletController::class, 'approveWithdrawal'])->name('withdrawals.approve');

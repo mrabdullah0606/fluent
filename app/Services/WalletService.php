@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\AdminWallet;
+use App\Models\AdminWalletTransaction;
 use App\Models\Payment;
 use App\Models\TeacherPaymentSetting;
 use App\Models\TeacherWallet;
+use App\Models\User;
 use App\Models\WalletTransaction;
 use App\Models\WithdrawalRequest;
 use Exception;
@@ -13,6 +16,42 @@ use Illuminate\Support\Facades\Log;
 
 class WalletService
 {
+    // Commission rates
+    const TEACHER_COMMISSION_RATE = 0.80; // 80%
+    const ADMIN_COMMISSION_RATE = 0.20;   // 20%
+
+    /**
+     * Process payment and distribute between teacher (80%) and admin (20%)
+     */
+    public function processPaymentDistribution($teacherId, $totalAmount, $description, $paymentId = null)
+    {
+        return DB::transaction(function () use ($teacherId, $totalAmount, $description, $paymentId) {
+            // Calculate amounts
+            $teacherAmount = round($totalAmount * self::TEACHER_COMMISSION_RATE, 2);
+            $adminAmount = round($totalAmount * self::ADMIN_COMMISSION_RATE, 2);
+
+            // Add earning to teacher wallet (80%)
+            $this->addEarning($teacherId, $teacherAmount, $description, $paymentId);
+
+            // Add commission to admin wallet (20%)
+            $this->addAdminCommission($adminAmount, $description, $paymentId, $teacherId);
+
+            Log::info("Payment distributed", [
+                'payment_id' => $paymentId,
+                'teacher_id' => $teacherId,
+                'total_amount' => $totalAmount,
+                'teacher_amount' => $teacherAmount,
+                'admin_amount' => $adminAmount,
+            ]);
+
+            return [
+                'teacher_amount' => $teacherAmount,
+                'admin_amount' => $adminAmount,
+                'total_distributed' => $teacherAmount + $adminAmount
+            ];
+        });
+    }
+
     public function addEarning($teacherId, $amount, $description, $paymentId = null)
     {
         DB::transaction(function () use ($teacherId, $amount, $description, $paymentId) {
@@ -51,11 +90,58 @@ class WalletService
                 ]);
             }
 
-            Log::info("Earning added to wallet", [
+            Log::info("Earning added to teacher wallet", [
                 'teacher_id' => $teacherId,
                 'amount' => $amount,
                 'new_balance' => $balanceAfter
             ]);
+        });
+    }
+
+    /**
+     * Add commission to admin wallet
+     */
+    public function addAdminCommission($amount, $description, $paymentId = null, $teacherId = null)
+    {
+        return DB::transaction(function () use ($amount, $description, $paymentId, $teacherId) {
+            // Get main admin wallet
+            $adminWallet = AdminWallet::getMainAdminWallet();
+
+            if (!$adminWallet) {
+                Log::error("Admin wallet not found for commission");
+                throw new Exception("Admin wallet not found");
+            }
+
+            $balanceBefore = $adminWallet->balance;
+            $balanceAfter = $balanceBefore + $amount;
+
+            $adminWallet->update([
+                'balance' => $balanceAfter,
+                'total_earned' => $adminWallet->total_earned + $amount,
+            ]);
+
+            // Create transaction record
+            AdminWalletTransaction::create([
+                'admin_id' => $adminWallet->admin_id,
+                'payment_id' => $paymentId,
+                'type' => 'credit',
+                'category' => 'commission',
+                'amount' => $amount,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $balanceAfter,
+                'description' => $description . ($teacherId ? " (Teacher ID: {$teacherId})" : ""),
+                'reference_id' => $paymentId ? "PAY-{$paymentId}" : null,
+            ]);
+
+            Log::info("Commission added to admin wallet", [
+                'admin_id' => $adminWallet->admin_id,
+                'amount' => $amount,
+                'new_balance' => $balanceAfter,
+                'teacher_id' => $teacherId,
+                'payment_id' => $paymentId
+            ]);
+
+            return $adminWallet;
         });
     }
 
@@ -135,6 +221,37 @@ class WalletService
 
             return $withdrawal;
         });
+    }
+
+    /**
+     * Get admin wallet statistics
+     */
+    public function getAdminWalletStats()
+    {
+        $adminWallet = AdminWallet::getMainAdminWallet();
+
+        if (!$adminWallet) {
+            return [
+                'balance' => 0,
+                'total_earned' => 0,
+                'total_withdrawn' => 0,
+                'recent_transactions' => collect([])
+            ];
+        }
+
+        $recentTransactions = AdminWalletTransaction::where('admin_id', $adminWallet->admin_id)
+            ->with('payment')
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        return [
+            'balance' => $adminWallet->balance,
+            'total_earned' => $adminWallet->total_earned,
+            'total_withdrawn' => $adminWallet->total_withdrawn,
+            'recent_transactions' => $recentTransactions,
+            'wallet' => $adminWallet
+        ];
     }
 
     private function getAccountDetails($paymentSettings, $method)

@@ -41,13 +41,13 @@ class Payment extends Model
     {
         parent::boot();
 
-        // REQUIREMENT 1: When payment is created with successful status, add to teacher wallet
+        // UPDATED: When payment is created with successful status, distribute 80% to teacher and 20% to admin
         static::created(function ($payment) {
             if ($payment->status === 'successful' && !$payment->wallet_processed) {
                 $walletService = app(WalletService::class);
 
-                // Add base_price to teacher wallet (this is teacher's earning)
-                $walletService->addEarning(
+                // Use base_price for distribution (80% teacher, 20% admin)
+                $walletService->processPaymentDistribution(
                     $payment->teacher_id,
                     $payment->base_price,
                     "Earning from: {$payment->summary}",
@@ -61,7 +61,7 @@ class Payment extends Model
             if ($payment->status === 'successful' && !$payment->wallet_processed && $payment->isDirty('status')) {
                 $walletService = app(WalletService::class);
 
-                $walletService->addEarning(
+                $walletService->processPaymentDistribution(
                     $payment->teacher_id,
                     $payment->base_price,
                     "Earning from: {$payment->summary}",
@@ -74,5 +74,26 @@ class Payment extends Model
     public function walletTransactions()
     {
         return $this->hasMany(WalletTransaction::class);
+    }
+
+    public function adminWalletTransactions()
+    {
+        return $this->hasMany(AdminWalletTransaction::class);
+    }
+
+    /**
+     * Get teacher's earning amount (80% of base_price)
+     */
+    public function getTeacherEarningAttribute()
+    {
+        return round($this->base_price * 0.80, 2);
+    }
+
+    /**
+     * Get admin's commission amount (20% of base_price)
+     */
+    public function getAdminCommissionAttribute()
+    {
+        return round($this->base_price * 0.20, 2);
     }
 }

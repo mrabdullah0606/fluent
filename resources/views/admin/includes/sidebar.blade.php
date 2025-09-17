@@ -4,6 +4,9 @@
     <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
         <i class="bi bi-house me-2"></i> Dashboard
     </a>
+
+    <a href="{{ route('admin.wallet.index') }}" class="nav-link"><i class="bi bi-wallet me-2"></i>
+        Wallet</a>
     <!-- User Management -->
     <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') }}">
         <i class="bi bi-person-lines-fill me-2"></i> User Management

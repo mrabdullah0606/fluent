@@ -11,8 +11,8 @@
                 <div class="p-3 position-relative card-border bg-white h-100">
                     <div class="icon-end"><i class="bi bi-credit-card"></i></div>
                     <p class="text-muted mb-1">Available Balance</p>
-                    <h4 class="fw-bold mb-1">$2,435.50</h4>
-                    <small class="text-muted">+ $120.00 since last withdrawal</small>
+                    <h4 class="fw-bold mb-1">${{ $balance }}</h4>
+                    <small class="text-muted">+ ${{ $totalWithdrawn }} since last withdrawal</small>
                 </div>
             </div>
 

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
+            AdminWalletSeeder::class,
             // LessonSettingSeeder::class,
             // LessonPackageSeeder::class,
             // GroupClassSeeder::class,

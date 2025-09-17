@@ -145,4 +145,14 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Wallet Configuration
+    |--------------------------------------------------------------------------
+    */
+    'teacher_commission_rate' => env('TEACHER_COMMISSION_RATE', 0.80),
+    'admin_commission_rate' => env('ADMIN_COMMISSION_RATE', 0.20),
+    'default_admin_id' => env('DEFAULT_ADMIN_ID', 1),
+    
 ];
