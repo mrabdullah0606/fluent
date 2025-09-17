@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\AdminChatController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminWalletController;
 use App\Http\Controllers\Admin\SupportController;
@@ -94,20 +95,15 @@ Route::prefix('student')->group(function () {
         Route::get('zoom/join/{id}', [LessonTrackingController::class, 'join'])
             ->name('student.zoom.join');
         /* ********************************** CHAT ROUTES ********************************** */
-        // Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');
-        // Route::get('chat/{user}', [ChatController::class, 'index'])->name('student.chat.index');
-        // Route::post('chat/send', [ChatController::class, 'send'])->name('student.chat.send');
         Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');
-
-        // PUT THESE SPECIFIC ROUTES FIRST
         Route::get('chat/unread-count', [ChatController::class, 'getUnreadCount'])->name('student.chat.unread-count');
         Route::post('chat/mark-all-read', [ChatController::class, 'markAllAsRead'])->name('student.chat.mark-all-read');
         Route::post('chat/send', [ChatController::class, 'send'])->name('student.chat.send');
-
-        // THEN PUT THE DYNAMIC ROUTE LAST
         Route::get('chat/{user}', [ChatController::class, 'index'])->name('student.chat.index');
-
-        // Logout route
+        Route::get('support', [ChatController::class, 'chatWithAdmin'])->name('student.chat.support');
+        Route::post('chat/send/support', [ChatController::class, 'sendSupport'])->name('student.chat.send.support');
+        Route::get('support/unread-count', [ChatController::class, 'getSupportUnreadCount'])->name('student.support.unread-count');
+        Route::get('messages/combined-unread-count', [ChatController::class, 'getCombinedUnreadCount'])->name('student.messages.combined-unread-count');
         Route::post('logout', [StudentAuthController::class, 'logout'])->name('student.logout');
         /* ********************************** zoom ********************************** */
         Route::get('zoom-meetings', [ZoomMeetingController::class, 'indexStudent'])->name('zoom.meetings.index');
@@ -169,18 +165,15 @@ Route::prefix('teacher')->group(function () {
         });
 
         /* ********************************** CHAT ROUTES ********************************** */
-        // Route::get('chats', [ChatController::class, 'teacherChatList'])->name('teacher.chats.index');
-        // Route::get('chat/{user}', [ChatController::class, 'index'])->name('teacher.chat.index');
-        // Route::post('chat/send', [ChatController::class, 'send'])->name('teacher.chat.send');
         Route::get('chats', [ChatController::class, 'teacherChatList'])->name('teacher.chats.index');
-
-        // PUT THESE SPECIFIC ROUTES FIRST
         Route::get('chat/unread-count', [ChatController::class, 'getUnreadCount'])->name('teacher.chat.unread-count');
         Route::post('chat/mark-all-read', [ChatController::class, 'markAllAsRead'])->name('teacher.chat.mark-all-read');
         Route::post('chat/send', [ChatController::class, 'send'])->name('teacher.chat.send');
-
-        // THEN PUT THE DYNAMIC ROUTE LAST
         Route::get('chat/{user}', [ChatController::class, 'index'])->name('teacher.chat.index');
+        Route::post('chat/send/support', [ChatController::class, 'sendSupport'])->name('teacher.chat.send.support');
+        Route::get('support', [ChatController::class, 'chatWithAdmin'])->name('teacher.chat.support');
+        Route::get('support/unread-count', [ChatController::class, 'getSupportUnreadCount'])->name('teacher.support.unread-count');
+        Route::get('messages/combined-unread-count', [ChatController::class, 'getCombinedUnreadCount'])->name('teacher.messages.combined-unread-count');
         /* ********************************** zoom ********************************** */
         Route::get('zoom-meetings', [ZoomMeetingController::class, 'index'])->name('teacher.zoom.meetings.index');
         Route::post('zoom-meetings', [ZoomMeetingController::class, 'store'])->name('teacher.zoom.meetings.store');
@@ -210,9 +203,6 @@ Route::prefix('teacher')->group(function () {
 /* ************************************************************************** */
 /*                                ADMIN Routes                                */
 /* ************************************************************************** */
-// Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isAdmin']], function () {
-//     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.index');
-// });
 Route::prefix('admin')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('login', [AdminController::class, 'showLoginForm'])->name('admin.login');
@@ -279,51 +269,16 @@ Route::prefix('admin')->group(function () {
             Route::post('/withdrawals/{id}/reject', [AdminWalletController::class, 'rejectWithdrawal'])->name('withdrawals.reject');
         });
 
-        Route::prefix('customer-support')->name('admin.customer.')->group(function () {
-            // Existing routes...
-            Route::get('/', [SupportController::class, 'index'])->name('support');
-            Route::get('/webhook-config', function () {
-                return view('admin.content.webhook-config');
-            })->name('support.webhook.config');
-            Route::get('/test', function () {
-                return view('admin.content.support-test');
-            })->name('support.test.page');
-
-            // API endpoints
-            Route::get('/stats', [SupportController::class, 'getStats'])->name('support.stats');
-            Route::get('/conversations', [SupportController::class, 'getConversations'])->name('support.conversations');
-            Route::get('/conversations/{conversationId}/messages', [SupportController::class, 'getMessages'])->name('support.messages');
-            Route::post('/conversations/{conversationId}/messages', [SupportController::class, 'sendMessage'])->name('support.send.message');
-
-            // Real-time updates
-            Route::get('/live-updates', [SupportController::class, 'getLiveUpdates'])->name('support.live.updates');
-            Route::get('/webhook-logs', [SupportController::class, 'getWebhookLogs'])->name('support.webhook.logs');
-            Route::get('/conversations/{conversationId}/typing', [SupportController::class, 'getTypingStatus'])->name('support.typing.status');
-
-            // NEW ENHANCED ENDPOINTS
-            Route::get('/status', [SupportController::class, 'getStatus'])->name('support.status');
-            Route::post('/clear-cache', [SupportController::class, 'clearCache'])->name('support.clear.cache');
-
-            // Utility routes
-            Route::get('/test-connection', [SupportController::class, 'testConnection'])->name('support.test');
-            Route::get('/redirect/{section?}', [SupportController::class, 'redirect'])->name('support.redirect');
+        Route::name('admin.')->group(function () {
+            Route::get('chat', [AdminChatController::class, 'index'])->name('chat.index');
+            Route::get('chat/unread-count', [AdminChatController::class, 'getUnreadCount'])->name('chat.unread-count');
+            Route::post('chat/mark-all-read', [AdminChatController::class, 'markAllAsRead'])->name('chat.mark-all-read');
+            Route::post('chat/send', [AdminChatController::class, 'send'])->name('chat.send');
+            Route::get('chat/{user}', [AdminChatController::class, 'chat'])->name('chat.show');
         });
     });
 });
 
-Route::post('/admin/customer-support/webhook', [SupportController::class, 'webhook'])
-    ->name('admin.customer.support.webhook')
-    ->withoutMiddleware(['web']);
-
-Route::get('/admin/customer-support/webhook-test', function () {
-    return response()->json([
-        'status' => 'Webhook endpoint is reachable',
-        'url' => route('admin.customer.support.webhook'),
-        'timestamp' => now()
-    ]);
-});
-Route::get('/admin/customer-support/stream-events', [SupportController::class, 'streamEvents'])
-    ->name('admin.customer.support.stream.events');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -339,21 +294,14 @@ Route::post('/lesson-tracking/deduct/{id}', [LessonTrackingController::class, 'd
     ->name('student.lesson.deduct')->middleware('auth');
 Route::get('/teacher/lesson-notifications/unread-count', [App\Http\Controllers\Dashboard\LessonTrackingController::class, 'unreadLessonNotificationsCount'])
     ->name('teacher.notifications.unread-count')->middleware('auth');
-
-
 // Teacher lesson notifications page
 Route::get('/teacher/lesson-notifications', [App\Http\Controllers\Dashboard\LessonTrackingController::class, 'lessonNotificationsPage'])
     ->name('teacher.lesson.notifications')->middleware('auth');
-
-
 // Mark single notification read
 Route::post('/teacher/notifications/mark-read/{id}', [LessonTrackingController::class, 'markSingleNotificationRead'])
     ->name('teacher.notifications.mark-read');
-
 // Mark all notifications read
 Route::post('/teacher/notifications/mark-all-read', [LessonTrackingController::class, 'markAllNotificationsRead'])
     ->name('teacher.notifications.mark-all-read');
-
-
 
 require __DIR__ . '/auth.php';

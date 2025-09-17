@@ -23,7 +23,7 @@
                      <a class="nav-link active d-flex align-items-center" href="{{ route('student.dashboard') }}">
                          <i class="bi bi-house me-1"></i> Home
                      </a>
-                 <li class="nav-item me-3 position-relative">
+                     {{-- <li class="nav-item me-3 position-relative">
                      <a class="nav-link d-flex align-items-center position-relative"
                          href="{{ route('student.chats.index') }}">
                          <i class="bi bi-chat-left-text me-1"></i>
@@ -32,7 +32,7 @@
                              <span
                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
                                  {{ $unreadMessagesCount > 99 ? '99+' : $unreadMessagesCount }}
-                             </span>
+                             </span> 
                          @endif
                      </a>
                  </li>
@@ -112,6 +112,113 @@
                              })
                              .catch(error => {
                                  console.error('Error fetching unread count:', error);
+                             });
+                     }
+
+                     // Update count every 30 seconds
+                     setInterval(updateNavbarNotificationCount, 30000);
+
+                     // Update count when page becomes visible (user switches back to tab)
+                     document.addEventListener('visibilitychange', function() {
+                         if (!document.hidden) {
+                             updateNavbarNotificationCount();
+                         }
+                     });
+
+                     // Update count on page load
+                     document.addEventListener('DOMContentLoaded', function() {
+                         updateNavbarNotificationCount();
+                     });
+                 </script> --}}
+                 <li class="nav-item me-3 position-relative">
+                     <a class="nav-link d-flex align-items-center position-relative"
+                         href="{{ route('student.chats.index') }}">
+                         <i class="bi bi-chat-left-text me-1"></i>
+                         Messages
+                         @if (isset($totalUnreadCount) && $totalUnreadCount > 0)
+                             <span
+                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
+                                 {{ $totalUnreadCount > 99 ? '99+' : $totalUnreadCount }}
+                             </span>
+                         @endif
+                     </a>
+                 </li>
+
+                 <style>
+                     .notification-badge {
+                         font-size: 0.65rem;
+                         padding: 0.25em 0.4em;
+                         margin-left: -10px;
+                         margin-top: -5px;
+                         animation: pulse 2s infinite;
+                     }
+
+                     @keyframes pulse {
+                         0% {
+                             box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+                         }
+
+                         70% {
+                             box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+                         }
+
+                         100% {
+                             box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+                         }
+                     }
+
+                     .nav-link {
+                         position: relative;
+                     }
+                 </style>
+
+                 <script>
+                     // SIMPLIFIED - Single route approach
+                     function updateNavbarNotificationCount() {
+                         const currentPath = window.location.pathname;
+                         let unreadCountRoute;
+
+                         if (currentPath.includes('/teacher/')) {
+                             unreadCountRoute = '{{ route('teacher.messages.combined-unread-count') }}';
+                         } else if (currentPath.includes('/student/')) {
+                             unreadCountRoute = '{{ route('student.messages.combined-unread-count') }}';
+                         } else {
+                             // Default to teacher route
+                             unreadCountRoute = '{{ route('teacher.messages.combined-unread-count') }}';
+                         }
+
+                         fetch(unreadCountRoute)
+                             .then(response => {
+                                 if (!response.ok) {
+                                     throw new Error(`HTTP error! status: ${response.status}`);
+                                 }
+                                 return response.json();
+                             })
+                             .then(data => {
+                                 console.log('Combined unread count response:', data);
+
+                                 const badge = document.querySelector('.notification-badge');
+                                 const messagesLink = document.querySelector('a[href*="chats"]');
+
+                                 if (data.unread_count > 0) {
+                                     if (badge) {
+                                         badge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
+                                     } else if (messagesLink) {
+                                         // Create badge if it doesn't exist
+                                         const newBadge = document.createElement('span');
+                                         newBadge.className =
+                                             'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge';
+                                         newBadge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
+                                         messagesLink.appendChild(newBadge);
+                                     }
+                                 } else {
+                                     if (badge) {
+                                         badge.remove();
+                                     }
+                                 }
+                             })
+                             .catch(error => {
+                                 console.error('Error fetching combined unread count:', error);
                              });
                      }
 

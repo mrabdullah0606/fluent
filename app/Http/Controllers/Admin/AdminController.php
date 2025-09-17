@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -56,9 +57,23 @@ class AdminController extends Controller
      */
     public function index(): Response
     {
-        return response()->view('admin.content.dashboard');
+        $teachers = User::with('teacherProfile')
+            ->where('role', 'teacher')
+            ->get();
+        $newTeachersThisMonth = User::where('role', 'teacher')
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->count();
+        $students = User::with('studentProfile')
+            ->where('role', 'student')
+            ->get();
+        $newStudentsThisMonth = User::where('role', 'student')
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->count();
+        return response()->view('admin.content.dashboard', compact('students', 'teachers', 'newTeachersThisMonth', 'newStudentsThisMonth'));
     }
-    
+
     /**
      * Show the admin dashboard.
      */

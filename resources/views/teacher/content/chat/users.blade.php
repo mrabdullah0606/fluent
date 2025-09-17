@@ -5,18 +5,73 @@
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0">Your Chats</h4>
-            @if ($users->sum('unread_count') > 0)
+            @if ($users->sum('unread_count') > 0 || $supportUnreadCount > 0)
                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="markAllAsRead()">
                     Mark All as Read
                 </button>
             @endif
         </div>
 
+        <!-- Customer Support Card (Dynamic) -->
+        <a href="{{ url('teacher/support') }}" class="text-decoration-none text-dark">
+            <div class="card mb-2 shadow-sm border-0 chat-user-card {{ $supportUnreadCount > 0 ? 'unread-chat' : '' }}">
+                <div class="card-body d-flex align-items-center">
+                    <div class="position-relative me-3">
+                        <div class="rounded-circle bg-success text-white d-flex justify-content-center align-items-center"
+                            style="width: 45px; height: 45px; font-weight: bold; font-size: 1.1rem;">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        @if ($supportUnreadCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                style="font-size: 0.7rem;">
+                                {{ $supportUnreadCount > 99 ? '99+' : $supportUnreadCount }}
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h6 class="mb-1 {{ $supportUnreadCount > 0 ? 'fw-bold' : '' }}">Customer Support</h6>
+                            @if ($supportLastMessage)
+                                <small class="text-muted">
+                                    {{ $supportLastMessage->created_at->diffForHumans() }}
+                                </small>
+                            @else
+                                <small class="text-muted">Available</small>
+                            @endif
+                        </div>
+
+                        @if ($supportLastMessage)
+                            <p class="mb-0 text-muted small {{ $supportUnreadCount > 0 ? 'fw-semibold text-dark' : '' }}">
+                                @if ($supportLastMessage->sender_id === auth()->id())
+                                    <span class="text-primary">You:</span>
+                                @else
+                                    <span class="text-success">Support:</span>
+                                @endif
+                                {{ Str::limit($supportLastMessage->message, 50) }}
+                            </p>
+                        @else
+                            <p class="mb-0 text-muted small">
+                                Need help? Contact our support team
+                            </p>
+                        @endif
+                    </div>
+
+                    @if ($supportUnreadCount > 0)
+                        <div class="ms-2">
+                            <div class="bg-success rounded-circle" style="width: 8px; height: 8px;"></div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </a>
+
+        <!-- Dynamic User Chats -->
         @forelse ($users as $user)
             <a href="{{ route('teacher.chat.index', $user->id) }}" class="text-decoration-none text-dark">
                 <div class="card mb-2 shadow-sm border-0 chat-user-card {{ $user->unread_count > 0 ? 'unread-chat' : '' }}">
                     <div class="card-body d-flex align-items-center">
-                        <!-- User avatar or initials -->
+                        <!-- User avatar -->
                         <div class="position-relative me-3">
                             <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
                                 style="width: 45px; height: 45px; font-weight: bold; font-size: 1.1rem;">
@@ -63,11 +118,13 @@
                 </div>
             </a>
         @empty
-            <div class="alert alert-secondary text-center">
-                <i class="bi bi-chat-left-text-fill fs-1 text-muted mb-3 d-block"></i>
-                <h6>No chats found</h6>
-                <p class="mb-0 text-muted">Start a conversation to see your chats here.</p>
-            </div>
+            @if (!$supportLastMessage && $supportUnreadCount == 0)
+                <div class="alert alert-secondary text-center mt-4">
+                    <i class="bi bi-chat-left-text-fill fs-1 text-muted mb-3 d-block"></i>
+                    <h6>No chats found</h6>
+                    <p class="mb-0 text-muted">Start a conversation to see your chats here.</p>
+                </div>
+            @endif
         @endforelse
     </div>
 
@@ -91,6 +148,19 @@
         .unread-chat:hover {
             background-color: #e7f1ff;
         }
+
+        /* Special styling for support chat */
+        .chat-user-card:has(.bg-success) {
+            border-left-color: #198754 !important;
+        }
+
+        .chat-user-card:has(.bg-success).unread-chat {
+            background-color: #f8fff9;
+        }
+
+        .chat-user-card:has(.bg-success).unread-chat:hover {
+            background-color: #e7ffe9;
+        }
     </style>
 
     <script>
@@ -112,12 +182,6 @@
                     console.error('Error marking messages as read:', error);
                 });
         }
-
-        // Auto-refresh unread counts every 30 seconds
-        setInterval(() => {
-            // You can add a subtle refresh here if needed
-            // Or use WebSockets for real-time updates
-        }, 30000);
     </script>
 
 @endsection
