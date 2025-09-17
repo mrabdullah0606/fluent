@@ -275,6 +275,7 @@ Route::prefix('admin')->group(function () {
             Route::post('chat/mark-all-read', [AdminChatController::class, 'markAllAsRead'])->name('chat.mark-all-read');
             Route::post('chat/send', [AdminChatController::class, 'send'])->name('chat.send');
             Route::get('chat/{user}', [AdminChatController::class, 'chat'])->name('chat.show');
+            Route::get('messages/combined-unread-count', [AdminChatController::class, 'getSupportUnreadCount'])->name('messages.combined-unread-count');
         });
     });
 });

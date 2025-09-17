@@ -22,26 +22,27 @@
         <i class="bi bi-briefcase-fill me-2"></i> Careers Management
     </a>
 
-    <a href="{{ route('admin.chat.index') }}" class="nav-link"><i class="bi bi-chat-left-text me-2"></i>
-
-        Customer
-        Support
-        @if (isset($totalUnreadCount) && $totalUnreadCount > 0)
+    <!-- Admin Sidebar Link -->
+    <a href="{{ route('admin.chat.index') }}" class="nav-link" id="admin-support-link">
+        <i class="bi bi-chat-left-text me-2"></i>
+        Customer Support
+        @if (isset($unreadSupportCount) && $unreadSupportCount > 0)
             <span
-                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
-                {{ $totalUnreadCount > 99 ? '99+' : $totalUnreadCount }}
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge"
+                id="support-badge">
+                {{ $unreadSupportCount > 99 ? '99+' : $unreadSupportCount }}
             </span>
         @endif
     </a>
-
 
     <style>
         .notification-badge {
             font-size: 0.65rem;
             padding: 0.25em 0.4em;
             margin-left: -10px;
-            margin-top: -5px;
+            margin-top: 10px;
             animation: pulse 2s infinite;
+            z-index: 10;
         }
 
         @keyframes pulse {
@@ -64,21 +65,13 @@
     </style>
 
     <script>
-        // SIMPLIFIED - Single route approach
-        function updateNavbarNotificationCount() {
-            const currentPath = window.location.pathname;
-            let unreadCountRoute;
-
-            if (currentPath.includes('/teacher/')) {
-                unreadCountRoute = '{{ route('teacher.messages.combined-unread-count') }}';
-            } else if (currentPath.includes('/student/')) {
-                unreadCountRoute = '{{ route('student.messages.combined-unread-count') }}';
-            } else {
-                // Default to teacher route
-                unreadCountRoute = '{{ route('teacher.messages.combined-unread-count') }}';
+        function updateAdminSupportCount() {
+            // Only run on admin pages
+            if (!window.location.pathname.includes('/admin/')) {
+                return;
             }
 
-            fetch(unreadCountRoute)
+            fetch('{{ route('admin.messages.combined-unread-count') }}')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
@@ -86,48 +79,59 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Combined unread count response:', data);
+                    console.log('Admin support unread count:', data);
 
-                    const badge = document.querySelector('.notification-badge');
-                    const messagesLink = document.querySelector('a[href*="chats"]');
+                    const supportLink = document.getElementById('admin-support-link');
+                    let badge = document.getElementById('support-badge');
 
-                    if (data.unread_count > 0) {
+                    if (data.success && data.unread_count > 0) {
+                        const countText = data.unread_count > 99 ? '99+' : data.unread_count.toString();
+
                         if (badge) {
-                            badge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
-                        } else if (messagesLink) {
-                            // Create badge if it doesn't exist
-                            const newBadge = document.createElement('span');
-                            newBadge.className =
+                            // Update existing badge
+                            badge.textContent = countText;
+                        } else {
+                            // Create new badge
+                            badge = document.createElement('span');
+                            badge.id = 'support-badge';
+                            badge.className =
                                 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge';
-                            newBadge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
-                            messagesLink.appendChild(newBadge);
+                            badge.textContent = countText;
+                            supportLink.appendChild(badge);
                         }
                     } else {
+                        // Remove badge if no unread messages
                         if (badge) {
                             badge.remove();
                         }
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching combined unread count:', error);
+                    console.error('Error fetching admin support count:', error);
                 });
         }
 
         // Update count every 30 seconds
-        setInterval(updateNavbarNotificationCount, 30000);
+        setInterval(updateAdminSupportCount, 30000);
 
-        // Update count when page becomes visible (user switches back to tab)
+        // Update count when page becomes visible
         document.addEventListener('visibilitychange', function() {
             if (!document.hidden) {
-                updateNavbarNotificationCount();
+                updateAdminSupportCount();
             }
         });
 
         // Update count on page load
         document.addEventListener('DOMContentLoaded', function() {
-            updateNavbarNotificationCount();
+            updateAdminSupportCount();
+        });
+
+        // Update count when navigating within admin area (for SPA-like behavior)
+        window.addEventListener('popstate', function() {
+            setTimeout(updateAdminSupportCount, 100);
         });
     </script>
+
     <a href="{{ route('admin.wallet.withdrawals.index') }}" class="nav-link"><i class="bi bi-wallet me-2"></i>
         Withdrawals Management</a>
     {{-- <a href="" class="nav-link"><i class="bi bi-eye me-2"></i> Profile</a> --}}

@@ -154,4 +154,23 @@ class AdminChatController extends Controller
             ], 500);
         }
     }
+
+    public function getSupportUnreadCount()
+    {
+        try {
+            $userId = auth()->id();
+            $unreadCount = CustomerSupport::where('receiver_id', $userId)
+                ->whereNull('read_at')
+                ->count();
+            return response()->json([
+                'success' => true,
+                'unread_count' => $unreadCount
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

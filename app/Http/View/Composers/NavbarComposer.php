@@ -2,6 +2,7 @@
 
 namespace App\Http\View\Composers;
 
+use App\Models\CustomerSupport;
 use Illuminate\View\View;
 use App\Models\Message;
 
@@ -13,13 +14,30 @@ class NavbarComposer
     public function compose(View $view): void
     {
         if (auth()->check()) {
-            $unreadMessagesCount = Message::where('receiver_id', auth()->id())
+            $user = auth()->user();
+
+            // Regular messages count
+            $unreadMessagesCount = Message::where('receiver_id', $user->id)
                 ->whereNull('read_at')
                 ->count();
 
-            $view->with('unreadMessagesCount', $unreadMessagesCount);
+            // Admin support messages count (only for admins)
+            $unreadSupportCount = 0;
+            if ($user->role === 'admin') {
+                $unreadSupportCount = CustomerSupport::where('receiver_id', $user->id)
+                    ->whereNull('read_at')
+                    ->count();
+            }
+
+            $view->with([
+                'unreadMessagesCount' => $unreadMessagesCount,
+                'unreadSupportCount' => $unreadSupportCount
+            ]);
         } else {
-            $view->with('unreadMessagesCount', 0);
+            $view->with([
+                'unreadMessagesCount' => 0,
+                'unreadSupportCount' => 0
+            ]);
         }
     }
 }
