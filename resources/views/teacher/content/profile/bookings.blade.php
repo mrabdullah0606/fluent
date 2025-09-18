@@ -37,7 +37,6 @@
 
         .navbar-brand.nav-text-orange:hover {
             color: #ffae00;
-            /* same as default */
             text-decoration: none;
             cursor: default;
         }
@@ -50,13 +49,11 @@
             min-width: 220px;
             margin-top: 50px;
             border: 1px solid #ffc107;
-            /* Yellow border */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .dropdown-item:hover {
             background-color: rgb(255, 242, 204) !important;
-            /* Hover color */
         }
 
         .dropdown-item i {
@@ -118,7 +115,6 @@
             <h3 class="fw-bold mb-4">
                 <i class="bi bi-gear-fill text-warning me-2"></i> Lesson Settings
             </h3>
-
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <div class="list-group">
@@ -131,19 +127,16 @@
 
                         <a href="{{ route('teacher.bookings') }}"class="text-decoration-none"> <button
                                 class="btn-2 list-group-item text-white list-group-item-action bg-danger">Booking
-                                Rules</button></a>
+                                Rules</button>
+                        </a>
                     </div>
                 </div>
-
-                <!-- Main Content -->
                 <div class="col-md-9 col-12 p-4">
                     <form action="{{ route('teacher.bookings.update') }}" method="POST">
                         @csrf
                         <div class="setting-box">
                             <h5 class="setting-title">Booking Rules</h5>
                             <p class="setting-description">Define how and when students can book lessons with you.</p>
-
-                            <!-- Rule 1: Minimum booking notice -->
                             <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-clock icon-yellow"></i>
@@ -162,8 +155,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <!-- Rule 2: Booking window -->
                             <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-calendar3 icon-yellow"></i>
@@ -181,8 +172,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <!-- Rule 3: Break after lesson -->
                             <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-clock-history icon-yellow"></i>
@@ -200,8 +189,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <!-- Rule 4: Accepting new students -->
                             <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-person-plus icon-yellow"></i>
@@ -210,15 +197,12 @@
                                         <small class="text-muted">Toggle if you are open to new student bookings.</small>
                                     </div>
                                 </div>
-                               <div class="form-check form-switch mt-3 mt-md-0">
-    <!-- Hidden input to ensure false value is sent when unchecked -->
-    <input type="hidden" name="accepting_new_students" value="0">
-    <input class="form-check-input" type="checkbox" name="accepting_new_students" value="1">
-</div>
-
+                                <div class="form-check form-switch mt-3 mt-md-0">
+                                    <input type="hidden" name="accepting_new_students" value="0">
+                                    <input class="form-check-input" type="checkbox" name="accepting_new_students"
+                                        value="1" {{ $rule->accepting_new_students ? 'checked' : '' }}>
+                                </div>
                             </div>
-
-                            <!-- Save Button -->
                             <div class="text-end mt-4">
                                 <button type="submit" class="btn save-btn">
                                     <i class="bi bi-save"></i> Save All Changes
@@ -229,9 +213,5 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-warning rounded-circle shadow position-fixed bottom-0 end-0 m-4"
-            style="width:60px; height:60px;">
-            <i class="bi bi-chat-dots fs-4 text-dark"></i>
-        </button>
     </main>
 @endsection
