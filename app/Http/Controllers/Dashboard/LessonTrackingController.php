@@ -28,11 +28,18 @@ class LessonTrackingController extends Controller
             ->orderBy('start_time', 'asc')
             ->get();
 
+        // $lessonTracking = \DB::table('user_lesson_trackings')
+        //     ->where('student_id', $studentId)
+        //     ->where('status', 'active')
+        //     // ->where('payment_type', 'package')
+        //     ->get();
         $lessonTracking = \DB::table('user_lesson_trackings')
-            ->where('student_id', $studentId)
-            ->where('status', 'active')
-            // ->where('payment_type', 'package')
+            ->join('users', 'user_lesson_trackings.teacher_id', '=', 'users.id')
+            ->where('user_lesson_trackings.student_id', $studentId)
+            ->where('user_lesson_trackings.status', 'active')
+            ->select('user_lesson_trackings.*', 'users.name as teacher_name')
             ->get();
+
 
         $totalPurchased = $lessonTracking->sum('total_lessons_purchased');
         $lessonsTaken   = $lessonTracking->sum('lessons_taken');

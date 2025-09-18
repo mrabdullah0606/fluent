@@ -23,78 +23,82 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
 
-                     <div class="modal-body">
-    @if ($lessonTracking->count() > 0)
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Package</th>
-                    <th>Total Lessons</th>
-                    <th>Taken</th>
-                    <th>Remaining</th>
-                    <th>Price per Lesson</th>
-                    <th>Purchase Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($lessonTracking as $package)
-                    <tr>
-                        <td>{{ $package->package_summary }}</td>
-                        <td>{{ $package->total_lessons_purchased }}</td>
-                        <td id="taken-{{ $package->id }}">{{ $package->lessons_taken }}</td>
-                        <td id="remaining-{{ $package->id }}">{{ $package->lessons_remaining }}</td>
-                        <td>${{ number_format($package->price_per_lesson, 2) }}</td>
-                        <td>{{ \Carbon\Carbon::parse($package->purchase_date)->format('M d, Y') }}</td>
-                        <td>
-                            <button 
-                                class="btn btn-sm btn-warning deduct-lesson-btn" 
-                                data-id="{{ $package->id }}"
-                                {{ $package->lessons_remaining <= 0 ? 'disabled' : '' }}>
-                                Deduct
-                            </button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <p class="text-muted">You haven’t purchased any packages yet.</p>
-    @endif
-</div>
+                        <div class="modal-body">
+                            @if ($lessonTracking->count() > 0)
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Package</th>
+                                            <th>Total Lessons</th>
+                                            <th>Taken</th>
+                                            <th>Remaining</th>
+                                            <th>Price per Lesson</th>
+                                            <th>Purchase Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($lessonTracking as $package)
+                                            <tr>
+                                                {{-- <td>{{ $package->package_summary }}</td> --}}
+                                                <td>{{ $package->package_summary }} - {{ $package->teacher_name }}</td>
+                                                <td>{{ $package->total_lessons_purchased }}</td>
+                                                <td id="taken-{{ $package->id }}">{{ $package->lessons_taken }}</td>
+                                                <td id="remaining-{{ $package->id }}">{{ $package->lessons_remaining }}
+                                                </td>
+                                                <td>${{ number_format($package->price_per_lesson, 2) }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($package->purchase_date)->format('M d, Y') }}
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-warning deduct-lesson-btn"
+                                                        data-id="{{ $package->id }}"
+                                                        {{ $package->lessons_remaining <= 0 ? 'disabled' : '' }}>
+                                                        Deduct
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <p class="text-muted">You haven’t purchased any packages yet.</p>
+                            @endif
+                        </div>
 
 
 
-<script>document.querySelectorAll('.deduct-lesson-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const packageId = this.dataset.id;
+                        <script>
+                            document.querySelectorAll('.deduct-lesson-btn').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const packageId = this.dataset.id;
 
-        fetch(`/lesson-tracking/deduct/${packageId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById(`remaining-${packageId}`).textContent = data.lessons_remaining;
-                document.getElementById(`taken-${packageId}`).textContent = data.lessons_taken;
+                                    fetch(`/lesson-tracking/deduct/${packageId}`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                            },
+                                        })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                document.getElementById(`remaining-${packageId}`).textContent = data
+                                                    .lessons_remaining;
+                                                document.getElementById(`taken-${packageId}`).textContent = data
+                                                    .lessons_taken;
 
-                if (data.lessons_remaining <= 0) button.disabled = true;
+                                                if (data.lessons_remaining <= 0) button.disabled = true;
 
-                // Optional: alert/toast
-                alert(data.message);
-            } else {
-                alert(data.error || 'Failed to deduct lesson.');
-            }
-        })
-        .catch(err => console.error('Error deducting lesson:', err));
-    });
-});
-
-</script>
+                                                // Optional: alert/toast
+                                                alert(data.message);
+                                            } else {
+                                                alert(data.error || 'Failed to deduct lesson.');
+                                            }
+                                        })
+                                        .catch(err => console.error('Error deducting lesson:', err));
+                                });
+                            });
+                        </script>
 
 
                         <div class="modal-footer">
@@ -170,6 +174,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($meetings as $meeting)
+                                    {{-- @dd($meeting->toArray()) --}}
                                     <tr>
                                         {{-- <td>{{ $meeting->topic }} - {{ $meeting->meeting_type }} </td> --}}
                                         <td>

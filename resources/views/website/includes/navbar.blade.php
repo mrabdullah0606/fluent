@@ -222,7 +222,7 @@
 
                 <ul class="navbar-nav me-3">
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('index') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('messages') }}">Messages</a></li>
+                    {{-- <li class="nav-item"><a class="nav-link text-dark" href="{{ route('messages') }}">Messages</a></li> --}}
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('contact') }}">Contact Us</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('about') }}">About</a></li>
                 </ul>

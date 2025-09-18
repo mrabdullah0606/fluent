@@ -29,7 +29,7 @@
                         @include('teacher.content.profile.particals.lesson-packages')
 
                         <!-- Group Classes -->
-                        @include('teacher.content.profile.particals.group-classes')
+                        {{-- @include('teacher.content.profile.particals.group-classes') --}}
 
                         <!-- Submit Button -->
                         <div class="text-end mt-4">

@@ -122,10 +122,7 @@
                                     <tr>
                                         <td>{{ $meeting->topic }}</td>
                                         <td>
-                                            {{ $meeting->creator?->name ?? 'N/A' }}
-                                            @if ($meeting->created_by === auth()->id())
-                                                <span class="badge bg-primary ms-1">You</span>
-                                            @endif
+                                            {{ $meeting->creator?->name ?? auth()->user()->name }}
                                         </td>
                                         <td>{{ $meeting->start_time->format('d M Y, h:i A') }}</td>
                                         <td>{{ $meeting->duration }} {{ __('min') }}</td>

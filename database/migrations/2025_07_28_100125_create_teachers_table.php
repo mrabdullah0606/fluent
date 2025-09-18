@@ -24,7 +24,6 @@ return new class extends Migration
             $table->json('teaches')->nullable();
             $table->string('speaks')->nullable();
             $table->string('country')->nullable();
-            $table->decimal('rate_per_hour', 8, 2)->nullable();
             $table->foreignId('language_id')->nullable()->constrained('languages')->onDelete('set null');
             $table->timestamps();
             $table->string('profile_image')->nullable();

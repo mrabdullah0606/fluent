@@ -105,36 +105,79 @@ class HomeController extends Controller
         return view('website.content.find-tutor');
     }
 
+    // public function tutor($id): View
+    // {
+    //     // Fetch teacher user with relations
+    //     $teacher = User::with(['teacherProfile', 'lessonPackages', 'teacherSettings'])
+    //         ->where('id', $id)
+    //         ->where('role', 'teacher')
+    //         ->firstOrFail();
+    //     // Teacher profile details
+    //     $teacherProfile = \App\Models\Teacher::where('user_id', $id)->first();
+    //     $introVideo = $teacherProfile?->intro_video;
+    //     $profileImage = $teacherProfile?->profile_image;
+
+    //     // Languages they teach
+    //     $languages = [];
+    //     if (!empty($teacherProfile?->teaches)) {
+    //         $languages = \App\Models\Language::whereIn('id', $teacherProfile->teaches)->pluck('name')->toArray();
+    //     }
+
+    //     // Rates (example from teacherSettings)
+    //     $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
+
+    //     // Reviews
+    //     $reviews = Review::with('student')
+    //         ->where('teacher_id', $teacher->id)
+    //         ->where('is_approved', true)
+    //         ->latest()
+    //         ->get();
+
+    //     $reviewsCount = $reviews->count();
+    //     $averageRating = $reviewsCount > 0 ? round($reviews->avg('rating'), 1) : 0;
+
+    //     return view('website.content.tutor', compact(
+    //         'teacher',
+    //         'teacherProfile',
+    //         'introVideo',
+    //         'profileImage',
+    //         'languages',
+    //         'duration60Rate',
+    //         'reviews',
+    //         'reviewsCount',
+    //         'averageRating'
+    //     ));
+    // }
+
     public function tutor($id): View
     {
-        // Fetch teacher user with relations
         $teacher = User::with(['teacherProfile', 'lessonPackages', 'teacherSettings'])
             ->where('id', $id)
             ->where('role', 'teacher')
             ->firstOrFail();
-        // Teacher profile details
         $teacherProfile = \App\Models\Teacher::where('user_id', $id)->first();
         $introVideo = $teacherProfile?->intro_video;
         $profileImage = $teacherProfile?->profile_image;
-
-        // Languages they teach
         $languages = [];
         if (!empty($teacherProfile?->teaches)) {
             $languages = \App\Models\Language::whereIn('id', $teacherProfile->teaches)->pluck('name')->toArray();
         }
-
-        // Rates (example from teacherSettings)
         $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
-
-        // Reviews
         $reviews = Review::with('student')
             ->where('teacher_id', $teacher->id)
             ->where('is_approved', true)
             ->latest()
             ->get();
-
         $reviewsCount = $reviews->count();
         $averageRating = $reviewsCount > 0 ? round($reviews->avg('rating'), 1) : 0;
+        $canReview = false;
+        if (auth()->check() && auth()->user()->role === 'student') {
+            $canReview = \DB::table('payments')
+                ->where('student_id', auth()->id())
+                ->where('teacher_id', $teacher->id)
+                ->where('status', 'successful')
+                ->exists();
+        }
 
         return view('website.content.tutor', compact(
             'teacher',
@@ -145,7 +188,8 @@ class HomeController extends Controller
             'duration60Rate',
             'reviews',
             'reviewsCount',
-            'averageRating'
+            'averageRating',
+            'canReview'
         ));
     }
 

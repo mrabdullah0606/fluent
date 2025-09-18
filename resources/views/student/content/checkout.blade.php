@@ -154,7 +154,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="pt-4">
+                            {{-- <div class="pt-4">
                                 <button type="submit" id="checkoutBtn"
                                     class="inline-flex items-center justify-center rounded-md font-bold bg-warning h-12 px-6 w-full text-lg transition-all duration-200 shadow-lg">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="none"
@@ -167,41 +167,59 @@
                                     Pay ${{ number_format($total, 2) }} Securely
                                 </button>
                             </div>
-                            <div class="flex items-center justify-center space-x-4 pt-2">
-                                <div class="flex items-center text-xs text-gray-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="mr-1">
-                                        <path d="M9 12l2 2 4-4"></path>
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                    </svg>
-                                    SSL Secured
-                                </div>
-                                <div class="flex items-center text-xs text-gray-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="mr-1">
-                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2">
-                                        </rect>
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                    </svg>
-                                    PCI Compliant
-                                </div>
-                                <div class="flex items-center text-xs text-gray-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="mr-1">
-                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                    </svg>
-                                    Money Back Guarantee
-                                </div>
-                            </div>
                             <p class="text-xs text-muted-foreground text-center">
                                 By completing this purchase, you agree to our
                                 <a href="#" class="text-primary hover:underline font-medium">Terms of Service</a>
                                 and
                                 <a href="#" class="text-primary hover:underline font-medium">Privacy Policy</a>.
-                            </p>
+                            </p> --}}
+                            <div class="pt-4">
+                                <!-- Checkbox + Label -->
+                                <div class="flex items-start mb-4">
+                                    <input id="agreeTerms" type="checkbox"
+                                        class="mt-1 h-4 w-4 text-primary border-gray-300 rounded cursor-pointer"
+                                        onclick="togglePayButton()" />
+
+                                    <label for="agreeTerms" class="ml-2 text-sm text-gray-700">
+                                        I agree to the
+                                        <button type="button"
+                                            onclick="openPdfModal('{{ asset('assets/website/pdf/refundPolicy.pdf') }}')"
+                                            class="text-primary hover:underline font-medium">Terms of Service</button>
+                                        and
+                                        <button type="button"
+                                            onclick="openPdfModal('{{ asset('assets/website/pdf/refundPolicy.pdf') }}')"
+                                            class="text-primary hover:underline font-medium">Privacy Policy</button>.
+                                    </label>
+                                </div>
+
+                                <!-- Pay Button -->
+                                <button type="submit" id="checkoutBtn"
+                                    class="inline-flex items-center justify-center rounded-md font-bold bg-warning h-12 px-6 w-full text-lg transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="mr-2">
+                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2">
+                                        </rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                    Pay ${{ number_format($total, 2) }} Securely
+                                </button>
+                            </div>
+                            <!-- Modal -->
+                            <div id="pdfModal"
+                                class="fixed inset-0 hidden bg-black bg-opacity-70 z-50 flex items-center justify-center">
+                                <div class="bg-white rounded-lg shadow-lg w-full h-full relative">
+                                    <!-- Close Button -->
+                                    <button onclick="closePdfModal(event)"
+                                        class="absolute top-4 right-6 text-gray-600 hover:text-black text-3xl font-bold">&times;</button>
+
+                                    <!-- PDF Viewer Fullscreen -->
+                                    <iframe id="pdfFrame" src="" class="w-full h-full"></iframe>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -287,6 +305,34 @@
 
         function validateCheckout() {
             return true;
+        }
+
+        function togglePayButton() {
+            const checkbox = document.getElementById('agreeTerms');
+            const btn = document.getElementById('checkoutBtn');
+            btn.disabled = !checkbox.checked;
+        }
+
+        function openPdfModal(pdfUrl) {
+            document.getElementById('pdfModal').classList.remove('hidden');
+            document.getElementById('pdfFrame').src = pdfUrl;
+        }
+
+        function closePdfModal(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            document.getElementById('pdfModal').classList.add('hidden');
+            document.getElementById('pdfFrame').src = "";
+
+            // Remove focus to prevent accidental form submission
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+
+            return false;
         }
     </script>
 @endsection

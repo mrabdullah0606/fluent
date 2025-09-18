@@ -96,13 +96,6 @@
                             placeholder="E.g., Pakistan" value="{{ old('country', $teacher?->country) }}">
                     </div>
 
-                    {{-- Rate per Hour --}}
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="rate_per_hour" class="block text-lg font-semibold mb-2">Rate per Hour ($)</label>
-                        <input type="number" step="0.01" id="rate_per_hour" name="rate_per_hour"
-                            class="form-control rounded-md" value="{{ old('rate_per_hour', $teacher?->rate_per_hour) }}">
-                    </div>
-
                     {{-- Hobbies --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
                         <label for="hobbies" class="block text-lg font-semibold mb-2">Hobbies</label>
@@ -128,7 +121,8 @@
 
                     {{-- Teaching Style --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="teaching_style" class="block text-lg font-semibold mb-2">Specialities (E.g., Conversational, Grammar-Focused)</label>
+                        <label for="teaching_style" class="block text-lg font-semibold mb-2">Specialities (E.g.,
+                            Conversational, Grammar-Focused)</label>
                         <input type="text" id="teaching_style" name="teaching_style" class="form-control rounded-md"
                             placeholder="E.g., Conversational, Grammar-Focused"
                             value="{{ old('teaching_style', $teacher?->teaching_style) }}">

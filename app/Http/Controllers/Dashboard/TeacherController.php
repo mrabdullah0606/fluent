@@ -14,7 +14,7 @@ use App\Models\Review;
 use App\Models\User;
 use App\Models\ZoomMeeting;
 use App\Models\Payment;
-use App\Models\GroupClass; // assuming you have this model
+use App\Models\GroupClass;
 use App\Models\TeacherWallet;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -26,36 +26,26 @@ use Illuminate\View\View;
 
 class TeacherController extends Controller
 {
-    // public function index(): Response
-    // {
-    //     $teacher = auth()->user(); // logged-in teacher
-    //     return response()->view('teacher.content.dashboard', compact('teacher'));
-    // }
+    /**
+     * Index
+     *
+     * @return Response
+     */
     public function index(): Response
     {
         $teacher = auth()->user();
-
-        // Teacher wallet
         $wallet = TeacherWallet::where('teacher_id', $teacher->id)->first();
-
-        // Get all Zoom meetings by this teacher, ordered by start_time
         $zoomMeetings = ZoomMeeting::with('group')
             ->where('teacher_id', $teacher->id)
             ->orderBy('start_time', 'asc')
             ->get();
-
         \Log::info('Zoom Meetings Count: ' . $zoomMeetings->count());
-
-        // Prepare meeting details array
         $meetingDetails = [];
-
         foreach ($zoomMeetings as $meeting) {
             \Log::info('Processing meeting: ' . $meeting->topic);
-
             $payments = Payment::where('teacher_id', $teacher->id)
                 ->where('type', $meeting->meeting_type)
                 ->get();
-
             if ($payments->count() > 0) {
                 foreach ($payments as $payment) {
                     if ($payment->type === 'duration') {
@@ -92,21 +82,12 @@ class TeacherController extends Controller
                 ];
             }
         }
-
         \Log::info('Meeting Details Count: ' . count($meetingDetails));
-
         $visibleMeetings = array_slice($meetingDetails, 0, 4);
         $hiddenMeetings = array_slice($meetingDetails, 4);
-
         \Log::info('Visible Meetings: ' . count($visibleMeetings));
         \Log::info('Hidden Meetings: ' . count($hiddenMeetings));
-
-        // Total unique students
         $totalEnrollers = Payment::where('teacher_id', $teacher->id)->distinct('student_id')->count('student_id');
-
-        // -----------------------------
-        // Calculate Lessons This Week
-        // -----------------------------
         $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
         $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
 
@@ -132,9 +113,7 @@ class TeacherController extends Controller
 
         $totalLessonsThisWeek = $completedLessons + $upcomingLessons;
 
-        // -----------------------------
-        // Return view
-        // -----------------------------
+
         return response()->view('teacher.content.dashboard', compact(
             'teacher',
             'visibleMeetings',
@@ -147,24 +126,30 @@ class TeacherController extends Controller
         ));
     }
 
+    /**
+     * Edit Profile
+     *
+     * @return View
+     */
     public function editProfile(): View
     {
-        $user = auth()->user(); // contains 'name'
+        $user = auth()->user();
         $teacher = auth()->user()->teacherProfile;
         $languages = Language::all();
         return view('teacher.content.profile.edit', compact('user', 'teacher', 'languages'));
     }
+
+
     public function updateProfile(Request $request)
     {
         $request->validate([
             'name'            => 'required|string|max:255',
             'headline'        => 'nullable|string|max:255',
             'about_me'        => 'nullable|string',
-            'teaches'         => 'nullable|array', // Changed to array
-            'teaches.*'       => 'exists:languages,id', // Validate each language ID
+            'teaches'         => 'nullable|array',
+            'teaches.*'       => 'exists:languages,id',
             'speaks'          => 'nullable|string|max:255',
             'country'         => 'nullable|string|max:255',
-            'rate_per_hour'   => 'nullable|numeric|min:0',
             'hobbies'         => 'nullable|string|max:255',
             'certifications'  => 'nullable|string|max:255',
             'experience'      => 'nullable|string|max:255',
@@ -172,41 +157,32 @@ class TeacherController extends Controller
             'profile_image'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'intro_video'     => 'nullable|mimetypes:video/mp4,video/x-m4v,video/quicktime,video/webm|max:51200',
         ]);
-
         $user = auth()->user();
         $user->name = $request->name;
         $user->save();
-
         $teacher = $user->teacherProfile;
-
         $data = [
             'user_id'        => $user->id,
             'headline'       => $request->headline,
             'about_me'       => $request->about_me,
-            'teaches'        => $request->teaches, // Store as array (will be cast to JSON)
+            'teaches'        => $request->teaches,
             'speaks'         => $request->speaks,
             'country'        => $request->country,
-            'rate_per_hour'  => $request->rate_per_hour,
             'hobbies'        => $request->hobbies,
             'certifications' => $request->certifications,
             'experience'     => $request->experience,
             'teaching_style' => $request->teaching_style,
         ];
-
-        // Image Upload
         if ($request->hasFile('profile_image')) {
             $data['profile_image'] = $request->file('profile_image')->store('teacher_images', 'public');
         } elseif ($teacher) {
             $data['profile_image'] = $teacher->profile_image;
         }
-
-        // Video Upload
         if ($request->hasFile('intro_video')) {
             $data['intro_video'] = $request->file('intro_video')->store('teacher_videos', 'public');
         } elseif ($teacher) {
             $data['intro_video'] = $teacher->intro_video;
         }
-
         if ($teacher) {
             $teacher->update($data);
         } else {
@@ -216,53 +192,27 @@ class TeacherController extends Controller
         return redirect()->back()->with('success', 'Profile saved successfully.');
     }
 
-
-
-
-    // public function updateProfile(Request $request)
-    // {
-    //     $teacher = auth()->user();
-
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //     ]);
-    //     $teacher->name = $request->name;
-
-    //     if ($request->filled('password')) {
-    //         $teacher->password = Hash::make($request->password);
-    //     }
-
-    //     $teacher->save();
-
-    //     return redirect()->route('teacher.profile.edit')
-    //         ->with('success', 'Profile updated successfully.');
-    // }
+    /**
+     * Public Profile
+     *
+     * @return View
+     */
     public function publicProfile(): View
     {
         $user = auth()->user();
-
-        // Load user with teacher (profile) and lesson packages
         $teacher = User::with(['teacherProfile', 'lessonPackages'])
             ->where('id', $user->id)
             ->where('role', 'teacher')
             ->firstOrFail();
-        // dd($teacher);
         $teacherProfile = Teacher::where('user_id', $user->id)->first();
-
         $introVideo = $teacherProfile?->intro_video;
-
-        // Languages the teacher teaches
         $languages = [];
         if (!empty($teacherProfile?->teaches)) {
             $languages = Language::whereIn('id', $teacherProfile->teaches)->pluck('name')->toArray();
         }
-
-        // Initialize default values
-        $reviews = collect(); // Empty collection
+        $reviews = collect();
         $reviewsCount = 0;
         $averageRating = 0;
-
-        // Fetch approved reviews with student relationship - only if teacherProfile exists
         if ($teacherProfile && $teacherProfile->id) {
             $review = Review::with('student')
                 ->where('teacher_id', $teacherProfile->id)
@@ -287,65 +237,32 @@ class TeacherController extends Controller
             'duration60Rate',
         ));
     }
-    // public function publicProfile(): View
-    // {
-    //     $user = auth()->user();
 
-    //     // Load user with teacher (profile) and lesson packages
-    //     $teacher = User::with(['teacherProfile', 'lessonPackages'])
-    //         ->where('id', $user->id)
-    //         ->where('role', 'teacher')
-    //         ->firstOrFail();
-    //     $teacherProfile = Teacher::where('user_id', $user->id)->first();
-    //     // dd($teacherProfile);
-    //     $introVideo = $teacherProfile?->intro_video;
-
-    //     // Languages the teacher teaches
-    //     $languages = [];
-    //     if (!empty($teacherProfile?->teaches)) {
-    //         $languages = Language::whereIn('id', $teacherProfile->teaches)->pluck('name')->toArray();
-    //     }
-
-    //     // Fetch approved reviews with student relationship
-    //     $review = Review::with('student')
-    //         ->where('teacher_id', $teacherProfile->id)
-    //         ->where('is_approved', true)
-    //         ->latest()
-    //         ->get();
-
-    //     // Keep $reviews variable for Blade
-    //     $reviews = $review;
-
-    //     $reviewsCount = $review->count();
-    //     $averageRating = $reviewsCount > 0 ? round($review->avg('rating'), 1) : 0;
-
-    //     return view('teacher.content.profile.public', compact(
-    //         'user',
-    //         'teacher',
-    //         'teacherProfile',
-    //         'introVideo',
-    //         'reviews',
-    //         'languages',
-    //         'review',
-    //         'reviewsCount',
-    //         'averageRating'
-    //     ));
-    // }
-
-
-
-
-
+    /**
+     * Calendar
+     *
+     * @return View
+     */
     public function calendar(): View
     {
         return view('teacher.content.calendar.index');
     }
 
+    /**
+     * Settings
+     *
+     * @return View
+     */
     public function settings(): View
     {
         return view('teacher.content.profile.settings');
     }
 
+    /**
+     * Bookings
+     *
+     * @return View
+     */
     public function bookings(): View
     {
         $rule = BookingRule::firstOrCreate(
@@ -356,6 +273,12 @@ class TeacherController extends Controller
         return view('teacher.content.profile.bookings', compact('rule'));
     }
 
+    /**
+     * Update Booking Rules
+     *
+     * @param Request $request
+     * @return void
+     */
     public function updateBookingRules(Request $request)
     {
         $validated = $this->validateBookingRules($request);
@@ -370,6 +293,12 @@ class TeacherController extends Controller
             ->with('success', 'Booking rules updated successfully.');
     }
 
+    /**
+     * Validate Booking Rules
+     *
+     * @param Request $request
+     * @return array
+     */
     private function validateBookingRules(Request $request): array
     {
         $validated = $request->validate([
@@ -384,23 +313,30 @@ class TeacherController extends Controller
         return $validated;
     }
 
+    /**
+     * Get Default Booking Rules
+     *
+     * @return array
+     */
     private function getDefaultBookingRules(): array
     {
         return [
             'min_booking_notice' => '24 hours',
             'booking_window' => '30 days',
             'break_after_lesson' => '15 minutes',
-            'accepting_new_students' => true,
+            'accepting_new_students' => false,
         ];
     }
 
+    /**
+     * Wallet
+     *
+     * @return View
+     */
     public function wallet(): View
     {
         return view('teacher.content.wallet.index');
     }
-
-
-
 
     public function show($id)
     {

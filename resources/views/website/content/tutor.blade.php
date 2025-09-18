@@ -299,17 +299,17 @@
                                         @endif
                                     @endforeach
                                     <!-- <div
-                                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                                        Conversational Russian</div>
-                                                    <div
-                                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                                        English for Beginners</div>
-                                                    <div
-                                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                                        Cultural Immersion</div>
-                                                    <div
-                                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                                        Pronunciation</div> -->
+                                                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
+                                                                            Conversational Russian</div>
+                                                                        <div
+                                                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
+                                                                            English for Beginners</div>
+                                                                        <div
+                                                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
+                                                                            Cultural Immersion</div>
+                                                                        <div
+                                                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
+                                                                            Pronunciation</div> -->
                                 </div>
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"
@@ -430,29 +430,6 @@
                                 window.location.href = url;
                             }
                         </script>
-
-                        {{-- <div  class="border border-red-300 p-4 rounded-lg bg-white hover:shadow-lg transition-shadow">
-                                        <h3 class="font-semibold text-red-600 text-lg">20-Lesson Package</h3>
-                                        <p class="text-sm font-bold text-green-600">Save 15%</p>
-                                        <ul class="text-xs text-gray-500 space-y-1 my-2">
-                                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
-                                                    width                                    ="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Flexible scheduling</li>
-                                            <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
-                                                    width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Personalized learning</li>
-                                        </ul><button
-                                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white">Select
-                                            Package</button>
-                                    </div> --}}
                     </div>
                 </div>
             </div>
@@ -475,68 +452,29 @@
                 </div>
                 <div>
                     @auth
-                        <button data-bs-toggle="modal" data-bs-target="#writeReviewModal"
-                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors 
-                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
-                   disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full 
-                   bg-yellow-500 hover:bg-yellow-600 text-white">
-                            Write a Review
-                        </button>
+                        @if ($canReview)
+                            <button data-bs-toggle="modal" data-bs-target="#writeReviewModal"
+                                class="inline-flex items-center justify-center text-sm font-medium h-9 rounded-md px-3 w-full 
+                bg-yellow-500 hover:bg-yellow-600 text-white">
+                                Write a Review
+                            </button>
+                        @else
+                            <p class="text-sm text-gray-500">
+                                You need to complete a paid lesson with this teacher before writing a review.
+                            </p>
+                        @endif
                     @else
                         <a href="{{ route('login') }}"
-                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors 
-                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
-                   disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full 
-                   bg-gray-400 hover:bg-gray-500 text-white">
+                            class="inline-flex items-center justify-center text-sm font-medium h-9 rounded-md px-3 w-full 
+            bg-gray-400 hover:bg-gray-500 text-white">
                             Login to Write a Review
                         </a>
                     @endauth
                 </div>
+
             </div>
-
-            {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                @foreach ($reviews as $review)
-                    <div class="bg-white p-4 rounded-lg border border-yellow-300" style="opacity: 1; transform: none;">
-                        <div class="flex justify-between items-start">
-                            <div class="flex items-center"><span
-                                    class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                        class="flex h-full w-full items-center justify-center rounded-full bg-muted">J</span></span>
-                                <div>
-                                    <p class="font-semibold text-gray-800">{{ $review->student->name }}</p>
-                                    <p class="text-xs text-gray-500">{{ $review->created_at->format('F j, Y') }}</p>
-                                </div>
-                            </div>
-                            @php
-                                $rating = $review->rating; // integer from DB, 1–5
-                            @endphp
-
-                            <div class="flex items-center">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="{{ $i <= $rating ? 'currentColor' : 'none' }}"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="h-4 w-4 {{ $i <= $rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300' }}">
-                                        <polygon
-                                            points="12 2 15.09 8.26 22 9.27 
-                             17 14.14 18.18 21.02 
-                             12 17.77 5.82 21.02 
-                             7 14.14 2 9.27 
-                             8.91 8.26 12 2">
-                                        </polygon>
-                                    </svg>
-                                @endfor
-                            </div>
-
-                        </div>
-                        <p class="text-sm text-gray-600 italic mt-3">"{{ $review->comment }}"</p>
-                    </div>
-                @endforeach
-
-            </div> --}}
             <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
                 <div class="carousel-inner">
-
                     @foreach ($reviews->chunk(2) as $chunkIndex => $reviewChunk)
                         <div class="carousel-item {{ $chunkIndex === 0 ? 'active' : '' }}">
                             <div class="row justify-content-center">
@@ -568,10 +506,10 @@
                                                     @for ($i = 1; $i <= 5; $i++)
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" viewBox="0 0 24 24"
-                                                            fill="{{ $i <= $rating ? 'currentColor' : 'none' }}"
+                                                            fill="{{ $i <= $review->rating ? 'currentColor' : 'none' }}"
                                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                             stroke-linejoin="round"
-                                                            class="h-4 w-4 {{ $i <= $rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300' }}">
+                                                            class="h-4 w-4 {{ $i <= $review->rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300' }}">
                                                             <polygon
                                                                 points="12 2 15.09 8.26 22 9.27 
                                                                  17 14.14 18.18 21.02 
@@ -582,7 +520,6 @@
                                                     @endfor
                                                 </div>
                                             </div>
-
                                             <p class="text-sm text-gray-600 italic mt-3">"{{ $review->comment }}"</p>
                                         </div>
                                     </div>
@@ -590,7 +527,6 @@
                             </div>
                         </div>
                     @endforeach
-
                 </div>
 
                 <!-- Carousel controls -->
@@ -605,10 +541,7 @@
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
-
         </div>
-
-        <!-- Write Review Modal -->
         <!-- Write Review Modal -->
         <div class="modal fade" id="writeReviewModal" tabindex="-1" aria-labelledby="writeReviewLabel"
             aria-hidden="true">

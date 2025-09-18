@@ -21,7 +21,7 @@
             </div>
 
             <!-- Group Lessons -->
-            <div class="col-md-5">
+            {{-- <div class="col-md-5">
                 <a href="{{ route('group.lesson') }}">
                     <div class="border p-4 border-warning lesson-card h-100">
                         <div class="icon text-danger"><i class="bi bi-people"></i></div>
@@ -32,7 +32,7 @@
                                 class="bi bi-arrow-right"></i></a>
                     </div>
                 </a>
-            </div>
+            </div> --}}
         </div>
     </div>
 @endsection

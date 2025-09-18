@@ -198,7 +198,6 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mt-3 mt-md-0">
-                                    <input type="hidden" name="accepting_new_students" value="0">
                                     <input class="form-check-input" type="checkbox" name="accepting_new_students"
                                         value="1" {{ $rule->accepting_new_students ? 'checked' : '' }}>
                                 </div>

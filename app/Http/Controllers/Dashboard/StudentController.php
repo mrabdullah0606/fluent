@@ -33,7 +33,7 @@ class StudentController extends Controller
         // Get all payments made by this student
         $payments = Payment::where('student_id', $student->id)->get();
         $totalTeachers = $payments->pluck('teacher_id')->unique()->count();
-        // dd($totalTeachers);
+        // dd($payments->toArray(), $totalTeachers);
         $meetingDetails = [];
 
         foreach ($payments as $payment) {
@@ -44,6 +44,17 @@ class StudentController extends Controller
 
             foreach ($zoomMeetings as $meeting) {
                 if ($payment->type === 'duration') {
+                    $meetingDetails[] = [
+                        'meeting_type' => $payment->type,
+                        'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
+                        'topic' => $meeting->topic,
+                        'start_time' => $meeting->start_time,
+                        'duration' => $meeting->duration,
+                        'join_url' => $meeting->join_url,
+                    ];
+                }
+
+                if ($payment->type === 'package') {
                     $meetingDetails[] = [
                         'meeting_type' => $payment->type,
                         'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
@@ -75,23 +86,16 @@ class StudentController extends Controller
             return Carbon::parse($meeting['start_time'])->isToday() ||
                 Carbon::parse($meeting['start_time'])->isFuture();
         })->values();
-$lessonSummary = $this->getLessonSummary($student->id);
+        $lessonSummary = $this->getLessonSummary($student->id);
 
-return response()->view('student.content.dashboard', compact(
-    'student', 
-    'meetingDetails', 
-    'totalTeachers', 
-    'upcomingMeetings',
-    'lessonSummary'
-));
- }
-
-
-    // public function index(): Response
-    // {
-    //     $student = auth()->user(); // logged-in student
-    //     return response()->view('student.content.dashboard', compact('student'));
-    // }
+        return response()->view('student.content.dashboard', compact(
+            'student',
+            'meetingDetails',
+            'totalTeachers',
+            'upcomingMeetings',
+            'lessonSummary'
+        ));
+    }
 
     public function addReviews()
     {
@@ -340,7 +344,7 @@ return response()->view('student.content.dashboard', compact(
     }
 
     public function oneOnOneTutors(): View
-    {   
+    {
         $teachers = User::with('teacherProfile')->where('role', 'teacher')->get();
         // dd($teachers->toArray());
         return view('student.content.one-to-one', compact('teachers'));
@@ -360,53 +364,53 @@ return response()->view('student.content.dashboard', compact(
     /* ************************************************************************** */
 
     public function reviewStore(Request $request)
-{
-    $request->validate([
-        'teacher_id' => 'required|exists:users,id',
-        'rating'     => 'required|integer|min:1|max:5',
-        'comment'    => 'required|string|max:1000',
-    ]);
+    {
+        $request->validate([
+            'teacher_id' => 'required|exists:users,id',
+            'rating'     => 'required|integer|min:1|max:5',
+            'comment'    => 'required|string|max:1000',
+        ]);
 
-    $studentId = Auth::id();
+        $studentId = Auth::id();
 
-    //Check if student has completed at least one lesson with this teacher
-    $hasLesson = \DB::table('user_lesson_trackings')
-        ->where('student_id', $studentId)
-        ->where('teacher_id', $request->teacher_id)
-        ->where('lessons_taken', '>', 0) // ✅ must have taken at least one lesson
-        ->exists();
+        //Check if student has completed at least one lesson with this teacher
+        $hasLesson = \DB::table('user_lesson_trackings')
+            ->where('student_id', $studentId)
+            ->where('teacher_id', $request->teacher_id)
+            ->where('lessons_taken', '>', 0) // ✅ must have taken at least one lesson
+            ->exists();
 
-    if (! $hasLesson) {
+        if (! $hasLesson) {
+            return response()->json([
+                'error' => 'You can only review a teacher after taking at least one lesson.'
+            ], 422);
+        }
+
+        // Check if review already exists
+        $exists = Review::where('teacher_id', $request->teacher_id)
+            ->where('student_id', $studentId)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'error' => 'You have already reviewed this teacher.'
+            ], 422);
+        }
+
+        // Store review
+        $review = Review::create([
+            'teacher_id'  => $request->teacher_id,
+            'student_id'  => $studentId,
+            'rating'      => $request->rating,
+            'comment'     => $request->comment,
+            'is_approved' => false
+        ]);
+
         return response()->json([
-            'error' => 'You can only review a teacher after taking at least one lesson.'
-        ], 422);
+            'success' => 'Review submitted successfully and is pending approval.',
+            'review'  => $review
+        ]);
     }
-
-    // Check if review already exists
-    $exists = Review::where('teacher_id', $request->teacher_id)
-        ->where('student_id', $studentId)
-        ->exists();
-
-    if ($exists) {
-        return response()->json([
-            'error' => 'You have already reviewed this teacher.'
-        ], 422);
-    }
-
-    // Store review
-    $review = Review::create([
-        'teacher_id'  => $request->teacher_id,
-        'student_id'  => $studentId,
-        'rating'      => $request->rating,
-        'comment'     => $request->comment,
-        'is_approved' => false
-    ]);
-
-    return response()->json([
-        'success' => 'Review submitted successfully and is pending approval.',
-        'review'  => $review
-    ]);
-}
 
     // public function reviewStore(Request $request)
     // {
@@ -438,39 +442,38 @@ return response()->view('student.content.dashboard', compact(
     //     ]);
     // }
 
-    
-protected function getLessonSummary($studentId)
-{
-    $today = now()->startOfDay();
-    $endOfWeek = now()->endOfWeek();
 
-    // Fetch all lessons (1-on-1 or group) purchased by student
-    $lessonTrackings = UserLessonTracking::with(['attendanceRecords', 'teacher'])
-        ->where('student_id', $studentId)
-        ->get();
+    protected function getLessonSummary($studentId)
+    {
+        $today = now()->startOfDay();
+        $endOfWeek = now()->endOfWeek();
 
-    $completed = 0;
-    $upcoming = 0;
+        // Fetch all lessons (1-on-1 or group) purchased by student
+        $lessonTrackings = UserLessonTracking::with(['attendanceRecords', 'teacher'])
+            ->where('student_id', $studentId)
+            ->get();
 
-    foreach ($lessonTrackings as $tracking) {
-        // Count completed lessons
-        $completed += $tracking->attendanceRecords()
-            ->where('attendance_status', 'attended')
-            ->whereBetween('created_at', [$today, $endOfWeek])
-            ->count();
+        $completed = 0;
+        $upcoming = 0;
 
-        // Count upcoming lessons (scheduled this week, not attended yet)
-        $upcoming += $tracking->attendanceRecords()
-            ->where('attendance_status', 'pending')
-            ->whereBetween('created_at', [$today, $endOfWeek])
-            ->count();
+        foreach ($lessonTrackings as $tracking) {
+            // Count completed lessons
+            $completed += $tracking->attendanceRecords()
+                ->where('attendance_status', 'attended')
+                ->whereBetween('created_at', [$today, $endOfWeek])
+                ->count();
+
+            // Count upcoming lessons (scheduled this week, not attended yet)
+            $upcoming += $tracking->attendanceRecords()
+                ->where('attendance_status', 'pending')
+                ->whereBetween('created_at', [$today, $endOfWeek])
+                ->count();
+        }
+
+        return [
+            'total_this_week' => $completed + $upcoming,
+            'completed' => $completed,
+            'upcoming' => $upcoming
+        ];
     }
-
-    return [
-        'total_this_week' => $completed + $upcoming,
-        'completed' => $completed,
-        'upcoming' => $upcoming
-    ];
-}
-
 }

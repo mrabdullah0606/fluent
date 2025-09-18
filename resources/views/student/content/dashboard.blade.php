@@ -33,24 +33,24 @@
                     </div>
 
                     <div style="opacity: 1; transform: none;">
-                       <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
-    <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-        <h3 class="tracking-tight text-sm font-medium">Lessons This Week</h3>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-             stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-    </div>
-    <div class="p-6 pt-0">
-        <div class="text-2xl font-bold">{{ $lessonSummary['total_this_week'] }}</div>
-        <p class="text-xs text-muted-foreground">
-            {{ $lessonSummary['completed'] }} completed, {{ $lessonSummary['upcoming'] }} upcoming
-        </p>
-    </div>
-</div>
-
+                        <div
+                            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
+                            <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
+                                <h3 class="tracking-tight text-sm font-medium">Lessons This Week</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <div class="text-2xl font-bold">{{ $lessonSummary['total_this_week'] }}</div>
+                                <p class="text-xs text-muted-foreground">
+                                    {{ $lessonSummary['completed'] }} completed, {{ $lessonSummary['upcoming'] }} upcoming
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -99,20 +99,6 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <a href="{{ $meeting['join_url'] }}" target="_blank">
-                                                <button
-                                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="h-4 w-4 mr-2">
-                                                        <path d="m22 8-6 4 6 4V8Z"></path>
-                                                        <rect width="14" height="12" x="2" y="6" rx="2"
-                                                            ry="2"></rect>
-                                                    </svg>
-                                                    Join Lesson
-                                                </button>
-                                            </a>
                                         </div>
                                     </div>
                                 @endforeach
@@ -202,17 +188,62 @@
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <a href="{{ $meeting['join_url'] }}" target="_blank"
-                                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 btn-red">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="h-4 w-4 mr-2">
-                                                        <path d="m22 8-6 4 6 4V8Z"></path>
-                                                        <rect width="14" height="12" x="2" y="6" rx="2"
-                                                            ry="2"></rect>
-                                                    </svg>Join Lesson
-                                                </a>
+                                                @php
+                                                    $hoursDiff = now()->diffInHours(
+                                                        \Carbon\Carbon::parse($meeting['start_time']),
+                                                        false,
+                                                    );
+                                                @endphp
+                                                <div class="flex items-center space-x-2">
+                                                    <a href="{{ $meeting['join_url'] }}" target="_blank">
+                                                        <button
+                                                            class="inline-flex items-center justify-center text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="h-4 w-4 mr-2">
+                                                                <path d="m22 8-6 4 6 4V8Z"></path>
+                                                                <rect width="14" height="12" x="2" y="6"
+                                                                    rx="2" ry="2"></rect>
+                                                            </svg>
+                                                            Join Lesson
+                                                        </button>
+                                                    </a>
+                                                    <div class="relative inline-block text-left">
+                                                        <button type="button"
+                                                            class="inline-flex items-center justify-center text-sm font-medium border rounded-md px-3 h-9 bg-white hover:bg-gray-100">
+                                                            Options
+                                                            <svg class="-mr-1 ml-2 h-4 w-4"
+                                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                                fill="currentColor">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.292l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.65a.75.75 0 01-1.08 0l-4.25-4.65a.75.75 0 01.02-1.06z"
+                                                                    clip-rule="evenodd" />
+                                                            </svg>
+                                                        </button>
+
+                                                        <div
+                                                            class="absolute right-0 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                                            <div class="py-1">
+                                                                <button type="button"
+                                                                    onclick="alert('{{ $hoursDiff < 24 ? 'If you cancel the lesson now, it will be paid to the tutor as it’s cancelled within the last 24 hours.' : 'Lesson cancelled successfully.' }}')"
+                                                                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                                    Cancel
+                                                                </button>
+                                                                <button type="button"
+                                                                    @if ($hoursDiff < 24) onclick="alert('Can’t reschedule within the last 24 hours')"
+                                                                    class="block w-full text-left px-4 py-2 text-sm text-gray-400 cursor-not-allowed"
+                                                                    disabled
+                                                                    @else
+                                                                    onclick="alert('Lesson rescheduled successfully.')"
+                                                                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @endif>
+                                                                    Reschedule
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     @else
