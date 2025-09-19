@@ -27,23 +27,15 @@ class LessonTrackingController extends Controller
             ->with(['teacher', 'attendees'])
             ->orderBy('start_time', 'asc')
             ->get();
-        // $lessonTracking = \DB::table('user_lesson_trackings')
-        //     ->where('student_id', $studentId)
-        //     ->where('status', 'active')
-        //     // ->where('payment_type', 'package')
-        //     ->get();
         $lessonTracking = \DB::table('user_lesson_trackings')
             ->join('users', 'user_lesson_trackings.teacher_id', '=', 'users.id')
             ->where('user_lesson_trackings.student_id', $studentId)
             ->where('user_lesson_trackings.status', 'active')
             ->select('user_lesson_trackings.*', 'users.name as teacher_name')
             ->get();
-
-
         $totalPurchased = $lessonTracking->sum('total_lessons_purchased');
         $lessonsTaken   = $lessonTracking->sum('lessons_taken');
         $remaining      = $lessonTracking->sum('lessons_remaining');
-        // dd($meetings, $lessonTracking->toArray(), $totalPurchased, $lessonsTaken, $remaining);
         return view('student.content.zoom.meetings', compact(
             'meetings',
             'totalPurchased',
@@ -53,34 +45,6 @@ class LessonTrackingController extends Controller
         ));
     }
 
-    // public function deductLesson($id)
-    // {
-    //     try {
-    //         $studentId = auth()->id();
-
-    //         $package = UserLessonTracking::with('teacher')
-    //             ->where('id', $id)
-    //             ->where('student_id', $studentId)
-    //             ->first();
-
-    //         if (!$package) {
-    //             return response()->json(['error' => 'Package not found'], 404);
-    //         }
-
-    //         // ✅ Only notify teacher, do not deduct
-    //         $package->teacher->notify(new \App\Notifications\LessonDeductedNotification($package, auth()->user()));
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Teacher has been notified to deduct the lesson!'
-    //         ]);
-    //     } catch (\Throwable $e) {
-    //         \Log::error("Error sending lesson deduction notification: " . $e->getMessage(), [
-    //             'trace' => $e->getTraceAsString()
-    //         ]);
-    //         return response()->json(['error' => 'Something went wrong.'], 500);
-    //     }
-    // }
     public function deductLesson($id)
     {
         try {
@@ -94,12 +58,8 @@ class LessonTrackingController extends Controller
             if (!$package) {
                 return response()->json(['error' => 'Package not found'], 404);
             }
-
-            // Send email to teacher
             Mail::to($package->teacher->email)
                 ->queue(new LessonDeductionRequestMail($package, $student));
-
-            // (Optional) still notify via Laravel notifications
             $package->teacher->notify(new \App\Notifications\LessonDeductedNotification($package, $student));
 
             return response()->json([
@@ -118,6 +78,18 @@ class LessonTrackingController extends Controller
     {
         $teacher = auth()->user();
 
+        // $notifications = $teacher->unreadNotifications()
+        //     ->where('type', 'App\Notifications\LessonDeductedNotification')
+        //     ->latest()
+        //     ->take(10)
+        //     ->get()
+        //     ->map(function ($notif) {
+        //         return [
+        //             'id' => $notif->id,
+        //             'message' => $notif->data['message'],
+        //             'time' => $notif->created_at->diffForHumans(),
+        //         ];
+        //     });
         $notifications = $teacher->unreadNotifications()
             ->where('type', 'App\Notifications\LessonDeductedNotification')
             ->latest()
@@ -125,11 +97,13 @@ class LessonTrackingController extends Controller
             ->get()
             ->map(function ($notif) {
                 return [
-                    'id' => $notif->id, // keep ID for marking read
+                    'id' => $notif->id,
                     'message' => $notif->data['message'],
                     'time' => $notif->created_at->diffForHumans(),
+                    'icon' => $notif->data['icon'] ?? 'bi bi-info-circle text-secondary',
                 ];
             });
+
 
         return response()->json([
             'unread_count' => $teacher->unreadNotifications()
@@ -172,30 +146,7 @@ class LessonTrackingController extends Controller
     }
 
 
-    // public function join($id)
-    // {
-    //     $meeting = ZoomMeeting::with('teacher')->findOrFail($id);
 
-    //     // only apply for package meetings
-    //     if ($meeting->meeting_type === 'package') {
-    //         $tracking = \DB::table('user_lesson_trackings')
-    //             ->where('student_id', auth()->id())
-    //             ->where('teacher_id', $meeting->teacher_id)
-    //             ->where('status', 'active')
-    //             ->first();
-
-    //         if ($tracking) {
-    //             \DB::table('user_lesson_trackings')
-    //                 ->where('id', $tracking->id)
-    //                 ->update([
-    //                     'lessons_taken' => $tracking->lessons_taken + 1,
-    //                     'lessons_remaining' => $tracking->lessons_remaining - 1,
-    //                     'updated_at' => now(),
-    //                 ]);
-    //         }
-    //     }
-    //     return redirect()->away($meeting->join_url);
-    // }
     public function join($id)
     {
         $meeting = ZoomMeeting::with('teacher')->findOrFail($id);
@@ -231,46 +182,168 @@ class LessonTrackingController extends Controller
         return redirect()->away($meeting->join_url);
     }
 
-
-    // public function join($id)
+    // public function cancel($id)
     // {
+    //     $studentId = auth()->id();
+
+    //     DB::table('zoom_meeting_user')
+    //         ->where('zoom_meeting_id', $id)
+    //         ->where('user_id', $studentId)
+    //         ->update([
+    //             'status' => 'cancelled',
+    //             'action_by' => $studentId,
+    //             'updated_at' => now(),
+    //         ]);
+
+    //     return back()->with('success', 'Lesson cancelled successfully.');
+    // }
+
+    // Updated cancel method with meeting details
+    public function cancel($id)
+    {
+        $student = auth()->user();
+
+        DB::table('zoom_meeting_user')
+            ->where('zoom_meeting_id', $id)
+            ->where('user_id', $student->id)
+            ->update([
+                'status' => 'cancelled',
+                'action_by' => $student->id,
+                'updated_at' => now(),
+            ]);
+
+        // Get meeting with teacher and all meeting details
+        $meeting = ZoomMeeting::with('teacher')->findOrFail($id);
+
+        // Try to get the lesson tracking/package info for this student-teacher pair
+        $packageInfo = \DB::table('user_lesson_trackings')
+            ->where('student_id', $student->id)
+            ->where('teacher_id', $meeting->teacher_id)
+            ->where('status', 'active')
+            ->first();
+
+        // Create package object with meeting and package information
+        $packageData = (object)[
+            'meeting_id' => $id,
+            'meeting_topic' => $meeting->topic ?? $meeting->agenda ?? 'Lesson',
+            'meeting_time' => \Carbon\Carbon::parse($meeting->start_time)->format('M d, Y H:i'),
+        ];
+
+        // Add package details if found
+        if ($packageInfo) {
+            $packageData->package_summary = $packageInfo->package_summary ?? "Package with {$meeting->teacher->name}";
+            $packageData->package_id = $packageInfo->id;
+        }
+
+        // Notify teacher with correct type
+        $meeting->teacher->notify(new \App\Notifications\LessonDeductedNotification(
+            $packageData,
+            $student,
+            'cancel'
+        ));
+
+        return back()->with('success', 'Lesson cancelled successfully.');
+    }
+
+    // Updated reschedule method with meeting details
+    public function reschedule(Request $request, $id)
+    {
+        $request->validate([
+            'rescheduled_time' => 'required|date|after:now',
+        ]);
+
+        $student = auth()->user();
+
+        DB::table('zoom_meeting_user')
+            ->where('zoom_meeting_id', $id)
+            ->where('user_id', $student->id)
+            ->update([
+                'status' => 'rescheduled',
+                'rescheduled_time' => $request->rescheduled_time,
+                'action_by' => $student->id,
+                'updated_at' => now(),
+            ]);
+
+        // Get meeting with teacher and all meeting details
+        $meeting = ZoomMeeting::with('teacher')->findOrFail($id);
+
+        // Try to get the lesson tracking/package info for this student-teacher pair
+        $packageInfo = \DB::table('user_lesson_trackings')
+            ->where('student_id', $student->id)
+            ->where('teacher_id', $meeting->teacher_id)
+            ->where('status', 'active')
+            ->first();
+
+        // Create package object with meeting and package information
+        $packageData = (object)[
+            'meeting_id' => $id,
+            'meeting_topic' => $meeting->topic ?? $meeting->agenda ?? 'Lesson',
+            'meeting_time' => \Carbon\Carbon::parse($meeting->start_time)->format('M d, Y H:i'),
+            'rescheduled_time' => \Carbon\Carbon::parse($request->rescheduled_time)->format('M d, Y H:i')
+        ];
+
+        // Add package details if found
+        if ($packageInfo) {
+            $packageData->package_summary = $packageInfo->package_summary ?? "Package with {$meeting->teacher->name}";
+            $packageData->package_id = $packageInfo->id;
+        }
+
+        // Notify teacher with correct type
+        $meeting->teacher->notify(new \App\Notifications\LessonDeductedNotification(
+            $packageData,
+            $student,
+            'reschedule'
+        ));
+
+        return back()->with('success', 'Lesson rescheduled successfully.');
+    }
+
+
+    // public function reschedule(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'rescheduled_time' => 'required|date|after:now',
+    //     ]);
+
+    //     $studentId = auth()->id();
+
+    //     DB::table('zoom_meeting_user')
+    //         ->where('zoom_meeting_id', $id)
+    //         ->where('user_id', $studentId)
+    //         ->update([
+    //             'status' => 'rescheduled',
+    //             'rescheduled_time' => $request->rescheduled_time,
+    //             'action_by' => $studentId,
+    //             'updated_at' => now(),
+    //         ]);
+
+    //     return back()->with('success', 'Lesson rescheduled successfully.');
+    // }
+    // public function reschedule(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'rescheduled_time' => 'required|date|after:now',
+    //     ]);
+
+    //     $student = auth()->user();
+
+    //     DB::table('zoom_meeting_user')
+    //         ->where('zoom_meeting_id', $id)
+    //         ->where('user_id', $student->id)
+    //         ->update([
+    //             'status' => 'rescheduled',
+    //             'rescheduled_time' => $request->rescheduled_time,
+    //             'action_by' => $student->id,
+    //             'updated_at' => now(),
+    //         ]);
+
+    //     // Notify teacher
     //     $meeting = ZoomMeeting::with('teacher')->findOrFail($id);
-    //     if ($meeting->meeting_type === 'package') {
-    //         $tracking = \DB::table('user_lesson_trackings')
-    //             ->where('student_id', auth()->id())
-    //             ->where('teacher_id', $meeting->teacher_id)
-    //             ->where('status', 'active')
-    //             ->first();
+    //     $meeting->teacher->notify(new \App\Notifications\LessonDeductedNotification(
+    //         (object)['id' => $id, 'rescheduled_time' => $request->rescheduled_time],
+    //         $student
+    //     ));
 
-    //         if ($tracking) {
-    //             \DB::table('user_lesson_trackings')
-    //                 ->where('id', $tracking->id)
-    //                 ->update([
-    //                     'lessons_taken'     => $tracking->lessons_taken + 1,
-    //                     'lessons_remaining' => max($tracking->lessons_remaining - 1, 0), // avoid negative
-    //                     'updated_at'        => now(),
-    //                 ]);
-    //         }
-    //     }
-
-    //     if ($meeting->meeting_type === 'duration') {
-    //         $tracking = \DB::table('user_lesson_trackings')
-    //             ->where('student_id', auth()->id())
-    //             ->where('teacher_id', $meeting->teacher_id)
-    //             ->where('status', 'active')
-    //             ->first();
-
-    //         if ($tracking) {
-    //             \DB::table('user_lesson_trackings')
-    //                 ->where('id', $tracking->id)
-    //                 ->update([
-    //                     'lessons_taken'       => $tracking->lessons_taken + 1,
-    //                     'lessons_remaining'   => max($tracking->lessons_remaining - 1, 0),
-    //                     'updated_at'          => now(),
-    //                 ]);
-    //         }
-    //     }
-
-    //     return redirect()->away($meeting->join_url);
+    //     return back()->with('success', 'Lesson rescheduled successfully.');
     // }
 }

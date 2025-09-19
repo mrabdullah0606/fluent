@@ -31,119 +31,11 @@
                          My Calendar</a>
                  </li>
 
-                 {{-- <li class="nav-item me-3 position-relative">
-                     <a class="nav-link d-flex align-items-center position-relative"
-                         href="{{ route('teacher.chats.index') }}">
-                         <i class="bi bi-chat-left-text me-1"></i>
-                         Messages
-                         @if (isset($unreadMessagesCount) && $unreadMessagesCount > 0)
-                             <span
-                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
-                                 {{ $unreadMessagesCount > 99 ? '99+' : $unreadMessagesCount }}
-                             </span>
-                         @endif
-                     </a>
-                 </li>
-
-                 <style>
-                     .notification-badge {
-                         font-size: 0.65rem;
-                         padding: 0.25em 0.4em;
-                         margin-left: -10px;
-                         margin-top: -5px;
-                         animation: pulse 2s infinite;
-                     }
-
-                     @keyframes pulse {
-                         0% {
-                             box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
-                         }
-
-                         70% {
-                             box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
-                         }
-
-                         100% {
-                             box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
-                         }
-                     }
-
-                     .nav-link {
-                         position: relative;
-                     }
-                 </style>
-
-                 <script>
-                     // Function to update navbar notification count - FIXED VERSION
-                     function updateNavbarNotificationCount() {
-                         const currentPath = window.location.pathname;
-                         let unreadCountRoute;
-
-                         if (currentPath.includes('/teacher/')) {
-                             unreadCountRoute = '{{ route('teacher.chat.unread-count') }}';
-                         } else if (currentPath.includes('/student/')) {
-                             unreadCountRoute = '{{ route('student.chat.unread-count') }}';
-                         } else {
-                             // Default to teacher route if we can't determine
-                             unreadCountRoute = '{{ route('teacher.chat.unread-count') }}';
-                         }
-
-                         fetch(unreadCountRoute)
-                             .then(response => {
-                                 if (!response.ok) {
-                                     throw new Error(`HTTP error! status: ${response.status}`);
-                                 }
-                                 return response.json();
-                             })
-                             .then(data => {
-                                 console.log('Navbar update response:', data); // Debug log
-
-                                 const badge = document.querySelector('.notification-badge');
-                                 const messagesLink = document.querySelector('a[href*="chats"]');
-
-                                 if (data.unread_count > 0) {
-                                     if (badge) {
-                                         badge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
-                                     } else if (messagesLink) {
-                                         // Create badge if it doesn't exist
-                                         const newBadge = document.createElement('span');
-                                         newBadge.className =
-                                             'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge';
-                                         newBadge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
-                                         messagesLink.appendChild(newBadge);
-                                     }
-                                 } else {
-                                     if (badge) {
-                                         badge.remove();
-                                     }
-                                 }
-                             })
-                             .catch(error => {
-                                 console.error('Error fetching unread count:', error);
-                             });
-                     }
-
-                     // Update count every 30 seconds
-                     setInterval(updateNavbarNotificationCount, 30000);
-
-                     // Update count when page becomes visible (user switches back to tab)
-                     document.addEventListener('visibilitychange', function() {
-                         if (!document.hidden) {
-                             updateNavbarNotificationCount();
-                         }
-                     });
-
-                     // Update count on page load
-                     document.addEventListener('DOMContentLoaded', function() {
-                         updateNavbarNotificationCount();
-                     });
-                 </script> --}}
-
                  <li class="nav-item me-3 position-relative">
                      <a class="nav-link d-flex align-items-center position-relative"
                          href="{{ route('teacher.chats.index') }}">
                          <i class="bi bi-chat-left-text me-1"></i>
-                         Messages 
+                         Messages
                          @if (isset($totalUnreadCount) && $totalUnreadCount > 0)
                              <span
                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
@@ -274,7 +166,7 @@
                              style="width: 300px;">
                              <li class="dropdown-header">Recent Lesson Notifications</li>
                              <div id="lesson-notifications-list" style="max-height: 300px; overflow-y: auto;">
-                                 @foreach ($lessonNotifications->take(5) as $notification)
+                                 {{-- @foreach ($lessonNotifications->take(5) as $notification)
                                      <li>
                                          <a class="dropdown-item small lesson-link" data-id="{{ $notification->id }}"
                                              href="{{ route('teacher.zoom.meetings.index') }}">
@@ -284,7 +176,22 @@
                                                  class="text-muted small">{{ $notification->created_at->diffForHumans() }}</span>
                                          </a>
                                      </li>
+                                 @endforeach --}}
+                                 @foreach ($lessonNotifications->take(5) as $notification)
+                                     <li>
+                                         <a class="dropdown-item small lesson-link d-flex align-items-start"
+                                             data-id="{{ $notification->id }}"
+                                             href="{{ route('teacher.zoom.meetings.index') }}">
+                                             <i class="{{ $notification->data['icon'] }} me-2"></i>
+                                             <div>
+                                                 {{ $notification->data['message'] }}<br>
+                                                 <span
+                                                     class="text-muted small">{{ $notification->created_at->diffForHumans() }}</span>
+                                             </div>
+                                         </a>
+                                     </li>
                                  @endforeach
+
                                  @if ($lessonCount > 5)
                                      <li>
                                          <hr class="dropdown-divider">
@@ -308,7 +215,6 @@
                          });
                      }
 
-                     // Update badge and dropdown dynamically
                      function updateLessonDropdown() {
                          fetch('{{ route('teacher.notifications.unread-count') }}')
                              .then(res => res.json())
@@ -318,7 +224,6 @@
                                  const dropdown = document.getElementById('lessonDropdown');
 
                                  if (data.unread_count > 0) {
-                                     // Update or create badge
                                      if (badge) badge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
                                      else {
                                          const span = document.createElement('span');
@@ -327,16 +232,18 @@
                                          span.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
                                          dropdown.appendChild(span);
                                      }
-
-                                     // Update list
                                      if (list) {
                                          list.innerHTML = '';
                                          data.notifications.slice(0, 5).forEach(notif => {
                                              const li = document.createElement('li');
-                                             li.innerHTML = `<a class="dropdown-item small lesson-link" data-id="${notif.id}" href="${dropdown.href}">
-                                            ${notif.message}<br>
-                                            <span class="text-muted small">${notif.time}</span>
-                                        </a>`;
+                                             li.innerHTML = `
+                                                <a class="dropdown-item small lesson-link d-flex align-items-start" data-id="${notif.id}" href="${dropdown.href}">
+                                                    <i class="${notif.icon} me-2"></i>
+                                                    <div>
+                                                        ${notif.message}<br>
+                                                        <span class="text-muted small">${notif.time}</span>
+                                                    </div>
+                                                </a>`;
                                              list.appendChild(li);
                                          });
                                      }

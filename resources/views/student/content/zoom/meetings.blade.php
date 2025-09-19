@@ -7,22 +7,18 @@
                 <h2 class="mb-0"><i class="fas fa-video me-2"></i>My Zoom Meetings</h2>
             </div>
             <div class="col-2 text-end">
-                <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#packagesModal">
                     View My Packages
                 </button>
             </div>
-            <!-- Packages Modal -->
             <div class="modal fade" id="packagesModal" tabindex="-1" aria-labelledby="packagesModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
-
                         <div class="modal-header">
                             <h5 class="modal-title" id="packagesModalLabel">My Purchased Packages</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-
                         <div class="modal-body">
                             @if ($lessonTracking->count() > 0)
                                 <table class="table table-bordered">
@@ -40,7 +36,6 @@
                                     <tbody>
                                         @foreach ($lessonTracking as $package)
                                             <tr>
-                                                {{-- <td>{{ $package->package_summary }}</td> --}}
                                                 <td>{{ $package->package_summary }} - {{ $package->teacher_name }}</td>
                                                 <td>{{ $package->total_lessons_purchased }}</td>
                                                 <td id="taken-{{ $package->id }}">{{ $package->lessons_taken }}</td>
@@ -64,9 +59,6 @@
                                 <p class="text-muted">You haven’t purchased any packages yet.</p>
                             @endif
                         </div>
-
-
-
                         <script>
                             document.querySelectorAll('.deduct-lesson-btn').forEach(button => {
                                 button.addEventListener('click', function() {
@@ -86,10 +78,7 @@
                                                     .lessons_remaining;
                                                 document.getElementById(`taken-${packageId}`).textContent = data
                                                     .lessons_taken;
-
                                                 if (data.lessons_remaining <= 0) button.disabled = true;
-
-                                                // Optional: alert/toast
                                                 alert(data.message);
                                             } else {
                                                 alert(data.error || 'Failed to deduct lesson.');
@@ -99,8 +88,6 @@
                                 });
                             });
                         </script>
-
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
@@ -160,7 +147,7 @@
             <div class="col-12">
                 @if ($meetings->count() > 0)
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered align-middle">
+                        <table id="zoomTable" class="table table-striped table-bordered align-middle">
                             <thead class="table-dark">
                                 <tr>
                                     <th>Topic</th>
@@ -174,9 +161,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($meetings as $meeting)
-                                    {{-- @dd($meeting->toArray()) --}}
                                     <tr>
-                                        {{-- <td>{{ $meeting->topic }} - {{ $meeting->meeting_type }} </td> --}}
                                         <td>
                                             {{ $meeting->topic }} -
                                             @php
@@ -189,7 +174,6 @@
                                                     );
                                                 }
                                             @endphp
-
                                             {{ $tracking->package_summary ?? ucfirst($meeting->meeting_type) }}
                                         </td>
                                         <td>{{ $meeting->teacher->name ?? 'N/A' }}</td>
@@ -197,20 +181,16 @@
                                         <td>{{ $meeting->duration }} min</td>
                                         <td><code>{{ $meeting->meeting_id }}</code></td>
                                         <td>{{ $meeting->password ?? '-' }}</td>
-
                                         <td>
                                             @php
                                                 $attendee = $meeting->attendees->firstWhere('id', auth()->id());
                                             @endphp
-
                                             @if ($attendee && $attendee->pivot->has_joined)
-                                                {{-- Already joined → show Rejoin --}}
                                                 <a href="{{ $meeting->join_url }}" target="_blank"
                                                     class="btn btn-sm btn-primary">
                                                     Rejoin
                                                 </a>
                                             @else
-                                                {{-- First time → normal join (deducts) --}}
                                                 <a href="{{ route('student.zoom.join', $meeting->id) }}"
                                                     class="btn btn-sm btn-success">
                                                     Join

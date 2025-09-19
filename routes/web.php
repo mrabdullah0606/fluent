@@ -95,6 +95,10 @@ Route::prefix('student')->group(function () {
         Route::get('/lesson-tracking', [LessonTrackingController::class, 'lessonTracking'])->name('student.lesson.tracking');
         Route::get('zoom/join/{id}', [LessonTrackingController::class, 'join'])
             ->name('student.zoom.join');
+        Route::post('zoom/{id}/cancel', [LessonTrackingController::class, 'cancel'])
+            ->name('student.zoom.cancel');
+        Route::post('zoom/{id}/reschedule', [LessonTrackingController::class, 'reschedule'])
+            ->name('student.zoom.reschedule');
         /* ********************************** CHAT ROUTES ********************************** */
         Route::get('chats', [ChatController::class, 'studentChatList'])->name('student.chats.index');
         Route::get('chat/unread-count', [ChatController::class, 'getUnreadCount'])->name('student.chat.unread-count');

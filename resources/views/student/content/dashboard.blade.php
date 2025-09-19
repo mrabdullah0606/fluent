@@ -54,96 +54,6 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div style="opacity: 1; transform: none;">
-                    <h2 class="text-2xl font-bold text-foreground mb-4">Upcoming Lessons</h2>
-                    <div class="space-y-4">
-                        @foreach ($upcomingMeetings as $meeting)
-                            @php
-                                $hoursDiff = now()->diffInHours(\Carbon\Carbon::parse($meeting['start_time']), false);
-                            @endphp
-                            <div
-                                class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow m-2">
-
-                                <div class="p-4 flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">J</span></span>
-                                        <div>
-                                            <p class="font-semibold text-foreground">{{ $meeting['teacher_name'] }}</p>
-                                            <p class="text-sm text-muted-foreground">{{ $meeting['topic'] }} -
-                                                {{ $meeting['duration'] }} min</p>
-                                            <p class="text-sm text-warning font-medium flex items-center"><svg
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="mr-1 h-3.5 w-3.5">
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                                </svg>
-                                                {{ \Carbon\Carbon::parse($meeting['start_time'])->isToday()
-                                                    ? 'Today at ' . \Carbon\Carbon::parse($meeting['start_time'])->format('H:i')
-                                                    : \Carbon\Carbon::parse($meeting['start_time'])->format('M d, Y H:i') }}
-
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                        <a href="{{ $meeting['join_url'] }}" target="_blank">
-                                            <button
-                                                class="inline-flex items-center justify-center text-sm font-medium bg-warning text-warning-foreground hover:bg-warning/90 h-9 rounded-md px-3">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="h-4 w-4 mr-2">
-                                                    <path d="m22 8-6 4 6 4V8Z"></path>
-                                                    <rect width="14" height="12" x="2" y="6" rx="2"
-                                                        ry="2">
-                                                    </rect>
-                                                </svg>
-                                                Join Lesson
-                                            </button>
-                                        </a>
-                                        <div class="relative inline-block text-left">
-                                            <button type="button"
-                                                class="inline-flex items-center justify-center text-sm font-medium border rounded-md px-3 h-9 bg-white hover:bg-gray-100">
-                                                Options
-                                                <svg class="-mr-1 ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.292l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.65a.75.75 0 01-1.08 0l-4.25-4.65a.75.75 0 01.02-1.06z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-
-                                            <div
-                                                class="absolute right-0 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                                                <div class="py-1">
-                                                    <button type="button"
-                                                        onclick="alert('{{ $hoursDiff < 24 ? 'If you cancel the lesson now, it will be paid to the tutor as it’s cancelled within the last 24 hours.' : 'Lesson cancelled successfully.' }}')"
-                                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                        Cancel
-                                                    </button>
-                                                    <button type="button"
-                                                        @if ($hoursDiff < 24) onclick="alert('Can’t reschedule within the last 24 hours')"
-                                                                    class="block w-full text-left px-4 py-2 text-sm text-gray-400 cursor-not-allowed"
-                                                                    disabled
-                                                                    @else
-                                                                    onclick="alert('Lesson rescheduled successfully.')"
-                                                                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @endif>
-                                                        Reschedule
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="text-center mt-6"><button
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Show
-                            More (1 more)</button></div>
-                </div> --}}
                 <div style="opacity: 1; transform: none;">
                     <h2 class="text-2xl font-bold text-foreground mb-4">Upcoming Lessons</h2>
 
@@ -186,20 +96,35 @@
                                                 ->first();
                                         @endphp
 
-                                        @if ($pivot && $pivot->has_joined)
-                                            <a href="{{ $meeting['join_url'] }}" target="_blank">
-                                                <button
-                                                    class="inline-flex items-center justify-center text-sm font-medium bg-primary text-white hover:bg-primary/90 h-9 rounded-md px-3">
-                                                    Rejoin Lesson
-                                                </button>
-                                            </a>
-                                        @else
-                                            <a href="{{ route('student.zoom.join', $meeting['id']) }}">
-                                                <button
-                                                    class="inline-flex items-center justify-center text-sm font-medium bg-success text-white hover:bg-success/90 h-9 rounded-md px-3">
-                                                    Join Lesson
-                                                </button>
-                                            </a>
+                                        @if ($pivot)
+                                            @if ($pivot->status === 'cancelled')
+                                                <span class="badge bg-danger">
+                                                    Cancelled by
+                                                    {{ \App\Models\User::find($pivot->action_by)?->name ?? 'Unknown' }}
+                                                </span>
+                                            @elseif ($pivot->status === 'rescheduled')
+                                                <span class="badge bg-warning text-dark">
+                                                    Rescheduled by
+                                                    {{ \App\Models\User::find($pivot->action_by)?->name ?? 'Unknown' }}
+                                                    <br>
+                                                    New Time:
+                                                    {{ \Carbon\Carbon::parse($pivot->rescheduled_time)->format('M d, Y H:i') }}
+                                                </span>
+                                            @elseif ($pivot->has_joined)
+                                                <a href="{{ $meeting['join_url'] }}" target="_blank">
+                                                    <button
+                                                        class="inline-flex items-center justify-center text-sm font-medium bg-primary text-white hover:bg-primary/90 h-9 rounded-md px-3">
+                                                        Rejoin Lesson
+                                                    </button>
+                                                </a>
+                                            @else
+                                                <a href="{{ route('student.zoom.join', $meeting['id']) }}">
+                                                    <button
+                                                        class="inline-flex items-center justify-center text-sm font-medium bg-success text-white hover:bg-success/90 h-9 rounded-md px-3">
+                                                        Join Lesson
+                                                    </button>
+                                                </a>
+                                            @endif
                                         @endif
 
                                         <div class="dropdown">
@@ -208,26 +133,31 @@
                                                 aria-expanded="false">
                                                 Options
                                             </button>
-
                                             <ul class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="lessonOptions{{ $index }}">
                                                 <li>
-                                                    <button type="button" class="dropdown-item"
-                                                        onclick="alert('{{ $hoursDiff < 24 ? 'If you cancel the lesson now, it will be paid to the tutor because it is cancelled within the last 24 hours.' : 'Lesson cancelled successfully.' }}')">
-                                                        Cancel
-                                                    </button>
+                                                    <form method="POST"
+                                                        action="{{ route('student.zoom.cancel', $meeting['id']) }}">
+                                                        @csrf
+                                                        <button type="submit" class="dropdown-item"
+                                                            onclick="return confirm('{{ $hoursDiff < 24 ? 'If you cancel the lesson now, it will be paid to the tutor because it is cancelled within the last 24 hours.' : 'Are you sure you want to cancel this lesson?' }}')">
+                                                            Cancel
+                                                        </button>
+                                                    </form>
                                                 </li>
+                                                <hr>
                                                 <li>
                                                     @if ($hoursDiff < 24)
-                                                        <button class="dropdown-item disabled" type="button"
-                                                            aria-disabled="true" tabindex="-1">
-                                                            Cannot reschedule within the last 24 hours
-                                                        </button>
+                                                        <button class="dropdown-item disabled" type="button">Cannot
+                                                            reschedule within 24h</button>
                                                     @else
-                                                        <button type="button" class="dropdown-item"
-                                                            onclick="alert('Lesson rescheduled successfully.')">
-                                                            Reschedule
-                                                        </button>
+                                                        <form method="POST"
+                                                            action="{{ route('student.zoom.reschedule', $meeting['id']) }}">
+                                                            @csrf
+                                                            <input type="datetime-local" name="rescheduled_time"
+                                                                class="form-control m-2 w-75" required>
+                                                            <button type="submit" class="dropdown-item">Reschedule</button>
+                                                        </form>
                                                     @endif
                                                 </li>
                                             </ul>

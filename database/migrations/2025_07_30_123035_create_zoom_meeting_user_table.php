@@ -17,6 +17,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->boolean('has_joined')->default(false);
+            $table->enum('status', ['scheduled', 'joined', 'cancelled', 'rescheduled'])->default('scheduled');
+            $table->timestamp('rescheduled_time')->nullable();
+            // $table->enum('action_by', ['student', 'teacher'])->nullable();
+            $table->foreignId('action_by')->nullable()->constrained('users')->nullOnDelete();
             $table->unsignedBigInteger('lesson_tracking_id')->nullable();
             $table->timestamps();
         });
