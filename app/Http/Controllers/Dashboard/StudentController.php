@@ -23,28 +23,107 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
+    // public function index(): Response
+    // {
+    //     $student = auth()->user();
+
+    //     // Get all payments made by this student
+    //     $payments = Payment::where('student_id', $student->id)->get();
+    //     $totalTeachers = $payments->pluck('teacher_id')->unique()->count();
+    //     // dd($payments->toArray(), $totalTeachers);
+    //     $meetingDetails = [];
+
+    //     foreach ($payments as $payment) {
+    //         $zoomMeetings = ZoomMeeting::where('teacher_id', $payment->teacher_id)
+    //             ->where('meeting_type', $payment->type)
+    //             ->get();
+
+    //         foreach ($zoomMeetings as $meeting) {
+    //             if ($payment->type === 'duration') {
+    //                 $meetingDetails[] = [
+    //                     'meeting_type' => $payment->type,
+    //                     'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
+    //                     'topic' => $meeting->topic,
+    //                     'start_time' => $meeting->start_time,
+    //                     'duration' => $meeting->duration,
+    //                     'join_url' => $meeting->join_url,
+    //                 ];
+    //             }
+
+    //             if ($payment->type === 'package') {
+    //                 $meetingDetails[] = [
+    //                     'meeting_type' => $payment->type,
+    //                     'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
+    //                     'topic' => $meeting->topic,
+    //                     'start_time' => $meeting->start_time,
+    //                     'duration' => $meeting->duration,
+    //                     'join_url' => $meeting->join_url,
+    //                 ];
+    //             }
+
+    //             if ($payment->type === 'group') {
+    //                 // Get the group class title based on teacher_id
+    //                 $groupClass = \App\Models\GroupClass::where('teacher_id', $payment->teacher_id)->first();
+    //                 $groupName = $groupClass ? $groupClass->title : 'Group Class';
+
+    //                 $meetingDetails[] = [
+    //                     'meeting_type' => $payment->type,
+    //                     'group_name' => $groupName,
+    //                     'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
+    //                     'topic' => $meeting->topic,
+    //                     'start_time' => $meeting->start_time,
+    //                     'duration' => $meeting->duration,
+    //                     'join_url' => $meeting->join_url,
+    //                 ];
+    //             }
+    //         }
+    //     }
+    //     $upcomingMeetings = collect($meetingDetails)->filter(function ($meeting) {
+    //         return Carbon::parse($meeting['start_time'])->isToday() ||
+    //             Carbon::parse($meeting['start_time'])->isFuture();
+    //     })->values();
+    //     $now = Carbon::now();
+    //     $startOfWeek = $now->copy()->startOfWeek();
+    //     $endOfWeek   = $now->copy()->endOfWeek();
+
+    //     // Get all lessons for this student in the current week
+    //     $lessonsThisWeek = DB::table('zoom_meeting_user')
+    //         ->where('user_id', $studentId)
+    //         ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+    //         ->get();
+
+    //     $totalThisWeek = $lessonsThisWeek->count();
+    //     $completed     = $lessonsThisWeek->where('has_joined', 1)->count();
+    //     $upcoming      = $lessonsThisWeek->where('has_joined', 0)->count();        // $lessonSummary = $this->getLessonSummary($student->id);
+    //     // dd($upcomingMeetings, $lessonSummary, $meetingDetails);
+
+    //     return response()->view('student.content.dashboard', compact(
+    //         'student',
+    //         'meetingDetails',
+    //         'totalTeachers',
+    //         'upcomingMeetings',
+    //         'lessonSummary'
+    //     ));
+    // }
+
     public function index(): Response
     {
         $student = auth()->user();
-
-        // Get all payments made by this student
         $payments = Payment::where('student_id', $student->id)->get();
         $totalTeachers = $payments->pluck('teacher_id')->unique()->count();
-        // dd($payments->toArray(), $totalTeachers);
         $meetingDetails = [];
-
         foreach ($payments as $payment) {
-            // Fetch the meetings created by the same teacher and with same meeting_type
             $zoomMeetings = ZoomMeeting::where('teacher_id', $payment->teacher_id)
                 ->where('meeting_type', $payment->type)
                 ->get();
-
             foreach ($zoomMeetings as $meeting) {
-                if ($payment->type === 'duration') {
+                if ($payment->type === 'duration' || $payment->type === 'package') {
                     $meetingDetails[] = [
+                        'id'           => $meeting->id,
                         'meeting_type' => $payment->type,
                         'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
                         'topic' => $meeting->topic,
@@ -53,24 +132,11 @@ class StudentController extends Controller
                         'join_url' => $meeting->join_url,
                     ];
                 }
-
-                if ($payment->type === 'package') {
-                    $meetingDetails[] = [
-                        'meeting_type' => $payment->type,
-                        'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
-                        'topic' => $meeting->topic,
-                        'start_time' => $meeting->start_time,
-                        'duration' => $meeting->duration,
-                        'join_url' => $meeting->join_url,
-                    ];
-                }
-
                 if ($payment->type === 'group') {
-                    // Get the group class title based on teacher_id
                     $groupClass = \App\Models\GroupClass::where('teacher_id', $payment->teacher_id)->first();
                     $groupName = $groupClass ? $groupClass->title : 'Group Class';
-
                     $meetingDetails[] = [
+                        'id'           => $meeting->id,
                         'meeting_type' => $payment->type,
                         'group_name' => $groupName,
                         'teacher_name' => $meeting->teacher->name ?? 'Unknown Teacher',
@@ -86,8 +152,18 @@ class StudentController extends Controller
             return Carbon::parse($meeting['start_time'])->isToday() ||
                 Carbon::parse($meeting['start_time'])->isFuture();
         })->values();
-        $lessonSummary = $this->getLessonSummary($student->id);
-
+        $now = Carbon::now();
+        $startOfWeek = $now->copy()->startOfWeek();
+        $endOfWeek   = $now->copy()->endOfWeek();
+        $lessonsThisWeek = DB::table('zoom_meeting_user')
+            ->where('user_id', $student->id)
+            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->get();
+        $lessonSummary = [
+            'total_this_week' => $lessonsThisWeek->count(),
+            'completed'       => $lessonsThisWeek->where('has_joined', 1)->count(),
+            'upcoming'        => $lessonsThisWeek->where('has_joined', 0)->count(),
+        ];
         return response()->view('student.content.dashboard', compact(
             'student',
             'meetingDetails',
@@ -101,7 +177,7 @@ class StudentController extends Controller
     {
         //$teacher = Teacher::first(); // You can fetch based on logic or selection
         //return view('student.content.reviews.create', compact('teacher'));
-        return view('student.content.reviews.create'); // Make sure the file is located at /resources/views/student/add-review.blade.php
+        return view('student.content.reviews.create');
     }
 
     // public function storeReview(Request $request, Teacher $teacher)

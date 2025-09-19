@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class TeacherController extends Controller
 {
@@ -34,40 +35,44 @@ class TeacherController extends Controller
     public function index(): Response
     {
         $teacher = auth()->user();
+
         $wallet = TeacherWallet::where('teacher_id', $teacher->id)->first();
+
         $zoomMeetings = ZoomMeeting::with('group')
             ->where('teacher_id', $teacher->id)
             ->orderBy('start_time', 'asc')
             ->get();
-        \Log::info('Zoom Meetings Count: ' . $zoomMeetings->count());
+
         $meetingDetails = [];
+
         foreach ($zoomMeetings as $meeting) {
-            \Log::info('Processing meeting: ' . $meeting->topic);
             $payments = Payment::where('teacher_id', $teacher->id)
                 ->where('type', $meeting->meeting_type)
                 ->get();
+
             if ($payments->count() > 0) {
                 foreach ($payments as $payment) {
-                    if ($payment->type === 'duration') {
+                    if ($payment->type === 'duration' || $payment->type === 'package') {
                         $student = User::find($payment->student_id);
                         $meetingDetails[] = [
                             'meeting_type' => $payment->type,
                             'student_name' => $student->name ?? 'N/A',
-                            'topic' => $meeting->topic,
-                            'start_time' => $meeting->start_time,
-                            'duration' => $meeting->duration,
-                            'join_url' => $meeting->join_url,
+                            'topic'        => $meeting->topic,
+                            'start_time'   => $meeting->start_time,
+                            'duration'     => $meeting->duration,
+                            'join_url'     => $meeting->join_url,
                         ];
                     } elseif ($payment->type === 'group') {
-                        $groupClass = GroupClass::where('teacher_id', auth()->id())->first();
-                        $groupName = $groupClass ? $groupClass->title : 'Group Class';
+                        $groupClass = GroupClass::where('teacher_id', $teacher->id)->first();
+                        $groupName  = $groupClass ? $groupClass->title : 'Group Class';
+
                         $meetingDetails[] = [
                             'meeting_type' => $payment->type,
-                            'group_name' => $groupName,
-                            'topic' => $meeting->topic,
-                            'start_time' => $meeting->start_time,
-                            'duration' => $meeting->duration,
-                            'join_url' => $meeting->join_url,
+                            'group_name'   => $groupName,
+                            'topic'        => $meeting->topic,
+                            'start_time'   => $meeting->start_time,
+                            'duration'     => $meeting->duration,
+                            'join_url'     => $meeting->join_url,
                         ];
                     }
                 }
@@ -75,56 +80,45 @@ class TeacherController extends Controller
                 $meetingDetails[] = [
                     'meeting_type' => 'general',
                     'student_name' => 'General Meeting',
-                    'topic' => $meeting->topic,
-                    'start_time' => $meeting->start_time,
-                    'duration' => $meeting->duration,
-                    'join_url' => $meeting->join_url,
+                    'topic'        => $meeting->topic,
+                    'start_time'   => $meeting->start_time,
+                    'duration'     => $meeting->duration,
+                    'join_url'     => $meeting->join_url,
                 ];
             }
         }
-        \Log::info('Meeting Details Count: ' . count($meetingDetails));
-        $visibleMeetings = array_slice($meetingDetails, 0, 4);
-        $hiddenMeetings = array_slice($meetingDetails, 4);
-        \Log::info('Visible Meetings: ' . count($visibleMeetings));
-        \Log::info('Hidden Meetings: ' . count($hiddenMeetings));
-        $totalEnrollers = Payment::where('teacher_id', $teacher->id)->distinct('student_id')->count('student_id');
-        $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
-        $endOfWeek = \Carbon\Carbon::now()->endOfWeek();
 
-        $lessonTrackings = UserLessonTracking::where('teacher_id', $teacher->id)
-            ->with('attendanceRecords')
+        $visibleMeetings = array_slice($meetingDetails, 0, 4);
+        $hiddenMeetings  = array_slice($meetingDetails, 4);
+
+        $totalEnrollers = Payment::where('teacher_id', $teacher->id)
+            ->distinct('student_id')
+            ->count('student_id');
+        $now         = \Carbon\Carbon::now();
+        $startOfWeek = $now->copy()->startOfWeek();
+        $endOfWeek   = $now->copy()->endOfWeek();
+
+        $lessonsThisWeek = DB::table('zoom_meeting_user')
+            ->where('teacher_id', $teacher->id)
+            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
             ->get();
 
-        $completedLessons = 0;
-        $upcomingLessons = 0;
-
-        foreach ($lessonTrackings as $tracking) {
-            foreach ($tracking->attendanceRecords as $attendance) {
-                $lessonDate = \Carbon\Carbon::parse($attendance->lesson_date);
-                if ($lessonDate->between($startOfWeek, $endOfWeek)) {
-                    if ($attendance->attendance_status === 'attended') {
-                        $completedLessons++;
-                    } elseif ($attendance->attendance_status === 'pending') {
-                        $upcomingLessons++;
-                    }
-                }
-            }
-        }
-
-        $totalLessonsThisWeek = $completedLessons + $upcomingLessons;
-
+        $lessonSummary = [
+            'total_this_week' => $lessonsThisWeek->count(),
+            'completed'       => $lessonsThisWeek->where('has_joined', 1)->count(),
+            'upcoming'        => $lessonsThisWeek->where('has_joined', 0)->count(),
+        ];
 
         return response()->view('teacher.content.dashboard', compact(
             'teacher',
+            'wallet',
             'visibleMeetings',
             'hiddenMeetings',
-            'wallet',
             'totalEnrollers',
-            'completedLessons',
-            'upcomingLessons',
-            'totalLessonsThisWeek'
+            'lessonSummary'
         ));
     }
+
 
     /**
      * Edit Profile

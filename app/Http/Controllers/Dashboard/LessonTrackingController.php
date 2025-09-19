@@ -27,7 +27,6 @@ class LessonTrackingController extends Controller
             ->with(['teacher', 'attendees'])
             ->orderBy('start_time', 'asc')
             ->get();
-
         // $lessonTracking = \DB::table('user_lesson_trackings')
         //     ->where('student_id', $studentId)
         //     ->where('status', 'active')
@@ -143,12 +142,9 @@ class LessonTrackingController extends Controller
     public function lessonNotificationsPage()
     {
         $teacher = auth()->user();
-
-        // ✅ Mark all lesson notifications as read
         $teacher->unreadNotifications
             ->where('type', 'App\Notifications\LessonDeductedNotification')
             ->markAsRead();
-
         $notifications = $teacher->notifications()->latest()->paginate(20);
 
         return view('teacher.lesson.notifications', compact('notifications'));
@@ -204,22 +200,18 @@ class LessonTrackingController extends Controller
     {
         $meeting = ZoomMeeting::with('teacher')->findOrFail($id);
         $studentId = auth()->id();
-
         $pivot = DB::table('zoom_meeting_user')
             ->where('zoom_meeting_id', $meeting->id)
             ->where('user_id', $studentId)
             ->first();
-
         if ($pivot && !$pivot->has_joined) {
-
-            // ✅ Pick the first package with remaining lessons
             $tracking = DB::table('user_lesson_trackings')
                 ->where('student_id', $studentId)
                 ->where('teacher_id', $meeting->teacher_id)
                 ->where('status', 'active')
                 ->where('payment_type', 'package')
-                ->where('lessons_remaining', '>', 0) // only deduct if remaining > 0
-                ->orderBy('id', 'asc') // oldest package first
+                ->where('lessons_remaining', '>', 0)
+                ->orderBy('id', 'asc')
                 ->first();
 
             if ($tracking) {
@@ -231,14 +223,11 @@ class LessonTrackingController extends Controller
                         'updated_at'        => now(),
                     ]);
             }
-
-            // ✅ Mark as joined
             DB::table('zoom_meeting_user')
                 ->where('zoom_meeting_id', $meeting->id)
                 ->where('user_id', $studentId)
                 ->update(['has_joined' => true]);
         }
-
         return redirect()->away($meeting->join_url);
     }
 

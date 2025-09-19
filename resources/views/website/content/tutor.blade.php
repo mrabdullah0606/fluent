@@ -159,14 +159,10 @@
                                             ${{ number_format($duration60Rate ?? 'N/A', 2) }}/hour
                                         </p>
                                     </div>
-
-
                                 </div>
-
                                 <!-- Right: Video -->
                                 <div>
                                     @if ($introVideo)
-                                        <!-- Uploaded Video -->
                                         <video controls class="w-full h-48 md:h-64 rounded-lg shadow-md">
                                             <source src="{{ asset('storage/' . $introVideo) }}" type="video/mp4">
                                             Your browser does not support the video tag.
@@ -181,39 +177,7 @@
                                         </iframe>
                                     @endif
                                 </div>
-
                             </div>
-
-                            <!-- Action Buttons under both -->
-                            {{-- <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
-                                <button
-                                    class="inline-flex items-center justify-center text-sm h-10 w-full sm:w-auto bg-red-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md"
-                                    disabled>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="mr-2 h-5 w-5">
-                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"> </rect>
-                                        <line x1="16" x2="16" y1="2" y2="6"></line>
-                                        <line x1="8" x2="8" y1="2" y2="6"></line>
-                                        <line x1="3" x2="21" y1="10" y2="10"></line>
-                                        <path d="M8 14h.01"></path>
-                                        <path d="M12 14h.01"></path>
-                                        <path d="M16 14h.01"></path>
-                                        <path d="M8 18h.01"></path>
-                                        <path d="M12 18h.01"></path>
-                                        <path d="M16 18h.01"></path>
-                                    </svg> Book Lesson
-                                </button>
-                                <button
-                                    class="inline-flex items-center justify-center text-sm h-10 w-full sm:w-auto border border-primary text-primary font-semibold py-3 px-6 rounded-lg"
-                                    disabled>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="mr-2 h-5 w-5">
-                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                    </svg> Message Tutor
-                                </button>
-                            </div> --}}
                             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
                                 <a href="{{ route('tutor.booking', ['id' => $teacher->id]) }}">
                                     <button
@@ -298,18 +262,6 @@
                                             </div>
                                         @endif
                                     @endforeach
-                                    <!-- <div
-                                                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                                                            Conversational Russian</div>
-                                                                        <div
-                                                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                                                            English for Beginners</div>
-                                                                        <div
-                                                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                                                            Cultural Immersion</div>
-                                                                        <div
-                                                                            class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 bg-yellow-100 text-yellow-800 border-yellow-300">
-                                                                            Pronunciation</div> -->
                                 </div>
                             </div>
                             <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-yellow-200"
