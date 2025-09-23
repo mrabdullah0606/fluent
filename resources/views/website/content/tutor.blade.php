@@ -16,7 +16,7 @@
                                     @if ($profileImage)
                                         <img src="{{ asset('storage/' . $profileImage) }}" alt="Profile Image">
                                     @else
-                                        <span>No Image Uploaded</span>
+                                        <span>{{ __('welcome.key_223') }}</span>
                                     @endif
 
                                 </span>
@@ -83,14 +83,14 @@
                                             ({{ $reviewsCount }} {{ Str::plural('review', $reviewsCount) }})
                                         </span>
                                     @else
-                                        <span class="text-gray-500">No ratings yet</span>
+                                        <span class="text-gray-500">{{ __('welcome.key_224') }}</span>
                                     @endif
                                 </div>
                             </div>
 
                             {{-- <div
                                 class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent mt-3 bg-green-500 hover:bg-green-600 text-white">
-                                Active Now
+                                {{ __('welcome.key_225') }}
                             </div> --}}
                         </div>
 
@@ -166,7 +166,7 @@
                                     @if ($introVideo)
                                         <video controls class="w-full h-48 md:h-64 rounded-lg shadow-md">
                                             <source src="{{ asset('storage/' . $introVideo) }}" type="video/mp4">
-                                            Your browser does not support the video tag.
+                                            {{ __('welcome.key_226') }}
                                         </video>
                                     @else
                                         <iframe width="100%" height="315"
@@ -200,7 +200,7 @@
                                             <path d="M12 18h.01"></path>
                                             <path d="M16 18h.01"></path>
                                         </svg>
-                                        Book Lesson
+                                        {{ __('welcome.key_227') }}
                                     </button>
                                 </a>
                                 @auth
@@ -216,9 +216,8 @@
                                 @endauth
                                 @guest
                                     <div>
-                                        Please <a href="{{ route('student.login') }}"><button
-                                                class="btn btn-dark">Login</button></a> to chat with this
-                                        teacher.
+                                        {{ __('welcome.key_207') }} <a href="{{ route('student.login') }}"><button
+                                                class="btn btn-dark">{{ __('welcome.key_208') }}</button></a> {{ __('welcome.key_228') }}
                                     </div>
                                 @endguest
 
@@ -237,7 +236,7 @@
                                         class="mr-2 h-6 w-6 text-yellow-500">
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                    </svg> About Me</h2>
+                                    </svg> {{ __('welcome.key_229') }}</h2>
                                 <p class="text-gray-600 leading-relaxed whitespace-pre-line">
                                     {{ $teacherProfile?->about_me ?? 'No information provided yet.' }}
                                 </p>
@@ -251,7 +250,7 @@
                                         class="mr-2 h-6 w-6 text-yellow-500">
                                         <circle cx="12" cy="8" r="6"></circle>
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                    </svg> Specialties</h2>
+                                    </svg> {{ __('welcome.key_230') }}</h2>
                                 <div class="flex flex-wrap gap-2">
                                     @foreach (explode(',', $teacher?->teacherProfile?->teaching_style ?? '') as $style)
                                         @if (trim($style) != '')
@@ -275,7 +274,7 @@
                                         class="mr-2 h-6 w-6 text-yellow-500">
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                    </svg> Certifications:</h2>
+                                    </svg> {{ __('welcome.key_231') }}</h2>
                                 <p class="text-gray-600 leading-relaxed whitespace-pre-line">
                                     {{ $teacher?->certifications ?? 'No Certifications provided yet.' }}
                                 </p>
@@ -293,7 +292,7 @@
                                         <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                     </svg>
-                                    Lesson Packages
+                                    {{ __('welcome.key_232') }}
                                 </h2>
                                 <div class="space-y-4">
                                     @if ($teacher->lessonPackages && $teacher->lessonPackages->where('is_active', true)->count() > 0)
@@ -317,7 +316,7 @@
                                                 @endif
 
                                                 <div class="text-xs text-gray-600 mb-2">
-                                                    <p><strong>{{ $package->number_of_lessons }}</strong> lessons</p>
+                                                    <p><strong>{{ $package->number_of_lessons }}</strong> {{ __('welcome.key_233') }}</p>
                                                     <p>
                                                         <span class="font-semibold text-black text-base">
                                                             ${{ number_format($originalPrice, 2) }}
@@ -325,8 +324,7 @@
                                                     </p>
 
                                                     @if ($package->duration_per_lesson)
-                                                        <p><strong>{{ $package->duration_per_lesson }}</strong> minutes per
-                                                            lesson</p>
+                                                        <p><strong>{{ $package->duration_per_lesson }}</strong> {{ __('welcome.key_234') }}</p>
                                                     @endif
                                                 </div>
 
@@ -339,7 +337,7 @@
                                                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                         </svg>
-                                                        Flexible scheduling
+                                                        {{ __('welcome.key_235') }}
                                                     </li>
                                                     <li class="flex items-center">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -349,20 +347,20 @@
                                                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                         </svg>
-                                                        Personalized learning
+                                                        {{ __('welcome.key_236') }}
                                                     </li>
                                                 </ul>
 
                                                 <button
                                                     class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white"
                                                     onclick="selectPackage({{ $package->id }}, '{{ $package->name }}', {{ $originalPrice }}, {{ $package->number_of_lessons }}, {{ $originalPrice }}, {{ $discountPercentage }}, {{ $teacher->id }})">
-                                                    Select Package
+                                                    {{ __('welcome.key_237') }}
                                                 </button>
                                             </div>
                                         @endforeach
                                     @else
                                         <div class="border border-red-300 p-4 rounded-lg bg-white text-center">
-                                            <p class="text-gray-500 text-sm">No lesson packages available at the moment.
+                                            <p class="text-gray-500 text-sm">{{ __('welcome.key_217') }}
                                             </p>
                                         </div>
                                     @endif
@@ -371,18 +369,7 @@
                         </div>
 
                         <script>
-                            function selectPackage(packageId, packageName, discountedPrice, lessons, originalPrice = 0, discountPercent = 0,
-                                teacherId = 0) {
-                                const url = `/student/checkout?type=package` +
-                                    `&value=${packageId}` +
-                                    `&price=${discountedPrice}` +
-                                    `&lessons=${lessons}` +
-                                    `&original_price=${originalPrice}` +
-                                    `&discount_percent=${discountPercent}` +
-                                    `&teacher_id=${teacherId}`;
-
-                                window.location.href = url;
-                            }
+                            {{ __('welcome.key_238') }}
                         </script>
                     </div>
                 </div>
@@ -410,18 +397,18 @@
                             <button data-bs-toggle="modal" data-bs-target="#writeReviewModal"
                                 class="inline-flex items-center justify-center text-sm font-medium h-9 rounded-md px-3 w-full 
                 bg-yellow-500 hover:bg-yellow-600 text-white">
-                                Write a Review
+                                {{ __('welcome.key_239') }}
                             </button>
                         @else
                             <p class="text-sm text-gray-500">
-                                You need to complete a paid lesson with this teacher before writing a review.
+                                {{ __('welcome.key_240') }}
                             </p>
                         @endif
                     @else
                         <a href="{{ route('login') }}"
                             class="inline-flex items-center justify-center text-sm font-medium h-9 rounded-md px-3 w-full 
             bg-gray-400 hover:bg-gray-500 text-white">
-                            Login to Write a Review
+                            {{ __('welcome.key_241') }}
                         </a>
                     @endauth
                 </div>
@@ -487,7 +474,7 @@
                 <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel"
                     data-bs-slide="prev">
                     <span class="carousel-control-prev-icon bg-warning rounded-circle p-2" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                    <span class="visually-hidden">{{ __('welcome.key_243') }}</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#reviewsCarousel"
                     data-bs-slide="next">
@@ -502,7 +489,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-yellow-500 text-white">
-                        <h5 class="modal-title" id="writeReviewLabel">Write a Review</h5>
+                        <h5 class="modal-title" id="writeReviewLabel">{{ __('welcome.key_239') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -511,7 +498,7 @@
                             <input type="hidden" id="reviewRating" value="0">
 
                             <div class="mb-3">
-                                <label class="form-label">Your Rating</label>
+                                <label class="form-label">{{ __('welcome.key_244') }}</label>
                                 <div id="starContainer" class="text-warning fs-4">
                                     <i class="fa-regular fa-star" data-value="1"></i>
                                     <i class="fa-regular fa-star" data-value="2"></i>
@@ -522,11 +509,11 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Comment</label>
+                                <label class="form-label">{{ __('welcome.key_245') }}</label>
                                 <textarea class="form-control" id="reviewComment" rows="3" required></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-warning w-100">Submit Review</button>
+                            <button type="submit" class="btn btn-warning w-100">{{ __('welcome.key_246') }}</button>
                         </form>
                     </div>
                 </div>
@@ -546,8 +533,7 @@
                         let value = this.getAttribute("data-value");
                         ratingInput.value = value;
 
-                        stars.forEach(s => {
-                            if (s.getAttribute("data-value") <= value) {
+                        stars.forEach(s => {{ __('welcome.key_247') }} <= value) {
                                 s.classList.remove("fa-regular");
                                 s.classList.add("fa-solid");
                             } else {
@@ -589,8 +575,6 @@
                             }
                         })
                         .catch(err => console.error(err));
-                });
-            });
         </script>
 
 

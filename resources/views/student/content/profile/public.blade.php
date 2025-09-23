@@ -478,10 +478,9 @@
                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                     </svg>
-                    <p>This is a preview of how your profile appears to students.
+                    <p>{{ __('welcome.key_359') }}
                         <a href="{{ route('student.profile.edit') }}"
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 underline-offset-4 hover:underline p-0 h-auto ml-1 text-yellow-900">Edit
-                            Profile</a>
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 underline-offset-4 hover:underline p-0 h-auto ml-1 text-yellow-900">{{ __('welcome.key_430') }}</a>
                     </p>
                 </div>
                 <div style="opacity: 1; transform: none;">
@@ -492,8 +491,7 @@
                                 class="relative flex shrink-0 overflow-hidden rounded-full w-32 h-32 md:w-40 md:h-40 mb-4 border-4 border-primary"><span
                                     class="flex h-full w-full items-center justify-center rounded-full text-4xl bg-primary text-white">{{ substr($student->name, 0, 2) }}</span></span>
                             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $student->name }}</h1>
-                            <p class="text-primary text-md mt-1">Passionate TEFL Certified English Tutor | Conversational
-                                &amp; Business English Expert</p>
+                            <p class="text-primary text-md mt-1">{{ __('welcome.key_431') }}</p>
                             <div class="flex items-center mt-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -501,10 +499,10 @@
                                     <polygon
                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                     </polygon>
-                                </svg><span class="font-semibold">4.9</span><span class="ml-1">(180 reviews)</span></div>
+                                </svg><span class="font-semibold">{{ __('welcome.key_432') }}</span><span class="ml-1">{{ __('welcome.key_433') }}</span></div>
                             <div
                                 class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent mt-3 bg-green-500 hover:bg-green-600 text-white">
-                                Active Now</div>
+                                {{ __('welcome.key_225') }}</div>
                         </div>
                         <div class="md:w-2/3 md:pl-8 space-y-4">
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
@@ -514,7 +512,7 @@
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-primary">
                                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                         <circle cx="12" cy="10" r="3"></circle>
-                                    </svg> From: 🇺🇸 United States</div>
+                                    </svg> {{ __('welcome.key_434') }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -525,7 +523,7 @@
                                         <path d="M7 2h1"></path>
                                         <path d="m22 22-5-10-5 10"></path>
                                         <path d="M14 18h6"></path>
-                                    </svg> Teaches: English</div>
+                                    </svg> {{ __('welcome.key_435') }}</div>
                                 <div class="flex items-center text-gray-700 col-span-2 sm:col-span-1"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -535,21 +533,21 @@
                                         <path
                                             d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                                         </path>
-                                    </svg> Speaks: English (Native), Spanish (B2)</div>
+                                    </svg> {{ __('welcome.key_436') }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-primary">
                                         <circle cx="12" cy="8" r="6"></circle>
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                    </svg> Experience: 5+ years</div>
+                                    </svg> {{ __('welcome.key_437') }}</div>
                                 <div class="flex items-center text-gray-700"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5 mr-2 text-primary">
                                         <line x1="12" x2="12" y1="2" y2="22"></line>
                                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg> Rate: $28/hour</div>
+                                    </svg> {{ __('welcome.key_438') }}</div>
                             </div>
                             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6"><button
                                     class="inline-flex items-center justify-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/90 h-10 w-full sm:w-auto bg-red-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md"
@@ -567,13 +565,13 @@
                                         <path d="M8 18h.01"></path>
                                         <path d="M12 18h.01"></path>
                                         <path d="M16 18h.01"></path>
-                                    </svg> Book Lesson</button><button
+                                    </svg> {{ __('welcome.key_227') }}</button><button
                                     class="inline-flex items-center justify-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:bg-accent hover:text-accent-foreground h-10 w-full sm:w-auto border-primary text-primary font-semibold py-3 px-6 rounded-lg"
                                     disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5">
                                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                    </svg> Message Tutor</button></div>
+                                    </svg> {{ __('welcome.key_362') }}</button></div>
                         </div>
                     </div>
                     <div class="grid md:grid-cols-3 gap-8">
@@ -586,14 +584,8 @@
                                         stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-6 w-6 text-primary">
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                    </svg> About Me</h2>
-                                <p class="text-gray-600 leading-relaxed whitespace-pre-line">Hello! I'm Sarah, a
-                                    TEFL-certified English tutor with over 5 years of experience helping students worldwide
-                                    achieve their language goals. My lessons are dynamic, interactive, and tailored to your
-                                    specific needs, whether you're looking to improve your conversational skills, master
-                                    business English, or prepare for an exam. I believe in creating a supportive and fun
-                                    learning environment where you feel comfortable to practice and grow. Let's embark on
-                                    this language journey together!</p>
+                                    </svg> {{ __('welcome.key_229') }}</h2>
+                                <p class="text-gray-600 leading-relaxed whitespace-pre-line">{{ __('welcome.key_439') }}</p>
                             </div>
                             <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200"
                                 style="opacity: 1; transform: none;">
@@ -603,20 +595,20 @@
                                         stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-6 w-6 text-primary">
                                         <circle cx="12" cy="8" r="6"></circle>
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                    </svg> Specialties</h2>
+                                    </svg> {{ __('welcome.key_230') }}</h2>
                                 <div class="flex flex-wrap gap-2">
                                     <div
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                        Conversational English</div>
+                                        {{ __('welcome.key_440') }}</div>
                                     <div
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                        Business English</div>
+                                        {{ __('welcome.key_186') }}</div>
                                     <div
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                        IELTS Prep</div>
+                                        {{ __('welcome.key_441') }}</div>
                                     <div
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                                        Pronunciation</div>
+                                        {{ __('welcome.key_442') }}</div>
                                 </div>
                             </div>
                         </div>
@@ -631,11 +623,11 @@
                                         <circle cx="9" cy="7" r="4"></circle>
                                         <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg> Lesson Packages</h2>
+                                    </svg> {{ __('welcome.key_232') }}</h2>
                                 <div class="space-y-4">
                                     <div class="border p-4 rounded-lg bg-gray-50">
-                                        <h3 class="font-semibold text-primary text-lg">Basic English (5 Lessons)</h3>
-                                        <p class="text-2xl font-bold text-gray-800 my-1">$100</p>
+                                        <h3 class="font-semibold text-primary text-lg">{{ __('welcome.key_443') }}</h3>
+                                        <p class="text-2xl font-bold text-gray-800 my-1">{{ __('welcome.key_184') }}</p>
                                         <ul class="text-xs text-gray-500 space-y-1 mb-3">
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -643,29 +635,29 @@
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Personalized curriculum</li>
+                                                </svg>{{ __('welcome.key_444') }}</li>
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Homework assignments</li>
+                                                </svg>{{ __('welcome.key_445') }}</li>
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Progress tracking</li>
+                                                </svg>{{ __('welcome.key_446') }}</li>
                                         </ul><button
                                             class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 w-full"
-                                            disabled="">Select Package</button>
+                                            disabled="">{{ __('welcome.key_237') }}</button>
                                     </div>
                                     <div class="border p-4 rounded-lg bg-gray-50">
-                                        <h3 class="font-semibold text-primary text-lg">Business English Pro (10 Lessons)
+                                        <h3 class="font-semibold text-primary text-lg">{{ __('welcome.key_447') }}
                                         </h3>
-                                        <p class="text-2xl font-bold text-gray-800 my-1">$250</p>
+                                        <p class="text-2xl font-bold text-gray-800 my-1">{{ __('welcome.key_187') }}</p>
                                         <ul class="text-xs text-gray-500 space-y-1 mb-3">
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -673,29 +665,29 @@
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Industry-specific vocabulary</li>
+                                                </svg>{{ __('welcome.key_448') }}</li>
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Meeting &amp; presentation skills</li>
+                                                </svg>{{ __('welcome.key_449') }}</li>
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Email &amp; report writing</li>
+                                                </svg>{{ __('welcome.key_450') }}</li>
                                         </ul><button
                                             class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 w-full"
-                                            disabled="">Select Package</button>
+                                            disabled="">{{ __('welcome.key_237') }}</button>
                                     </div>
                                     <div class="border p-4 rounded-lg bg-gray-50">
-                                        <h3 class="font-semibold text-primary text-lg">Fluency Accelerator (20 Lessons)
+                                        <h3 class="font-semibold text-primary text-lg">{{ __('welcome.key_451') }}
                                         </h3>
-                                        <p class="text-2xl font-bold text-gray-800 my-1">$450</p>
+                                        <p class="text-2xl font-bold text-gray-800 my-1">{{ __('welcome.key_452') }}</p>
                                         <ul class="text-xs text-gray-500 space-y-1 mb-3">
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -703,31 +695,31 @@
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Intensive speaking practice</li>
+                                                </svg>{{ __('welcome.key_453') }}</li>
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Cultural immersion topics</li>
+                                                </svg>{{ __('welcome.key_454') }}</li>
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Advanced grammar focus</li>
+                                                </svg>{{ __('welcome.key_455') }}</li>
                                             <li class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round" class="h-3 w-3 mr-2 text-green-500">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                </svg>Priority Support</li>
+                                                </svg>{{ __('welcome.key_456') }}</li>
                                         </ul><button
                                             class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 w-full"
-                                            disabled="">Select Package</button>
+                                            disabled="">{{ __('welcome.key_237') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -742,9 +734,9 @@
                                 <polygon
                                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                 </polygon>
-                            </svg> Student Reviewss (180)</h2>
+                            </svg> {{ __('welcome.key_457') }}</h2>
                             <h5 class="mb-4 d-flex justify-content-end">
-                            <a href="{{route('student.add.review')}}" class="btn btn-secondary">Add Your Review</a>
+                            <a href="{{route('student.add.review')}}" class="btn btn-secondary">{{ __('welcome.key_458') }}</a>
                             </h5>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"
@@ -752,10 +744,10 @@
                                 <div class="flex justify-between items-start">
                                     <div class="flex items-center"><span
                                             class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">M</span></span>
+                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ __('welcome.key_459') }}</span></span>
                                         <div>
-                                            <p class="font-semibold text-gray-800">Maria K.</p>
-                                            <p class="text-xs text-gray-500">June 10, 2025</p>
+                                            <p class="font-semibold text-gray-800">{{ __('welcome.key_460') }}</p>
+                                            <p class="text-xs text-gray-500">{{ __('welcome.key_461') }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -795,18 +787,17 @@
                                             </polygon>
                                         </svg></div>
                                 </div>
-                                <p class="text-sm text-gray-600 italic mt-3">"Sarah is an amazing teacher! My confidence in
-                                    speaking English has improved so much."</p>
+                                <p class="text-sm text-gray-600 italic mt-3">{{ __('welcome.key_462') }}</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex justify-between items-start">
                                     <div class="flex items-center"><span
                                             class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">K</span></span>
+                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ __('welcome.key_463') }}</span></span>
                                         <div>
-                                            <p class="font-semibold text-gray-800">Kenji T.</p>
-                                            <p class="text-xs text-gray-500">June 8, 2025</p>
+                                            <p class="font-semibold text-gray-800">{{ __('welcome.key_464') }}</p>
+                                            <p class="text-xs text-gray-500">{{ __('welcome.key_465') }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -846,18 +837,17 @@
                                             </polygon>
                                         </svg></div>
                                 </div>
-                                <p class="text-sm text-gray-600 italic mt-3">"Excellent for business English. Very
-                                    professional and helpful."</p>
+                                <p class="text-sm text-gray-600 italic mt-3">{{ __('welcome.key_466') }}</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex justify-between items-start">
                                     <div class="flex items-center"><span
                                             class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">L</span></span>
+                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ __('welcome.key_467') }}</span></span>
                                         <div>
-                                            <p class="font-semibold text-gray-800">Linda S.</p>
-                                            <p class="text-xs text-gray-500">June 5, 2025</p>
+                                            <p class="font-semibold text-gray-800">{{ __('welcome.key_468') }}</p>
+                                            <p class="text-xs text-gray-500">{{ __('welcome.key_469') }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -897,17 +887,17 @@
                                             </polygon>
                                         </svg></div>
                                 </div>
-                                <p class="text-sm text-gray-600 italic mt-3">"Good lessons, very patient."</p>
+                                <p class="text-sm text-gray-600 italic mt-3">{{ __('welcome.key_470') }}</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex justify-between items-start">
                                     <div class="flex items-center"><span
                                             class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">A</span></span>
+                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ __('welcome.key_471') }}</span></span>
                                         <div>
-                                            <p class="font-semibold text-gray-800">Ahmed R.</p>
-                                            <p class="text-xs text-gray-500">June 2, 2025</p>
+                                            <p class="font-semibold text-gray-800">{{ __('welcome.key_472') }}</p>
+                                            <p class="text-xs text-gray-500">{{ __('welcome.key_473') }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -947,18 +937,17 @@
                                             </polygon>
                                         </svg></div>
                                 </div>
-                                <p class="text-sm text-gray-600 italic mt-3">"Sarah's methods are very effective. I learned
-                                    a lot in a short time."</p>
+                                <p class="text-sm text-gray-600 italic mt-3">{{ __('welcome.key_474') }}</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex justify-between items-start">
                                     <div class="flex items-center"><span
                                             class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">C</span></span>
+                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ __('welcome.key_475') }}</span></span>
                                         <div>
-                                            <p class="font-semibold text-gray-800">Chloe B.</p>
-                                            <p class="text-xs text-gray-500">May 28, 2025</p>
+                                            <p class="font-semibold text-gray-800">{{ __('welcome.key_476') }}</p>
+                                            <p class="text-xs text-gray-500">{{ __('welcome.key_477') }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -998,18 +987,17 @@
                                             </polygon>
                                         </svg></div>
                                 </div>
-                                <p class="text-sm text-gray-600 italic mt-3">"Highly recommend! She makes learning fun and
-                                    engaging."</p>
+                                <p class="text-sm text-gray-600 italic mt-3">{{ __('welcome.key_478') }}</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex justify-between items-start">
                                     <div class="flex items-center"><span
                                             class="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 mr-3"><span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">D</span></span>
+                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ __('welcome.key_479') }}</span></span>
                                         <div>
-                                            <p class="font-semibold text-gray-800">David P.</p>
-                                            <p class="text-xs text-gray-500">May 25, 2025</p>
+                                            <p class="font-semibold text-gray-800">{{ __('welcome.key_480') }}</p>
+                                            <p class="text-xs text-gray-500">{{ __('welcome.key_481') }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -1049,13 +1037,11 @@
                                             </polygon>
                                         </svg></div>
                                 </div>
-                                <p class="text-sm text-gray-600 italic mt-3">"Very knowledgeable and supportive. Helped me
-                                    with my IELTS."</p>
+                                <p class="text-sm text-gray-600 italic mt-3">{{ __('welcome.key_482') }}</p>
                             </div>
                         </div>
                         <div class="text-center mt-8"><button
-                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Show
-                                More Reviews (2 more)</button></div>
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">{{ __('welcome.key_483') }}</button></div>
                     </div>
                 </div>
             </div>

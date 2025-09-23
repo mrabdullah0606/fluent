@@ -11,7 +11,7 @@
                         class="mr-2 h-4 w-4">
                         <path d="m12 19-7-7 7-7"></path>
                         <path d="M19 12H5"></path>
-                    </svg> Back to Home</a>
+                    </svg> {{ __('welcome.key_180') }}</a>
                 <h1 class="text-3xl md:text-4xl font-bold text-foreground text-center"><span
                         class="text-gradient-yellow-red">{{ $language->name }} Tutors</span></h1>
                 <p class="text-md text-muted-foreground text-center mt-2">Explore available tutors for
@@ -92,8 +92,7 @@
                                     <a href="{{ route('tutor', ['id' => $teacher->user->id]) }}">
                                         <button
                                             class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 w-full btn-red text-sm py-2">
-                                            View
-                                            Profile &amp; Book
+                                            {{ __('welcome.key_181') }}
                                         </button>
                                     </a>
                                 </div>
@@ -115,26 +114,25 @@
                                                 ry="2">
                                             </rect>
                                             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                        </svg>Example Packages</h5>
+                                        </svg>{{ __('welcome.key_182') }}</h5>
                                     <div class="space-y-2">
                                         <div class="border border-primary/10 p-2.5 rounded-md bg-primary/5"
                                             style="opacity: 1; transform: none;">
                                             <div class="flex justify-between items-center mb-0.5">
-                                                <p class="font-medium text-foreground text-xs">Basic English</p>
-                                                <p class="font-semibold text-secondary text-sm">$100</p>
+                                                <p class="font-medium text-foreground text-xs">{{ __('welcome.key_183') }}</p>
+                                                <p class="font-semibold text-secondary text-sm">{{ __('welcome.key_184') }}</p>
                                             </div>
-                                            <p class="text-xs text-muted-foreground">5 lessons</p>
+                                            <p class="text-xs text-muted-foreground">{{ __('welcome.key_185') }}</p>
                                         </div>
                                         <div class="border border-primary/10 p-2.5 rounded-md bg-primary/5"
                                             style="opacity: 1; transform: none;">
                                             <div class="flex justify-between items-center mb-0.5">
-                                                <p class="font-medium text-foreground text-xs">Business English</p>
-                                                <p class="font-semibold text-secondary text-sm">$250</p>
+                                                <p class="font-medium text-foreground text-xs">{{ __('welcome.key_186') }}</p>
+                                                <p class="font-semibold text-secondary text-sm">{{ __('welcome.key_187') }}</p>
                                             </div>
-                                            <p class="text-xs text-muted-foreground">10 lessons</p>
+                                            <p class="text-xs text-muted-foreground">{{ __('welcome.key_188') }}</p>
                                         </div>
-                                        <p class="text-xs text-muted-foreground text-center mt-1">More packages on
-                                            profile...
+                                        <p class="text-xs text-muted-foreground text-center mt-1">{{ __('welcome.key_189') }}
                                         </p>
                                     </div>
                                 </div>

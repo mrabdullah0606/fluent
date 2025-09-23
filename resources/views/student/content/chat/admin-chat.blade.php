@@ -8,9 +8,9 @@
                     <div class="card-header d-flex justify-content-between align-items-center bg-info text-white">
                         <div>
                             <h4 class="mb-0">
-                                <i class="bi bi-headset me-2"></i>Customer Support
+                                <i class="bi bi-headset me-2"></i>{{ __('welcome.key_291') }}
                             </h4>
-                            <small id="connection-status" class="text-light">Connecting...</small>
+                            <small id="connection-status" class="text-light">{{ __('welcome.key_280') }}</small>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <button type="button" id="sound-toggle" class="btn btn-outline-light btn-sm"
@@ -18,15 +18,14 @@
                                 <i id="sound-icon" class="bi bi-volume-up"></i>
                             </button>
                             <a href="{{ route('student.chats.index') }}" class="btn btn-outline-light btn-sm">
-                                <i class="bi bi-arrow-left"></i> Back to Chats
+                                <i class="bi bi-arrow-left"></i> {{ __('welcome.key_281') }}
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info mb-3">
                             <i class="bi bi-info-circle me-2"></i>
-                            <strong>Customer Support:</strong> Ask any questions about the platform, report issues, or get
-                            help with your account.
+                            <strong>{{ __('welcome.key_300') }}</strong> {{ __('welcome.key_428') }}
                         </div>
 
                         <div id="chat-box"
@@ -59,7 +58,7 @@
                             <div class="input-group">
                                 <input type="text" id="message" class="form-control"
                                     placeholder="Type your question or message..." required maxlength="1000">
-                                <button type="submit" class="btn btn-info" id="send-btn">Send</button>
+                                <button type="submit" class="btn btn-info" id="send-btn">{{ __('welcome.key_282') }}</button>
                             </div>
                         </form>
                     </div>
@@ -73,7 +72,7 @@
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="messageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <strong class="me-auto">Support Reply</strong>
+                <strong class="me-auto">{{ __('welcome.key_302') }}</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body" id="toastBody">

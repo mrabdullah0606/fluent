@@ -2,76 +2,23 @@
 @section('title', 'Find-Tutor - FluentAll')
 @section('content')
     <style>
-        .slider-container {
-            width: 300px;
-            position: relative;
-            /*margin: 18px;*/
-        }
-
-        .slider-track {
-            position: absolute;
-            height: 5px;
-            background: #ccc;
-            width: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1;
-            border-radius: 5px;
-        }
-
-        .range {
-            position: absolute;
-            height: 5px;
-            background: orange;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2;
-            border-radius: 5px;
-        }
-
-        input[type=range] {
-            -webkit-appearance: none;
-            position: absolute;
-            width: 100%;
-            pointer-events: none;
-            background: none;
-            z-index: 3;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: blue;
-            cursor: pointer;
-            pointer-events: auto;
-            position: relative;
-            z-index: 4;
-        }
-
-        .range-values {
-            margin-bottom: 30px;
-            margin-top: -17px;
-        }
+        {{ __('welcome.key_194') }}
     </style>
     <main class="flex-grow">
         <div class="container mx-auto px-4 md:px-6 py-8 md:py-12 bg-background">
             <h1 class="text-3xl md:text-4xl font-bold text-foreground text-center mb-8 md:mb-10"
-                style="opacity: 1; transform: none;"><span class="text-gradient-yellow-red">Find Your One-on-One Tutor</span>
+                style="opacity: 1; transform: none;"><span class="text-gradient-yellow-red">{{ __('welcome.key_195') }}</span>
             </h1>
             <form method="GET" action="{{ route('one.on.one.tutors') }}">
                 <div class="mb-8 p-4 md:p-6 border border-primary/20 bg-white rounded-xl shadow-lg" style="opacity: 1;">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
                         <!-- Language I Want to Learn -->
                         <div>
-                            <label class="text-sm font-medium text-foreground">Language I Want to Learn</label>
+                            <label class="text-sm font-medium text-foreground">{{ __('welcome.key_196') }}</label>
                             <div class="mt-1">
                                 <select name="learn_language"
                                     class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-                                    <option value="">Select Language</option>
+                                    <option value="">{{ __('welcome.key_162') }}</option>
                                     @foreach ($languages as $language)
                                         <option value="{{ $language->name }}"
                                             {{ request('learn_language') == $language->name ? 'selected' : '' }}>
@@ -84,7 +31,7 @@
                         <!-- Price Range (Dual Range Slider) -->
                         <div class="slider-container">
                             <div class="range-values">
-                                Price Range: $<span id="min-val">0</span> - $<span id="max-val">75</span>
+                                {{ __('welcome.key_197') }}<span id="min-val">{{ __('welcome.key_198') }}</span> - $<span id="max-val">{{ __('welcome.key_199') }}</span>
                             </div>
                             <div class="slider-track"></div>
                             <div class="range" id="range"></div>
@@ -95,11 +42,11 @@
                         </div>
                         <!-- Tutor Speaks -->
                         <div>
-                            <label class="text-sm font-medium text-foreground">Tutor Speaks</label>
+                            <label class="text-sm font-medium text-foreground">{{ __('welcome.key_200') }}</label>
                             <div class="mt-1">
                                 <select name="speaks"
                                     class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-                                    <option value="">Select Language</option>
+                                    <option value="">{{ __('welcome.key_162') }}</option>
                                     @foreach ($languages as $language)
                                         <option value="{{ $language->name }}"
                                             {{ request('learn_language') == $language->name ? 'selected' : '' }}>
@@ -111,11 +58,11 @@
                         </div>
                         <!-- Tutor From -->
                         <div>
-                            <label class="text-sm font-medium text-foreground">Tutor From</label>
+                            <label class="text-sm font-medium text-foreground">{{ __('welcome.key_201') }}</label>
                             <div class="mt-1">
                                 <select name="country"
                                     class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-                                    <option value="">Select Country</option>
+                                    <option value="">{{ __('welcome.key_202') }}</option>
                                     @foreach ($countries as $country)
                                         <option value="{{ $country }}"
                                             {{ request('country') == $country ? 'selected' : '' }}>
@@ -135,11 +82,11 @@
                         </div>
                         <button type="submit"
                             class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-primary text-primary hover:bg-primary hover:text-white">
-                            Apply Filters
+                            {{ __('welcome.key_203') }}
                         </button>
                         <a href=""
                             class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors border bg-background h-10 px-4 py-2 border-secondary text-secondary hover:bg-secondary hover:text-white">
-                            Clear Filters
+                            {{ __('welcome.key_204') }}
                         </a>
                     </div>
                 </div>
@@ -223,11 +170,10 @@
                                 </svg>
                                 {{ $teacher->duration_60 ?? 'N/A' }}/hour
                             </p>
-                            {{-- <p class="text-primary font-semibold text-sm mb-2">Trial: $5</p> --}}
+                            {{-- <p class="text-primary font-semibold text-sm mb-2">{{ __('welcome.key_205') }}</p> --}}
                             <button
                                 class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 btn-red w-full text-sm py-2">
-                                <a href="{{ route('tutor', ['id' => $teacher->id]) }}" class="...">View Profile &amp;
-                                    Book</a>
+                                <a href="{{ route('tutor', ['id' => $teacher->id]) }}" class="...">{{ __('welcome.key_206') }}</a>
 
                             </button>
                         </div>
@@ -289,9 +235,8 @@
                             @endauth
                             @guest
                                 <div>
-                                    Please <a href="{{ route('student.login') }}"><button
-                                            class="btn btn-dark">Login</button></a> to chat with this
-                                    teacher.
+                                    {{ __('welcome.key_207') }} <a href="{{ route('student.login') }}"><button
+                                            class="btn btn-dark">{{ __('welcome.key_208') }}</button></a> {{ __('welcome.key_209') }}
                                 </div>
                             @endguest
                             <div>
@@ -328,10 +273,7 @@
             const min = parseInt(minRange.value);
             const max = parseInt(maxRange.value);
 
-            if (min > max - 1) {
-                minRange.value = max - 1;
-            }
-            if (max < min + 1) {
+            if (min > {{ __('welcome.key_210') }} < min + 1) {
                 maxRange.value = min + 1;
             }
 

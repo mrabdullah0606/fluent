@@ -4,11 +4,10 @@
     <div class="container py-5">
         <!-- Title -->
         <div class="text-center mb-4">
-            <h2 class="fw-bold section-heading">About <span>fluentAll</span></h2>
+            <h2 class="fw-bold section-heading">{{ __('welcome.key_23') }} <span>{{ __('welcome.key_24') }}</span></h2>
             <p class="text-muted">
-                We are passionate about breaking down language barriers and fostering a global community of <br>
-                learners and educators.
-                Our vision: <em>"Be fluent in all Languages you want"</em>.
+                {{ __('welcome.key_25') }} <br>
+                {{ __('welcome.key_26') }} <em>{{ __('welcome.key_27') }}</em>.
             </p>
         </div>
 
@@ -17,20 +16,14 @@
             <div class="row align-items-center">
                 <!-- Text Content -->
                 <div class="col-lg-7 mb-4 mb-lg-0">
-                    <h5 class="mission-title">Our Mission</h5>
+                    <h5 class="mission-title">{{ __('welcome.key_28') }}</h5>
                     <p class="text-muted">
-                        To make high-quality language education accessible, engaging, and effective for everyone,
-                        everywhere.
-                        We strive to empower individuals by connecting them with expert tutors and fostering a love for
-                        language learning.
+                        {{ __('welcome.key_29') }}
                     </p>
 
-                    <h5 class="vision-title mt-4">Our Vision</h5>
+                    <h5 class="vision-title mt-4">{{ __('welcome.key_30') }}</h5>
                     <p class="text-muted">
-                        To be the leading global platform for language learning, helping everyone "Be fluent in all
-                        Languages you want".
-                        We are recognized for our commitment to student success, tutor excellence, and innovative
-                        educational approaches.
+                        {{ __('welcome.key_31') }}
                     </p>
                 </div>
 
@@ -47,7 +40,7 @@
     <div class="container py-5">
         <div class="text-center mb-5">
             <h2 class="fw-bold fs-3">
-                Why <span class="text-gradient">Choose fluentAll?</span>
+                {{ __('welcome.key_32') }} <span class="text-gradient">{{ __('welcome.key_33') }}</span>
             </h2>
         </div>
 
@@ -55,37 +48,37 @@
             <div class="col-md-6 col-lg-3">
                 <div class="card-custom p-4 text-center">
                     <div class="icon mb-3"><i class="bi bi-person-check-fill"></i></div>
-                    <h6 class="fw-bold">Expert Tutors</h6>
-                    <p class="text-small">Learn from certified native speakers and experienced language professionals.
+                    <h6 class="fw-bold">{{ __('welcome.key_34') }}</h6>
+                    <p class="text-small">{{ __('welcome.key_35') }}
                     </p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card-custom p-4 text-center">
                     <div class="icon mb-3"><i class="bi bi-bullseye"></i></div>
-                    <h6 class="fw-bold">Personalized Learning</h6>
-                    <p class="text-small">Tailored lesson plans that adapt to your pace and goals.</p>
+                    <h6 class="fw-bold">{{ __('welcome.key_36') }}</h6>
+                    <p class="text-small">{{ __('welcome.key_37') }}</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card-custom p-4 text-center">
                     <div class="icon mb-3"><i class="bi bi-calendar-check-fill"></i></div>
-                    <h6 class="fw-bold">Flexible Scheduling</h6>
-                    <p class="text-small">Find lessons that fit your busy life. Learn anytime, anywhere.</p>
+                    <h6 class="fw-bold">{{ __('welcome.key_38') }}</h6>
+                    <p class="text-small">{{ __('welcome.key_39') }}</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card-custom p-4 text-center">
                     <div class="icon mb-3"><i class="bi bi-shield-check"></i></div>
-                    <h6 class="fw-bold">Trusted Platform</h6>
-                    <p class="text-small">Secure payments, verified tutors, and a supportive community.</p>
+                    <h6 class="fw-bold">{{ __('welcome.key_40') }}</h6>
+                    <p class="text-small">{{ __('welcome.key_41') }}</p>
                 </div>
             </div>
         </div>
 
         <div class="text-center mb-4">
             <h2 class="fw-bold fs-3">
-                OUR <span class="text-gradient">VALUES</span>
+                {{ __('welcome.key_42') }} <span class="text-gradient">{{ __('welcome.key_43') }}</span>
             </h2>
         </div>
 
@@ -93,22 +86,22 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card-custom p-4 text-center">
                     <div class="icon icon-red mb-3"><i class="bi bi-award-fill"></i></div>
-                    <h6 class="fw-bold">Excellence</h6>
-                    <p class="text-small">We uphold the highest standards in teaching and platform experience.</p>
+                    <h6 class="fw-bold">{{ __('welcome.key_44') }}</h6>
+                    <p class="text-small">{{ __('welcome.key_45') }}</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="card-custom p-4 text-center">
                     <div class="icon icon-red mb-3"><i class="bi bi-globe-americas"></i></div>
-                    <h6 class="fw-bold">Global Community</h6>
-                    <p class="text-small">We foster connections and understanding across cultures.</p>
+                    <h6 class="fw-bold">{{ __('welcome.key_46') }}</h6>
+                    <p class="text-small">{{ __('welcome.key_47') }}</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="card-custom p-4 text-center">
                     <div class="icon icon-red mb-3"><i class="bi bi-people-fill"></i></div>
-                    <h6 class="fw-bold">Learner-Centric</h6>
-                    <p class="text-small">Our students’ progress and satisfaction are our top priorities.</p>
+                    <h6 class="fw-bold">{{ __('welcome.key_48') }}</h6>
+                    <p class="text-small">{{ __('welcome.key_49') }}</p>
                 </div>
             </div>
         </div>

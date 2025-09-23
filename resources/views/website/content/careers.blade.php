@@ -12,7 +12,7 @@
                             class="mr-2 h-4 w-4">
                             <path d="m12 19-7-7 7-7"></path>
                             <path d="M19 12H5"></path>
-                        </svg> Back
+                        </svg> {{ __('welcome.key_73') }}
                     </button>
                 </a>
                 @if (session('success'))
@@ -27,10 +27,9 @@
                         <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                     </svg>
-                    <h1 class="text-4xl md:text-5xl font-bold text-foreground">Join Our <span
-                            class="text-gradient-yellow-red">Team</span></h1>
-                    <p class="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">We're building the future of language
-                        learning and looking for passionate individuals to help us on our mission.</p>
+                    <h1 class="text-4xl md:text-5xl font-bold text-foreground">{{ __('welcome.key_144') }} <span
+                            class="text-gradient-yellow-red">{{ __('welcome.key_145') }}</span></h1>
+                    <p class="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">{{ __('welcome.key_146') }}</p>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -68,12 +67,9 @@
                                         <line x1="12" x2="12" y1="2" y2="22"></line>
                                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                     </svg> {{ $career->salary }} Annually</div>
-                                <p class="text-muted-foreground text-sm pt-2 line-clamp-3">Join our passionate engineering
-                                    team
-                                    to build and enhance the fluentAll platform. You will be responsible for developing new
-                                    features, improving user experience, and ensuring code quality.</p>
+                                <p class="text-muted-foreground text-sm pt-2 line-clamp-3">{{ __('welcome.key_147') }}</p>
                                 <div class="pt-2">
-                                    <h4 class="text-xs font-semibold text-primary mb-1">Key Qualifications:</h4>
+                                    <h4 class="text-xs font-semibold text-primary mb-1">{{ __('welcome.key_148') }}</h4>
                                     <ul class="list-disc list-inside space-y-0.5">
                                         {{ $career->description }}
                                     </ul>
@@ -83,7 +79,7 @@
                                 <div class="flex items-center p-6 pt-0">
                                     <button
                                         class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full btn-red">
-                                        Apply Now <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        {{ __('welcome.key_72') }} <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-4 w-4">
                                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -98,12 +94,11 @@
                 @endforeach
             </div>
             <div class="mt-16 text-center bg-primary/10 p-8 rounded-xl border border-primary/20" style="opacity: 1;">
-                <h2 class="text-2xl font-semibold text-foreground mb-3">Can't find a suitable role?</h2>
-                <p class="text-muted-foreground mb-6 max-w-md mx-auto">We're always looking for talented individuals. Send
-                    us your resume and tell us how you can contribute to fluentAll!</p>
+                <h2 class="text-2xl font-semibold text-foreground mb-3">{{ __('welcome.key_149') }}</h2>
+                <p class="text-muted-foreground mb-6 max-w-md mx-auto">{{ __('welcome.key_150') }}</p>
                 <button
                     class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 btn-yellow-outline">
-                    <a href="{{ route('apply.general') }}">Submit General Application</a> <svg
+                    <a href="{{ route('apply.general') }}">{{ __('welcome.key_151') }}</a> <svg
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="ml-2 h-4 w-4">

@@ -3,18 +3,18 @@
 @section('content')
     <main class="main-content" id="language-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold">Language Management</h3>
+            <h3 class="fw-bold">{{ __('welcome.key_726') }}</h3>
             <a class="btn btn-warning" href="{{ route('admin.languages.create') }}" id="addUserBtn">
-                <i class="bi bi-plus-circle me-1"></i> Add Language
+                <i class="bi bi-plus-circle me-1"></i> {{ __('welcome.key_727') }}
             </a>
         </div>
         <table id="userTable2" class="table table-bordered bg-white shadow-sm">
             <thead class="table-warning">
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Symbol</th>
-                    <th class="text-center">Actions</th>
+                    <th>{{ __('welcome.key_598') }}</th>
+                    <th>{{ __('welcome.key_728') }}</th>
+                    <th>{{ __('welcome.key_729') }}</th>
+                    <th class="text-center">{{ __('welcome.key_604') }}</th>
                 </tr>
             </thead>
             <tbody id="language-table-body">

@@ -12,7 +12,7 @@
                     <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
                     <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
                 </svg>
-                <h1 class="display-6 fw-bold text-dark mb-0">Withdrawal Management</h1>
+                <h1 class="display-6 fw-bold text-dark mb-0">{{ __('welcome.key_772') }}</h1>
             </div>
 
             {{-- Alerts --}}
@@ -36,24 +36,24 @@
                 <div class="card-body">
                     <form method="GET" action="{{ route('admin.wallet.withdrawals.index') }}" class="row g-3">
                         <div class="col-md-6 col-lg-4">
-                            <label for="status" class="form-label">Filter by Status</label>
+                            <label for="status" class="form-label">{{ __('welcome.key_773') }}</label>
                             <select name="status" id="status" class="form-select">
-                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All Status
+                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>{{ __('welcome.key_774') }}
                                 </option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('welcome.key_627') }}
                                 </option>
                                 <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
-                                    Processing</option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed
+                                    {{ __('welcome.key_775') }}</option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>{{ __('welcome.key_776') }}
                                 </option>
-                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Failed</option>
-                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled
+                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>{{ __('welcome.key_777') }}</option>
+                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>{{ __('welcome.key_778') }}
                                 </option>
                             </select>
                         </div>
                         <div class="col-md-6 col-lg-2 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary">
-                                Apply Filter
+                                {{ __('welcome.key_779') }}
                             </button>
                         </div>
                     </form>
@@ -157,16 +157,16 @@
                                             <div class="btn-group btn-group-sm" role="group">
                                                 <button type="button" class="btn btn-outline-primary"
                                                     onclick="viewWithdrawal({{ $withdrawal->id }})">
-                                                    View
+                                                    {{ __('welcome.key_648') }}
                                                 </button>
                                                 @if ($withdrawal->status === 'pending')
                                                     <button type="button" class="btn btn-outline-success"
                                                         onclick="approveWithdrawal({{ $withdrawal->id }})">
-                                                        Approve
+                                                        {{ __('welcome.key_646') }}
                                                     </button>
                                                     <button type="button" class="btn btn-outline-danger"
                                                         onclick="rejectWithdrawal({{ $withdrawal->id }})">
-                                                        Reject
+                                                        {{ __('welcome.key_647') }}
                                                     </button>
                                                 @endif
                                             </div>
@@ -178,7 +178,7 @@
                                     <tr>
                                         <td colspan="7" class="text-center py-4 text-muted">
                                             <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                            No withdrawal requests found.
+                                            {{ __('welcome.key_781') }}
                                         </td>
                                     </tr>
                                 @endforelse --}}
@@ -198,19 +198,19 @@
             {{-- Transactions Table --}}
             <div class="card mt-5">
                 <div class="card-header">
-                    <h5 class="mb-0">All Wallet Transactions</h5>
+                    <h5 class="mb-0">{{ __('welcome.key_782') }}</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table id="userTable2" class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Teacher</th>
-                                    <th>Description</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
-                                    <th>Balance After</th>
+                                    <th>{{ __('welcome.key_384') }}</th>
+                                    <th>{{ __('welcome.key_521') }}</th>
+                                    <th>{{ __('welcome.key_385') }}</th>
+                                    <th>{{ __('welcome.key_386') }}</th>
+                                    <th>{{ __('welcome.key_387') }}</th>
+                                    <th>{{ __('welcome.key_768') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -230,7 +230,7 @@
                                             @if ($txn->payment_id)
                                                 <br><small class="text-primary">Payment #{{ $txn->payment_id }}</small>
                                             @endif
-                                            @if ($txn->withdrawal_id)
+                                             @if ($txn->withdrawal_id)
                                                 <br><small class="text-purple">Withdrawal
                                                     #{{ $txn->withdrawal_id }}</small>
                                             @endif
@@ -252,7 +252,7 @@
                                 {{-- <tr>
                                         <td colspan="6" class="text-center py-4 text-muted">
                                             <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                            No transactions found.
+                                            {{ __('welcome.key_783') }}
                                         </td>
                                     </tr>
                                 @endforelse --}}
@@ -277,7 +277,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="viewModalLabel">Withdrawal Details</h5>
+                    <h5 class="modal-title" id="viewModalLabel">{{ __('welcome.key_784') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="withdrawal-details">
@@ -292,7 +292,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="approveModalLabel">Approve Withdrawal</h5>
+                    <h5 class="modal-title" id="approveModalLabel">{{ __('welcome.key_785') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="approveForm" method="POST">
@@ -305,15 +305,15 @@
                                 placeholder="Enter external transaction ID">
                         </div>
                         <div class="mb-3">
-                            <label for="admin_notes" class="form-label">Admin Notes <small
-                                    class="text-muted">(Optional)</small></label>
+                            <label for="admin_notes" class="form-label">{{ __('welcome.key_678') }} <small
+                                    class="text-muted">{{ __('welcome.key_786') }}</small></label>
                             <textarea name="admin_notes" id="admin_notes" rows="3" class="form-control"
                                 placeholder="Add any notes about this approval"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success">Approve Withdrawal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('welcome.key_262') }}</button>
+                        <button type="submit" class="btn btn-success">{{ __('welcome.key_785') }}</button>
                     </div>
                 </form>
             </div>
@@ -325,22 +325,22 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="rejectModalLabel">Reject Withdrawal</h5>
+                    <h5 class="modal-title" id="rejectModalLabel">{{ __('welcome.key_787') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="rejectForm" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="failure_reason" class="form-label">Reason for Rejection <span
+                            <label for="failure_reason" class="form-label">{{ __('welcome.key_654') }} <span
                                     class="text-danger">*</span></label>
                             <textarea name="failure_reason" id="failure_reason" rows="4" required class="form-control"
                                 placeholder="Please provide a reason for rejecting this withdrawal request"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Reject Withdrawal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('welcome.key_262') }}</button>
+                        <button type="submit" class="btn btn-danger">{{ __('welcome.key_787') }}</button>
                     </div>
                 </form>
             </div>
