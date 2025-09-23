@@ -127,7 +127,7 @@
                                             @endif
                                         @endif
 
-                                        <div class="dropdown">
+                                        {{-- <div class="dropdown">
                                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
                                                 id="lessonOptions{{ $index }}" data-bs-toggle="dropdown"
                                                 aria-expanded="false">
@@ -158,6 +158,55 @@
                                                                 class="form-control m-2 w-75" required>
                                                             <button type="submit" class="dropdown-item">Reschedule</button>
                                                         </form>
+                                                    @endif
+                                                </li>
+                                            </ul>
+                                        </div> --}}
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                                id="lessonOptions{{ $index }}" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                Options
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end"
+                                                aria-labelledby="lessonOptions{{ $index }}">
+                                                {{-- Cancel Option --}}
+                                                <li>
+                                                    @if ($pivot && !$pivot->has_joined)
+                                                        <form method="POST"
+                                                            action="{{ route('student.zoom.cancel', $meeting['id']) }}">
+                                                            @csrf
+                                                            <button type="submit" class="dropdown-item"
+                                                                onclick="return confirm('{{ $hoursDiff < 24 ? 'If you cancel the lesson now, it will be paid to the tutor because it is cancelled within the last 24 hours.' : 'Are you sure you want to cancel this lesson?' }}')">
+                                                                Cancel
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <button class="dropdown-item disabled" type="button">Cancel
+                                                            (Already Joined)</button>
+                                                    @endif
+                                                </li>
+                                                <hr>
+                                                {{-- Reschedule Option --}}
+                                                <li>
+                                                    @if ($pivot && !$pivot->has_joined)
+                                                        @if ($hoursDiff < 24)
+                                                            <button class="dropdown-item disabled" type="button">
+                                                                Cannot reschedule within 24h
+                                                            </button>
+                                                        @else
+                                                            <form method="POST"
+                                                                action="{{ route('student.zoom.reschedule', $meeting['id']) }}">
+                                                                @csrf
+                                                                <input type="datetime-local" name="rescheduled_time"
+                                                                    class="form-control m-2 w-75" required>
+                                                                <button type="submit"
+                                                                    class="dropdown-item">Reschedule</button>
+                                                            </form>
+                                                        @endif
+                                                    @else
+                                                        <button class="dropdown-item disabled" type="button">Reschedule
+                                                            (Already Joined)</button>
                                                     @endif
                                                 </li>
                                             </ul>

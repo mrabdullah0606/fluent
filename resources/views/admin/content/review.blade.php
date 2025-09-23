@@ -72,7 +72,7 @@
         <div id="flashMessage" class="alert d-none" role="alert"></div>
 
         <div class="table-responsive">
-            <table class="table table-bordered bg-white shadow-sm">
+            <table id="userTable" class="table table-bordered bg-white shadow-sm">
                 <thead class="table-warning">
                     <tr>
                         <th>#</th>
@@ -145,7 +145,7 @@
                             </td>
                         </tr>
                     @endforeach
-                    @if ($reviews->isEmpty())
+                    {{-- @if ($reviews->isEmpty())
                         <tr>
                             <td colspan="8" class="text-center py-4 text-muted">
                                 <i class="bi bi-chat-left-text-fill" style="font-size: 2rem;"></i>
@@ -153,7 +153,7 @@
                                 No reviews found
                             </td>
                         </tr>
-                    @endif
+                    @endif --}}
                 </tbody>
             </table>
         </div>
@@ -207,7 +207,7 @@
                         if (!res.ok) throw new Error(data.message || 'Error updating review');
 
                         statusBadge.className =
-                        `badge bg-${isApproved ? 'success' : 'warning'}`;
+                            `badge bg-${isApproved ? 'success' : 'warning'}`;
                         statusBadge.textContent = isApproved ? 'Approved' : 'Pending';
 
                         showFlashMessage(data.message, 'success');

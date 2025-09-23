@@ -2,6 +2,48 @@
 @section('title', 'My Zoom Meetings - FluentAll')
 @section('content')
     <div class="container py-4">
+        <!-- Attendance Confirmation Modal -->
+        <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="attendanceModalLabel">Confirm Lesson Attendance</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="attendanceDetails">
+                            <p><strong>Lesson:</strong> <span id="lessonTopic"></span></p>
+                            <p><strong>Teacher:</strong> <span id="teacherName"></span></p>
+                            <p><strong>Date:</strong> <span id="lessonDate"></span></p>
+                            <p><strong>Amount:</strong> $<span id="lessonAmount"></span></p>
+                        </div>
+                        <hr>
+                        <h6>Please confirm attendance:</h6>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="studentAttended">
+                            <label class="form-check-label" for="studentAttended">
+                                <strong>I attended this lesson</strong>
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="teacherAttended">
+                            <label class="form-check-label" for="teacherAttended">
+                                <strong>My teacher attended this lesson</strong>
+                            </label>
+                        </div>
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle"></i> Teacher payment will only be processed if both you and
+                                your teacher attended the lesson.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmAttendanceBtn">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row mb-4">
             <div class="col-10">
                 <h2 class="mb-0"><i class="fas fa-video me-2"></i>My Zoom Meetings</h2>
@@ -56,42 +98,12 @@
                                     </tbody>
                                 </table>
                             @else
-                                <p class="text-muted">You haven’t purchased any packages yet.</p>
+                                <p class="text-muted">You haven't purchased any packages yet.</p>
                             @endif
                         </div>
-                        <script>
-                            document.querySelectorAll('.deduct-lesson-btn').forEach(button => {
-                                button.addEventListener('click', function() {
-                                    const packageId = this.dataset.id;
-
-                                    fetch(`/lesson-tracking/deduct/${packageId}`, {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                            },
-                                        })
-                                        .then(res => res.json())
-                                        .then(data => {
-                                            if (data.success) {
-                                                document.getElementById(`remaining-${packageId}`).textContent = data
-                                                    .lessons_remaining;
-                                                document.getElementById(`taken-${packageId}`).textContent = data
-                                                    .lessons_taken;
-                                                if (data.lessons_remaining <= 0) button.disabled = true;
-                                                alert(data.message);
-                                            } else {
-                                                alert(data.error || 'Failed to deduct lesson.');
-                                            }
-                                        })
-                                        .catch(err => console.error('Error deducting lesson:', err));
-                                });
-                            });
-                        </script>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -112,6 +124,23 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     @endif
+                </div>
+            </div>
+        @endif
+
+        <!-- Pending Attendance Alert -->
+        @if (isset($pendingAttendances) && $pendingAttendances->count() > 0)
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-warning alert-dismissible fade show">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Attendance Confirmation Required!</strong>
+                        You have {{ $pendingAttendances->count() }} lesson(s) that need attendance confirmation.
+                        <button type="button" class="btn btn-sm btn-outline-dark ms-2" onclick="showPendingAttendances()">
+                            Review Now
+                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
                 </div>
             </div>
         @endif
@@ -216,7 +245,136 @@
             </div>
         </div>
     </div>
+
     <script>
+        let currentAttendanceId = null;
+
+        // Check for pending attendances on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkPendingAttendances();
+        });
+
+        // Function to check and show pending attendances
+        function checkPendingAttendances() {
+            fetch('/student/lesson-tracking/pending-attendances')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.attendances && data.attendances.length > 0) {
+                        showAttendanceModal(data.attendances[0]);
+                    }
+                })
+                .catch(error => console.error('Error checking pending attendances:', error));
+        }
+
+        // Function to show all pending attendances
+        function showPendingAttendances() {
+            fetch('/student/lesson-tracking/pending-attendances')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.attendances && data.attendances.length > 0) {
+                        showAttendanceModal(data.attendances[0]);
+                    } else {
+                        alert('No pending attendance confirmations found.');
+                    }
+                })
+                .catch(error => console.error('Error loading pending attendances:', error));
+        }
+
+        // Function to show attendance modal
+        function showAttendanceModal(attendance) {
+            currentAttendanceId = attendance.id;
+
+            document.getElementById('lessonTopic').textContent = attendance.meeting_topic;
+            document.getElementById('teacherName').textContent = attendance.teacher_name;
+            document.getElementById('lessonDate').textContent = attendance.meeting_date;
+            document.getElementById('lessonAmount').textContent = parseFloat(attendance.amount).toFixed(2);
+
+            // Reset checkboxes
+            document.getElementById('studentAttended').checked = false;
+            document.getElementById('teacherAttended').checked = false;
+
+            // Show modal
+            new bootstrap.Modal(document.getElementById('attendanceModal')).show();
+        }
+
+        // Handle attendance confirmation
+        document.getElementById('confirmAttendanceBtn').addEventListener('click', function() {
+            const studentAttended = document.getElementById('studentAttended').checked;
+            const teacherAttended = document.getElementById('teacherAttended').checked;
+
+            if (!currentAttendanceId) {
+                alert('No attendance record selected.');
+                return;
+            }
+
+            const confirmBtn = this;
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Processing...';
+
+            fetch(`/student/lesson-tracking/confirm-attendance/${currentAttendanceId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        student_attended: studentAttended,
+                        teacher_attended: teacherAttended
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+
+                        // Close modal
+                        bootstrap.Modal.getInstance(document.getElementById('attendanceModal')).hide();
+
+                        // Check for more pending attendances
+                        setTimeout(checkPendingAttendances, 1000);
+                    } else {
+                        alert(data.error || 'Failed to confirm attendance.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error confirming attendance:', error);
+                    alert('Something went wrong. Please try again.');
+                })
+                .finally(() => {
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = 'Confirm';
+                });
+        });
+
+        // Existing functions
+        document.querySelectorAll('.deduct-lesson-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const packageId = this.dataset.id;
+
+                fetch(`/student/lesson-tracking/deduct/${packageId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById(`remaining-${packageId}`).textContent = data
+                                .lessons_remaining;
+                            document.getElementById(`taken-${packageId}`).textContent = data
+                                .lessons_taken;
+                            if (data.lessons_remaining <= 0) button.disabled = true;
+                            alert(data.message);
+                        } else {
+                            alert(data.error || 'Failed to deduct lesson.');
+                        }
+                    })
+                    .catch(err => console.error('Error deducting lesson:', err));
+            });
+        });
+
         function copyMeetingLink(joinUrl, meetingId, password) {
             let text = `Zoom Meeting Details:\n\nJoin URL: ${joinUrl}\nMeeting ID: ${meetingId}`;
             if (password) text += `\nPassword: ${password}`;

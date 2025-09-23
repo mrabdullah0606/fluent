@@ -5,6 +5,47 @@
         <div class="dashboard__content-title mt-4 mb-4 bg-warning p-3">
             <h4 class="title text-white fw-bold">{{ __('Zoom Meetings') }}</h4>
         </div>
+        <!-- Attendance Confirmation Modal -->
+        <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="attendanceModalLabel">Confirm Lesson Attendance</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="attendanceDetails">
+                            <p><strong>Lesson:</strong> <span id="lessonTopic"></span></p>
+                            <p><strong>Student:</strong> <span id="studentName"></span></p>
+                            <p><strong>Date:</strong> <span id="lessonDate"></span></p>
+                            <p><strong>Amount:</strong> $<span id="lessonAmount"></span></p>
+                        </div>
+                        <hr>
+                        <h6>Please confirm attendance:</h6>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="studentAttended">
+                            <label class="form-check-label" for="studentAttended">
+                                <strong>My student attended this lesson</strong>
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="teacherAttended">
+                            <label class="form-check-label" for="teacherAttended">
+                                <strong>I attended this lesson</strong>
+                            </label>
+                        </div>
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle"></i> Payment will only be processed if both you and
+                                your student attended the lesson.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmAttendanceBtn">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         {{-- Toast Alerts --}}
         @if (session('success') || session('error'))
@@ -23,7 +64,23 @@
                 @endif
             </div>
         @endif
-
+        <!-- Pending Attendance Alert -->
+        @if (isset($pendingAttendances) && $pendingAttendances->count() > 0)
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-warning alert-dismissible fade show">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Attendance Confirmation Required!</strong>
+                        You have {{ $pendingAttendances->count() }} lesson(s) that need attendance confirmation.
+                        <button type="button" class="btn btn-sm btn-outline-dark ms-2"
+                            onclick="showTeacherPendingAttendances()">
+                            Review Now
+                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+            </div>
+        @endif
         {{-- Main Form & Instructions --}}
         <div class="row g-4">
             <div class="col-lg-8">
@@ -74,7 +131,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="duration" class="form-label">{{ __('Duration (minutes)') }} <code>*</code></label>
+                            <label for="duration" class="form-label">{{ __('Duration (minutes)') }}
+                                <code>*</code></label>
                             <input type="number" id="duration" name="duration" class="form-control"
                                 value="{{ old('duration', 60) }}" min="1" max="480" required>
                             @error('duration')
@@ -102,6 +160,7 @@
 
         {{-- Meeting List --}}
         <div class="row mt-5">
+
             <div class="col-12">
                 <h5 class="mb-3">{{ __('Your Meetings') }}</h5>
                 @if ($meetings->count())
@@ -117,7 +176,7 @@
                                     <th>{{ __('Actions') }}</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            {{-- <tbody>
                                 @foreach ($meetings as $meeting)
                                     <tr>
                                         <td>{{ $meeting->topic }}</td>
@@ -140,6 +199,51 @@
                                                 onclick="copyToClipboard('{{ $meeting->join_url }}')">
                                                 {{ __('Copy') }}
                                             </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody> --}}
+                            <tbody>
+                                @foreach ($meetings as $meeting)
+                                    <tr>
+                                        <td>{{ $meeting->topic }}</td>
+                                        <td>
+                                            {{ $meeting->creator?->name ?? auth()->user()->name }}
+                                        </td>
+                                        <td>{{ $meeting->start_time->format('d M Y, h:i A') }}</td>
+                                        <td>{{ $meeting->duration }} min</td>
+                                        <td>
+                                            <code>{{ $meeting->meeting_id }}</code>
+                                            @if ($meeting->password)
+                                                <br><small class="text-muted">Password:
+                                                    <code>{{ $meeting->password }}</code></small>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($meeting->teacher_joined)
+                                                <a href="{{ $meeting->start_url ?? $meeting->join_url }}" target="_blank"
+                                                    class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-video me-1"></i>Rejoin
+                                                </a>
+                                            @else
+                                                <a href="{{ route('teacher.zoom.join', $meeting->id) }}"
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="fas fa-play me-1"></i>Join
+                                                </a>
+                                            @endif
+
+                                            <button class="btn btn-sm btn-outline-secondary"
+                                                onclick="copyToClipboard('{{ $meeting->join_url }}')">
+                                                <i class="fas fa-copy me-1"></i>Copy
+                                            </button>
+
+                                            @if ($meeting->teacher_joined)
+                                                <small class="d-block text-muted mt-1">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    Joined:
+                                                    {{ \Carbon\Carbon::parse($meeting->teacher_joined_at)->format('M d, h:i A') }}
+                                                </small>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -266,6 +370,107 @@
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             input.min = now.toISOString().slice(0, 16);
+        });
+
+        // Add this JavaScript to your teacher's Zoom meetings page
+        let currentAttendanceId = null;
+
+        // Check for pending attendances on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkTeacherPendingAttendances();
+        });
+
+        // Function to check and show pending attendances
+        function checkTeacherPendingAttendances() {
+            fetch('/teacher/lesson-tracking/pending-attendances')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.attendances && data.attendances.length > 0) {
+                        showTeacherAttendanceModal(data.attendances[0]);
+                    }
+                })
+                .catch(error => console.error('Error checking pending attendances:', error));
+        }
+
+        // Function to show all pending attendances
+        function showTeacherPendingAttendances() {
+            fetch('/teacher/lesson-tracking/pending-attendances')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.attendances && data.attendances.length > 0) {
+                        showTeacherAttendanceModal(data.attendances[0]);
+                    } else {
+                        alert('No pending attendance confirmations found.');
+                    }
+                })
+                .catch(error => console.error('Error loading pending attendances:', error));
+        }
+
+        // Function to show attendance modal
+        function showTeacherAttendanceModal(attendance) {
+            currentAttendanceId = attendance.id;
+
+            document.getElementById('lessonTopic').textContent = attendance.meeting_topic;
+            document.getElementById('studentName').textContent = attendance.student_name;
+            document.getElementById('lessonDate').textContent = attendance.meeting_date;
+            document.getElementById('lessonAmount').textContent = parseFloat(attendance.amount).toFixed(2);
+
+            // Reset checkboxes
+            document.getElementById('studentAttended').checked = false;
+            document.getElementById('teacherAttended').checked = false;
+
+            // Show modal
+            new bootstrap.Modal(document.getElementById('attendanceModal')).show();
+        }
+
+        // Handle attendance confirmation
+        document.getElementById('confirmAttendanceBtn').addEventListener('click', function() {
+            const studentAttended = document.getElementById('studentAttended').checked;
+            const teacherAttended = document.getElementById('teacherAttended').checked;
+
+            if (!currentAttendanceId) {
+                alert('No attendance record selected.');
+                return;
+            }
+
+            const confirmBtn = this;
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Processing...';
+
+            fetch(`/teacher/lesson-tracking/confirm-attendance/${currentAttendanceId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    },
+                    body: JSON.stringify({
+                        student_attended: studentAttended,
+                        teacher_attended: teacherAttended
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+
+                        // Close modal
+                        bootstrap.Modal.getInstance(document.getElementById('attendanceModal')).hide();
+
+                        // Check for more pending attendances
+                        setTimeout(checkTeacherPendingAttendances, 1000);
+                    } else {
+                        alert(data.error || 'Failed to confirm attendance.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error confirming attendance:', error);
+                    alert('Something went wrong. Please try again.');
+                })
+                .finally(() => {
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = 'Confirm';
+                });
         });
     </script>
 @endpush

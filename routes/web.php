@@ -121,6 +121,23 @@ Route::prefix('student')->group(function () {
         Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
         Route::get('/stripe/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
         /************************** Stripe End *********************************************/
+        // Get pending attendance confirmations
+        Route::get('/lesson-tracking/pending-attendances', [LessonTrackingController::class, 'getPendingAttendances'])
+            ->name('lesson-tracking.pending-attendances');
+
+        // Confirm attendance
+        Route::post('/lesson-tracking/confirm-attendance/{id}', [LessonTrackingController::class, 'confirmAttendance'])
+            ->name('lesson-tracking.confirm-attendance');
+
+        // Existing routes should remain the same
+        Route::get('/lesson-tracking', [LessonTrackingController::class, 'lessonTracking'])
+            ->name('student.lesson.tracking');
+
+        Route::post('/lesson-tracking/deduct/{id}', [LessonTrackingController::class, 'deductLesson'])
+            ->name('lesson-tracking.deduct');
+
+        Route::get('/student/zoom/join/{id}', [LessonTrackingController::class, 'join'])
+            ->name('student.zoom.join');
     });
 });
 
@@ -185,7 +202,7 @@ Route::prefix('teacher')->group(function () {
         Route::get('zoom/summaries', [ZoomMeetingController::class, 'getSummaries'])->name('teacher.zoom.getSummaries');
         Route::get('zoom/students', [ZoomMeetingController::class, 'getStudentsBySummary'])->name('teacher.zoom.getStudentsByPackage');
         Route::get('zoom/packages', [ZoomMeetingController::class, 'getPackages'])->name('teacher.zoom.getPackages');
-
+        Route::get('/zoom/join/{id}', [ZoomMeetingController::class, 'teacherJoin'])->name('teacher.zoom.join');
 
         /* ****************************** Availability ****************************** */
         Route::prefix('availability')->name('teacher.availability.')->group(function () {
@@ -202,6 +219,13 @@ Route::prefix('teacher')->group(function () {
             Route::post('/payment-settings', [WalletController::class, 'updatePaymentSettings'])->name('payment-settings');
             Route::get('/transactions', [WalletController::class, 'transactions'])->name('transactions');
         });
+
+        // Teacher attendance confirmation routes
+        Route::get('/lesson-tracking/pending-attendances', [LessonTrackingController::class, 'getTeacherPendingAttendances'])
+            ->name('teacher.lesson-tracking.pending-attendances');
+
+        Route::post('/lesson-tracking/confirm-attendance/{id}', [LessonTrackingController::class, 'confirmTeacherAttendance'])
+            ->name('teacher.lesson-tracking.confirm-attendance');
     });
 });
 

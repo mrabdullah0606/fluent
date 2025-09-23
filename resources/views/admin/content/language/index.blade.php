@@ -8,7 +8,7 @@
                 <i class="bi bi-plus-circle me-1"></i> Add Language
             </a>
         </div>
-        <table id="languageTable" class="table table-bordered bg-white shadow-sm">
+        <table id="userTable2" class="table table-bordered bg-white shadow-sm">
             <thead class="table-warning">
                 <tr>
                     <th>ID</th>

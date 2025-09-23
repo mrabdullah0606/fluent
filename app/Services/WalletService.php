@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Log;
 class WalletService
 {
     // Commission rates
-    const TEACHER_COMMISSION_RATE = 0.80; // 80%
-    const ADMIN_COMMISSION_RATE = 0.20;   // 20%
+    const TEACHER_COMMISSION_RATE = 0.80;
+    const ADMIN_COMMISSION_RATE = 0.20;
 
     /**
      * Process payment and distribute between teacher (80%) and admin (20%)
@@ -130,10 +130,10 @@ class WalletService
                 'balance_before' => $balanceBefore,
                 'balance_after' => $balanceAfter,
                 'description' => $description . ($teacherId ? " (Teacher ID: {$teacherId})" : ""),
-                'reference_id' => $paymentId ? "PAY-{$paymentId}" : null,
+                'reference_id' => $paymentId ? "TEACH-PAY-{$paymentId}" : null,
             ]);
 
-            Log::info("Commission added to admin wallet", [
+            Log::info("Amount deducted from admin wallet", [
                 'admin_id' => $adminWallet->admin_id,
                 'amount' => $amount,
                 'new_balance' => $balanceAfter,
@@ -272,5 +272,113 @@ class WalletService
             default:
                 throw new Exception('Invalid payment method');
         }
+    }
+
+    public function addFullAmountToAdminWallet($amount, $description, $paymentId = null)
+    {
+        $amount = floatval($amount);
+
+        if ($amount <= 0) {
+            \Log::error("addFullAmountToAdminWallet called with invalid amount", compact('amount', 'description', 'paymentId'));
+            throw new \InvalidArgumentException("Amount must be greater than zero");
+        }
+
+        return \DB::transaction(function () use ($amount, $description, $paymentId) {
+            $adminWallet = \App\Models\AdminWallet::getMainAdminWallet();
+            if (!$adminWallet) {
+                \Log::error('Admin wallet not found while adding full payment');
+                throw new \Exception('Admin wallet not found');
+            }
+
+            $balanceBefore = $adminWallet->balance;
+            $balanceAfter = $balanceBefore + $amount;
+
+            $adminWallet->update([
+                'balance' => $balanceAfter,
+                'total_earned' => $adminWallet->total_earned + $amount,
+            ]);
+
+            \App\Models\AdminWalletTransaction::create([
+                'admin_id' => $adminWallet->admin_id,
+                'payment_id' => $paymentId,
+                'type' => 'credit',
+                'category' => 'payment',
+                'amount' => $amount,
+                'description' => $description,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $balanceAfter,
+                'reference_id' => $paymentId ? 'PAY-' . $paymentId : null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            \Log::info("Full payment of {$amount} added to admin wallet ID {$adminWallet->id}");
+
+            return $adminWallet;
+        });
+    }
+    /**
+     * Deduct amount from admin wallet (used when paying teachers)
+     */
+    public function deductFromAdminWallet($amount, $description, $paymentId = null, $teacherId = null)
+    {
+        $amount = floatval($amount);
+
+        if ($amount <= 0) {
+            Log::error("deductFromAdminWallet called with invalid amount", compact('amount', 'description', 'paymentId', 'teacherId'));
+            throw new \InvalidArgumentException("Amount must be greater than zero");
+        }
+
+        return DB::transaction(function () use ($amount, $description, $paymentId, $teacherId) {
+            // Get main admin wallet
+            $adminWallet = AdminWallet::getMainAdminWallet();
+
+            if (!$adminWallet) {
+                Log::error("Admin wallet not found for deduction");
+                throw new Exception("Admin wallet not found");
+            }
+
+            // Check if admin has sufficient balance
+            if ($adminWallet->balance < $amount) {
+                Log::error("Insufficient admin wallet balance for teacher payment", [
+                    'required_amount' => $amount,
+                    'available_balance' => $adminWallet->balance,
+                    'teacher_id' => $teacherId
+                ]);
+                throw new Exception("Insufficient admin wallet balance");
+            }
+
+            $balanceBefore = $adminWallet->balance;
+            $balanceAfter = $balanceBefore - $amount;
+
+            // Update admin wallet balance
+            $adminWallet->update([
+                'balance' => $balanceAfter,
+                'total_withdrawn' => $adminWallet->total_withdrawn + $amount,
+            ]);
+
+            // Create transaction record
+            AdminWalletTransaction::create([
+                'admin_id' => $adminWallet->admin_id,
+                'payment_id' => $paymentId,
+                'type' => 'debit',
+                'category' => 'lesson_payout',
+                'amount' => $amount,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $balanceAfter,
+                'description' => $description . ($teacherId ? " (Teacher ID: {$teacherId})" : ""),
+                'reference_id' => $paymentId ? "TEACH-PAY-{$paymentId}" : null,
+            ]);
+
+            Log::info("Amount deducted from admin wallet", [
+                'admin_id' => $adminWallet->admin_id,
+                'amount' => $amount,
+                'new_balance' => $balanceAfter,
+                'teacher_id' => $teacherId,
+                'payment_id' => $paymentId
+            ]);
+
+            return $adminWallet;
+        });
     }
 }

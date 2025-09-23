@@ -41,32 +41,33 @@ class Payment extends Model
     {
         parent::boot();
 
-        // UPDATED: When payment is created with successful status, distribute 80% to teacher and 20% to admin
         static::created(function ($payment) {
             if ($payment->status === 'successful' && !$payment->wallet_processed) {
-                $walletService = app(WalletService::class);
-
-                // Use base_price for distribution (80% teacher, 20% admin)
-                $walletService->processPaymentDistribution(
-                    $payment->teacher_id,
-                    $payment->base_price,
-                    "Earning from: {$payment->summary}",
+                // Store TOTAL amount to admin wallet instead of base_price
+                app(\App\Services\WalletService::class)->addFullAmountToAdminWallet(
+                    (float) $payment->total, // Changed from base_price to total
+                    'Full payment added to admin wallet: ' . $payment->summary,
                     $payment->id
                 );
+
+                $payment->wallet_processed = true;
+                $payment->wallet_processed_at = now();
+                $payment->save();
             }
         });
 
-        // Also handle if payment status changes to successful
         static::updated(function ($payment) {
             if ($payment->status === 'successful' && !$payment->wallet_processed && $payment->isDirty('status')) {
-                $walletService = app(WalletService::class);
-
-                $walletService->processPaymentDistribution(
-                    $payment->teacher_id,
-                    $payment->base_price,
-                    "Earning from: {$payment->summary}",
+                // Store TOTAL amount to admin wallet instead of base_price
+                app(\App\Services\WalletService::class)->addFullAmountToAdminWallet(
+                    (float) $payment->total, // Changed from base_price to total
+                    'Full payment added to admin wallet (update): ' . $payment->summary,
                     $payment->id
                 );
+
+                $payment->wallet_processed = true;
+                $payment->wallet_processed_at = now();
+                $payment->save();
             }
         });
     }

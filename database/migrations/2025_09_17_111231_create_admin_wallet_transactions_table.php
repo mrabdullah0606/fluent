@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('payment_id')->nullable()->constrained('payments')->onDelete('set null');
             $table->enum('type', ['credit', 'debit']);
-            $table->enum('category', ['commission', 'withdrawal', 'refund', 'adjustment']);
+            $table->enum('category', ['commission', 'withdrawal', 'refund', 'adjustment', 'payment', 'lesson_payout']);
             $table->decimal('amount', 15, 2);
             $table->decimal('balance_before', 15, 2);
             $table->decimal('balance_after', 15, 2);

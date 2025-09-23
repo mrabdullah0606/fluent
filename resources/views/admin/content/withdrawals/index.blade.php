@@ -93,7 +93,7 @@
             <div class="card">
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
+                        <table id="userTable" class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
                                     @foreach (['ID', 'Teacher', 'Amount', 'Method', 'Status', 'Date', 'Actions'] as $heading)
@@ -102,7 +102,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($withdrawals as $withdrawal)
+                                @foreach ($withdrawals as $withdrawal)
+                                    {{-- @forelse($withdrawals as $withdrawal) --}}
                                     <tr>
                                         {{-- ID --}}
                                         <td class="fw-medium">#{{ $withdrawal->id }}</td>
@@ -171,14 +172,16 @@
                                             </div>
                                         </td>
                                     </tr>
-                                @empty
+                                @endforeach
+
+                                {{-- @empty
                                     <tr>
                                         <td colspan="7" class="text-center py-4 text-muted">
                                             <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                             No withdrawal requests found.
                                         </td>
                                     </tr>
-                                @endforelse
+                                @endforelse --}}
                             </tbody>
                         </table>
                     </div>
@@ -193,75 +196,78 @@
             </div>
             {{-- -All Transaction History --}}
             {{-- Transactions Table --}}
-<div class="card mt-5">
-    <div class="card-header">
-        <h5 class="mb-0">All Wallet Transactions</h5>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Date</th>
-                        <th>Teacher</th>
-                        <th>Description</th>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Balance After</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($transactions as $txn)
-                        <tr>
-                            <td>
-                                {{ $txn->created_at->format('M j, Y') }}
-                                <br><small class="text-muted">{{ $txn->created_at->format('g:i A') }}</small>
-                            </td>
-                            <td>
-                                {{ $txn->teacher->name ?? 'N/A' }}
-                                <br><small class="text-muted">ID: {{ $txn->teacher_id }}</small>
-                            </td>
-                            <td>
-                                {{ $txn->description }}
-                                @if($txn->payment_id)
-                                    <br><small class="text-primary">Payment #{{ $txn->payment_id }}</small>
-                                @endif
-                                @if($txn->withdrawal_id)
-                                    <br><small class="text-purple">Withdrawal #{{ $txn->withdrawal_id }}</small>
-                                @endif
-                            </td>
-                            <td>
-                                <span class="badge {{ $txn->type == 'credit' ? 'bg-success' : 'bg-danger' }}">
-                                    {{ ucfirst($txn->type) }}
-                                </span>
-                                <br>
-                                <small class="text-muted">{{ ucfirst($txn->category) }}</small>
-                            </td>
-                            <td class="fw-bold {{ $txn->type == 'credit' ? 'text-success' : 'text-danger' }}">
-                                {{ $txn->type == 'credit' ? '+' : '-' }}${{ number_format($txn->amount, 2) }}
-                            </td>
-                            <td>${{ number_format($txn->balance_after, 2) }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">
-                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                No transactions found.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h5 class="mb-0">All Wallet Transactions</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table id="userTable2" class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Teacher</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Balance After</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($transactions as $txn)
+                                    {{-- @forelse($transactions as $txn) --}}
+                                    <tr>
+                                        <td>
+                                            {{ $txn->created_at->format('M j, Y') }}
+                                            <br><small class="text-muted">{{ $txn->created_at->format('g:i A') }}</small>
+                                        </td>
+                                        <td>
+                                            {{ $txn->teacher->name ?? 'N/A' }}
+                                            <br><small class="text-muted">ID: {{ $txn->teacher_id }}</small>
+                                        </td>
+                                        <td>
+                                            {{ $txn->description }}
+                                            @if ($txn->payment_id)
+                                                <br><small class="text-primary">Payment #{{ $txn->payment_id }}</small>
+                                            @endif
+                                            @if ($txn->withdrawal_id)
+                                                <br><small class="text-purple">Withdrawal
+                                                    #{{ $txn->withdrawal_id }}</small>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span class="badge {{ $txn->type == 'credit' ? 'bg-success' : 'bg-danger' }}">
+                                                {{ ucfirst($txn->type) }}
+                                            </span>
+                                            <br>
+                                            <small class="text-muted">{{ ucfirst($txn->category) }}</small>
+                                        </td>
+                                        <td class="fw-bold {{ $txn->type == 'credit' ? 'text-success' : 'text-danger' }}">
+                                            {{ $txn->type == 'credit' ? '+' : '-' }}${{ number_format($txn->amount, 2) }}
+                                        </td>
+                                        <td>${{ number_format($txn->balance_after, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                                {{-- @empty --}}
+                                {{-- <tr>
+                                        <td colspan="6" class="text-center py-4 text-muted">
+                                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                            No transactions found.
+                                        </td>
+                                    </tr>
+                                @endforelse --}}
+                            </tbody>
+                        </table>
+                    </div>
 
-        {{-- Pagination --}}
-        @if($transactions->hasPages())
-            <div class="card-footer bg-light">
-                {{ $transactions->appends(request()->query())->links() }}
+                    {{-- Pagination --}}
+                    @if ($transactions->hasPages())
+                        <div class="card-footer bg-light">
+                            {{ $transactions->appends(request()->query())->links() }}
+                        </div>
+                    @endif
+                </div>
             </div>
-        @endif
-    </div>
-</div>
 
         </div>
     </main>
@@ -340,7 +346,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <script>
         function viewWithdrawal(id) {
@@ -408,43 +414,43 @@
                     </div>
                     
                     ${data.transaction_id ? `
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Transaction ID</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <code class="bg-secondary bg-opacity-10 p-2 rounded d-block">${data.transaction_id}</code>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
+                                                        <div class="col-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h6 class="mb-0">Transaction ID</h6>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <code class="bg-secondary bg-opacity-10 p-2 rounded d-block">${data.transaction_id}</code>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
                     
                     ${data.admin_notes ? `
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Admin Notes</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="alert alert-info mb-0">${data.admin_notes}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
+                                                        <div class="col-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h6 class="mb-0">Admin Notes</h6>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="alert alert-info mb-0">${data.admin_notes}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
                     
                     ${data.failure_reason ? `
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Failure Reason</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="alert alert-danger mb-0">${data.failure_reason}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
+                                                        <div class="col-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h6 class="mb-0">Failure Reason</h6>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="alert alert-danger mb-0">${data.failure_reason}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
                     
                     <div class="col-md-6">
                         <div class="card">
@@ -455,15 +461,15 @@
                         </div>
                     </div>
                     ${data.processed_date ? `
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h6 class="text-muted mb-2">Processed Date</h6>
-                                        <p class="mb-0">${new Date(data.processed_date).toLocaleDateString()} ${new Date(data.processed_date).toLocaleTimeString()}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
+                                                        <div class="col-md-6">
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <h6 class="text-muted mb-2">Processed Date</h6>
+                                                                    <p class="mb-0">${new Date(data.processed_date).toLocaleDateString()} ${new Date(data.processed_date).toLocaleTimeString()}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
                 </div>
             `;
                     new bootstrap.Modal(document.getElementById('viewModal')).show();

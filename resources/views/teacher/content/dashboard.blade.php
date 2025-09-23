@@ -72,7 +72,6 @@
                                 </p>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -142,7 +141,8 @@
                                                 Join Lesson
                                             </button>
                                         </a>
-                                        <div class="dropdown">
+
+                                        {{-- <div class="dropdown">
                                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
                                                 type="button" id="lessonOptions{{ $index }}"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -171,7 +171,7 @@
                                                     @endif
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>

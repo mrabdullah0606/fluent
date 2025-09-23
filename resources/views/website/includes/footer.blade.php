@@ -45,7 +45,11 @@
                     </li>
                     <li>
                         <i class="bi bi-chat-left-text text-warning me-2"></i>
-                        <a href="#" class="text-muted text-decoration-none">Contact Form</a>
+                        <a href="{{ route('contact') }}" class="text-muted text-decoration-none">Contact Form</a>
+                    </li>
+                    <li>
+                        <i class="bi bi-chat-left-text text-warning me-2"></i>
+                        <a href="{{ route('admin.login') }}" class="text-muted text-decoration-none">Admin Login</a>
                     </li>
                 </ul>
             </div>

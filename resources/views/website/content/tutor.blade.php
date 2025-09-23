@@ -22,10 +22,11 @@
                                 </span>
                             </span>
 
-                            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+                            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
                                 {{ $teacher->name }}
                             </h1>
-                            <!-- <p class="text-primary text-md mt-1">{{ $teacher?->headline ?? 'No headline added yet' }}</p> -->
+                            <p class="text-warning text-md mt-1">{{ $teacherProfile?->headline ?? 'No headline added yet' }}
+                            </p>
 
                             <!-- Ratings -->
                             <div class="flex items-center mt-2 text-gray-700">
@@ -87,10 +88,10 @@
                                 </div>
                             </div>
 
-                            <div
+                            {{-- <div
                                 class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent mt-3 bg-green-500 hover:bg-green-600 text-white">
                                 Active Now
-                            </div>
+                            </div> --}}
                         </div>
 
                         <!-- Right Section -->
@@ -102,17 +103,17 @@
                                 <div class="grid grid-cols-2 sm:grid-cols-2 gap-4 text-sm">
                                     <div class="flex items-center text-gray-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            class="h-6 w-6 mr-2 text-warning" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                             <circle cx="12" cy="10" r="3"></circle>
                                         </svg>
-                                        From: {{ $teacher?->country ?? 'N/A' }}
+                                        From: {{ $teacherProfile->country ?? 'N/A' }}
                                     </div>
 
                                     <div class="flex items-center text-gray-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            class="h-6 w-6 mr-2 text-warning" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="m5 8 6 6"></path>
                                             <path d="m4 14 6-6 2-3"></path>
@@ -126,17 +127,17 @@
 
                                     <div class="flex items-center text-gray-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            class="h-6 w-6 mr-2 text-warning" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <circle cx="12" cy="8" r="6"></circle>
                                             <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
                                         </svg>
-                                        Experience: {{ $teacher?->experience ?? 'N/A' }}
+                                        Experience: {{ $teacherProfile?->experience ?? 'N/A' }} Years
                                     </div>
 
                                     <div class="flex items-center text-gray-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            class="h-6 w-6 mr-2 text-warning" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="2" x2="22" y1="12" y2="12"></line>
@@ -150,7 +151,7 @@
 
                                     <div class="flex items-center text-gray-700 col-span-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                            class="h-6 w-6 mr-2 text-primary" fill="none" stroke="currentColor"
+                                            class="h-6 w-6 mr-2 text-warning" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <line x1="12" x2="12" y1="2" y2="22"></line>
                                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -178,7 +179,8 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
+                            <div
+                                class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6 align-items-center">
                                 <a href="{{ route('tutor.booking', ['id' => $teacher->id]) }}">
                                     <button
                                         class="inline-flex items-center justify-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md"><svg
@@ -204,7 +206,7 @@
                                 @auth
                                     <a href="{{ route('student.chat.index', $teacher->id) }}" class="btn">
                                         <button
-                                            class="inline-flex items-center justify-center font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-9 rounded-md px-3 w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground text-xs"><svg
+                                            class="inline-flex items-center justify-center font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-9 rounded-md px-3 w-full border-warning text-warning hover:bg-warning hover:text-warning-foreground text-xs"><svg
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 mr-1.5">

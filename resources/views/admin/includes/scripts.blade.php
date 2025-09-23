@@ -7,18 +7,28 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
-	$(document).ready(function () {
-		$('#userTable').DataTable({
-		// Optional config
-		"paging": true,
-		"ordering": true,
-		"info": true,
-		"responsive": true 
-		});
-	});
-	document.addEventListener('DOMContentLoaded', function () {
+    $(document).ready(function() {
+        $('#userTable').DataTable({
+            // Optional config
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "responsive": true
+        });
+    });
+
+    $(document).ready(function() {
+        $('#userTable2').DataTable({
+            // Optional config
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "responsive": true
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
         const toastElList = [].slice.call(document.querySelectorAll('.toast'));
-        toastElList.map(function (toastEl) {
+        toastElList.map(function(toastEl) {
             const toast = new bootstrap.Toast(toastEl);
             toast.show();
         });

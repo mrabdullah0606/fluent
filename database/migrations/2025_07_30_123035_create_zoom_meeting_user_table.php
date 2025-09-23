@@ -22,6 +22,8 @@ return new class extends Migration
             // $table->enum('action_by', ['student', 'teacher'])->nullable();
             $table->foreignId('action_by')->nullable()->constrained('users')->nullOnDelete();
             $table->unsignedBigInteger('lesson_tracking_id')->nullable();
+            $table->boolean('teacher_joined')->default(false);
+            $table->timestamp('teacher_joined_at')->nullable();
             $table->timestamps();
         });
     }

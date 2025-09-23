@@ -178,7 +178,6 @@ class HomeController extends Controller
                 ->where('status', 'successful')
                 ->exists();
         }
-
         return view('website.content.tutor', compact(
             'teacher',
             'teacherProfile',
