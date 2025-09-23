@@ -147,6 +147,17 @@
     <a href="{{ route('admin.wallet.index') }}" class="nav-link"><i class="bi bi-wallet me-2"></i>
         Wallet
     </a>
+
+    <a class="nav-link" href="{{ route('admin.attendances.index') }}">
+        <i class="ri-checkbox-circle-line me-2"></i>
+        Attendance Approvals
+        @php
+            $pendingCount = \App\Models\LessonAttendance::where('admin_status', 'pending')->count();
+        @endphp
+        @if ($pendingCount > 0)
+            <span class="badge bg-warning ms-2">{{ $pendingCount }}</span>
+        @endif
+    </a>
     {{-- <a href="" class="nav-link"><i class="bi bi-eye me-2"></i> Profile</a> --}}
     <a href="javascript:void(0);" class="nav-link text-danger"
         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

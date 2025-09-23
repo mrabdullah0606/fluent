@@ -75,4 +75,25 @@ class LessonAttendance extends Model
     {
         return round($this->base_price * 0.20, 2);
     }
+
+    // Add these relationships and methods to LessonAttendance model
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function isPending()
+    {
+        return $this->admin_status === 'pending';
+    }
+
+    public function isApproved()
+    {
+        return $this->admin_status === 'approved';
+    }
+
+    public function isRejected()
+    {
+        return $this->admin_status === 'rejected';
+    }
 }

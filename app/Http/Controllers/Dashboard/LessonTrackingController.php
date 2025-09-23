@@ -102,6 +102,53 @@ class LessonTrackingController extends Controller
         return redirect()->away($meeting->join_url);
     }
 
+    // public function confirmAttendance(Request $request, $attendanceId)
+    // {
+    //     $request->validate([
+    //         'student_attended' => 'required|boolean',
+    //         'teacher_attended' => 'required|boolean',
+    //     ]);
+
+    //     try {
+    //         $attendance = LessonAttendance::where('id', $attendanceId)
+    //             ->where('student_id', auth()->id())
+    //             ->where('status', 'pending')
+    //             ->lockForUpdate()
+    //             ->firstOrFail();
+    //         $updateData = [
+    //             'student_attended' => $request->student_attended,
+    //             'student_confirmed_at' => now(),
+    //         ];
+    //         if (is_null($attendance->teacher_confirmed_at)) {
+    //             $updateData['teacher_attended'] = $request->teacher_attended;
+    //         }
+    //         $attendance->update($updateData);
+    //         $bothConfirmed = !is_null($attendance->student_confirmed_at) && !is_null($attendance->teacher_confirmed_at);
+    //         if ($bothConfirmed && $attendance->student_attended && $attendance->teacher_attended && !$attendance->payment_released) {
+    //             $this->processTeacherPayment($attendance);
+    //             $attendance->update([
+    //                 'status' => 'confirmed',
+    //                 'payment_released' => true,
+    //                 'payment_released_at' => now(),
+    //             ]);
+
+    //             $message = 'Attendance confirmed! Teacher payment has been processed.';
+    //         } else if ($bothConfirmed) {
+    //             $attendance->update(['status' => 'confirmed']);
+    //             $message = 'Attendance confirmation completed by both parties.';
+    //         } else {
+    //             $message = 'Your attendance confirmation recorded. Waiting for teacher confirmation.';
+    //         }
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => $message
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         \Log::error("Error confirming student attendance: " . $e->getMessage());
+    //         return response()->json(['error' => 'Something went wrong.'], 500);
+    //     }
+    // }
     public function confirmAttendance(Request $request, $attendanceId)
     {
         $request->validate([
@@ -115,27 +162,26 @@ class LessonTrackingController extends Controller
                 ->where('status', 'pending')
                 ->lockForUpdate()
                 ->firstOrFail();
+
             $updateData = [
                 'student_attended' => $request->student_attended,
                 'student_confirmed_at' => now(),
             ];
+
             if (is_null($attendance->teacher_confirmed_at)) {
                 $updateData['teacher_attended'] = $request->teacher_attended;
             }
+
             $attendance->update($updateData);
+
             $bothConfirmed = !is_null($attendance->student_confirmed_at) && !is_null($attendance->teacher_confirmed_at);
-            if ($bothConfirmed && $attendance->student_attended && $attendance->teacher_attended && !$attendance->payment_released) {
-                $this->processTeacherPayment($attendance);
+
+            if ($bothConfirmed) {
                 $attendance->update([
                     'status' => 'confirmed',
-                    'payment_released' => true,
-                    'payment_released_at' => now(),
+                    'admin_status' => 'pending'
                 ]);
-
-                $message = 'Attendance confirmed! Teacher payment has been processed.';
-            } else if ($bothConfirmed) {
-                $attendance->update(['status' => 'confirmed']);
-                $message = 'Attendance confirmation completed by both parties.';
+                $message = 'Attendance confirmed! Payment is pending admin approval.';
             } else {
                 $message = 'Your attendance confirmation recorded. Waiting for teacher confirmation.';
             }
@@ -225,6 +271,51 @@ class LessonTrackingController extends Controller
         return response()->json(['attendances' => $attendances]);
     }
 
+    // public function confirmTeacherAttendance(Request $request, $attendanceId)
+    // {
+    //     $request->validate([
+    //         'student_attended' => 'required|boolean',
+    //         'teacher_attended' => 'required|boolean',
+    //     ]);
+
+    //     try {
+    //         $attendance = LessonAttendance::where('id', $attendanceId)
+    //             ->where('teacher_id', auth()->id())
+    //             ->where('status', 'pending')
+    //             ->lockForUpdate()
+    //             ->firstOrFail();
+    //         $updateData = [
+    //             'teacher_attended' => $request->teacher_attended,
+    //             'teacher_confirmed_at' => now(),
+    //         ];
+    //         if (is_null($attendance->student_confirmed_at)) {
+    //             $updateData['student_attended'] = $request->student_attended;
+    //         }
+    //         $attendance->update($updateData);
+    //         $bothConfirmed = !is_null($attendance->student_confirmed_at) && !is_null($attendance->teacher_confirmed_at);
+    //         if ($bothConfirmed && $attendance->student_attended && $attendance->teacher_attended && !$attendance->payment_released) {
+    //             $this->processTeacherPayment($attendance);
+    //             $attendance->update([
+    //                 'status' => 'confirmed',
+    //                 'payment_released' => true,
+    //                 'payment_released_at' => now(),
+    //             ]);
+    //             $message = 'Attendance confirmed! Your payment has been processed.';
+    //         } else if ($bothConfirmed) {
+    //             $attendance->update(['status' => 'confirmed']);
+    //             $message = 'Attendance confirmation completed by both parties.';
+    //         } else {
+    //             $message = 'Your attendance confirmation recorded. Waiting for student confirmation.';
+    //         }
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => $message
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         \Log::error("Error confirming teacher attendance: " . $e->getMessage());
+    //         return response()->json(['error' => 'Something went wrong.'], 500);
+    //     }
+    // }
     public function confirmTeacherAttendance(Request $request, $attendanceId)
     {
         $request->validate([
@@ -238,29 +329,30 @@ class LessonTrackingController extends Controller
                 ->where('status', 'pending')
                 ->lockForUpdate()
                 ->firstOrFail();
+
             $updateData = [
                 'teacher_attended' => $request->teacher_attended,
                 'teacher_confirmed_at' => now(),
             ];
+
             if (is_null($attendance->student_confirmed_at)) {
                 $updateData['student_attended'] = $request->student_attended;
             }
+
             $attendance->update($updateData);
+
             $bothConfirmed = !is_null($attendance->student_confirmed_at) && !is_null($attendance->teacher_confirmed_at);
-            if ($bothConfirmed && $attendance->student_attended && $attendance->teacher_attended && !$attendance->payment_released) {
-                $this->processTeacherPayment($attendance);
+
+            if ($bothConfirmed) {
                 $attendance->update([
                     'status' => 'confirmed',
-                    'payment_released' => true,
-                    'payment_released_at' => now(),
+                    'admin_status' => 'pending'
                 ]);
-                $message = 'Attendance confirmed! Your payment has been processed.';
-            } else if ($bothConfirmed) {
-                $attendance->update(['status' => 'confirmed']);
-                $message = 'Attendance confirmation completed by both parties.';
+                $message = 'Attendance confirmed! Payment is pending admin approval.';
             } else {
                 $message = 'Your attendance confirmation recorded. Waiting for student confirmation.';
             }
+
             return response()->json([
                 'success' => true,
                 'message' => $message

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminChatController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminWalletController;
 use App\Http\Controllers\Admin\AdminWalletDashboardController;
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Auth\StudentAuthController;
 use App\Http\Controllers\Auth\TeacherAuthController;
@@ -310,6 +311,14 @@ Route::prefix('admin')->group(function () {
             Route::post('chat/send', [AdminChatController::class, 'send'])->name('chat.send');
             Route::get('chat/{user}', [AdminChatController::class, 'chat'])->name('chat.show');
             Route::get('messages/combined-unread-count', [AdminChatController::class, 'getSupportUnreadCount'])->name('messages.combined-unread-count');
+        });
+
+        Route::name('admin.')->group(function () {
+            Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+            Route::get('/attendances/{id}', [AttendanceController::class, 'show'])->name('attendances.show');
+            Route::post('/attendances/{id}/approve', [AttendanceController::class, 'approve'])->name('attendances.approve');
+            Route::post('/attendances/{id}/reject', [AttendanceController::class, 'reject'])->name('attendances.reject');
+            Route::post('/attendances/bulk-approve', [AttendanceController::class, 'bulkApprove'])->name('attendances.bulk-approve');
         });
     });
 });

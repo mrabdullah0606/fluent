@@ -48,7 +48,7 @@
                         <a href="{{ route('contact') }}" class="text-muted text-decoration-none">Contact Form</a>
                     </li>
                     <li>
-                        <i class="bi bi-chat-left-text text-warning me-2"></i>
+                        <i class="bi bi-person-lock text-warning me-2 fs-5"></i>
                         <a href="{{ route('admin.login') }}" class="text-muted text-decoration-none">Admin Login</a>
                     </li>
                 </ul>

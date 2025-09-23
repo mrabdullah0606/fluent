@@ -22,6 +22,11 @@ return new class extends Migration
             $table->boolean('payment_released')->default(false);
             $table->timestamp('payment_released_at')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'disputed'])->default('pending');
+            $table->enum('admin_status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->timestamp('admin_approved_at')->nullable();
+            $table->text('admin_notes')->nullable();
+            $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
 
             // Foreign key constraints
