@@ -1,9 +1,9 @@
 @extends('website.master.master')
 @section('title', 'Home - FluentAll')
 @section('content')
- 
-    <div class="container d-flex justify-content-center align-items-center min-vh-100 text-center">
-        <div>
+
+    {{-- <div class="container d-flex justify-content-center align-items-center min-vh-100 text-center">
+        <div class="container-fluid">
             <!-- Image -->
             <div class="d-flex justify-content-center">
                 <img src="{{ asset('assets/website/images/hero-image.jpeg') }}"
@@ -13,8 +13,7 @@
             <!-- Heading -->
             <h1 class="fw-bold mt-4">
                 Start your journey and learn with <br>
-                <span class="text-warning">best</span>
-                <span style="color: orange;">online</span>
+                <span class="text-warning">best online</span>
                 <span style="color: red;">tutors!</span>
             </h1>
             <!-- Subheading -->
@@ -25,13 +24,33 @@
             <div class="mt-4 text-center">
                 <i class="bi bi-chevron-down text-warning fs-2 move-icon"></i>
             </div>
-        </div> 
-    </div>
+        </div>
+    </div> --}}
+    <section class="relative py-20 md:py-28 hero-pattern-custom flex items-center justify-center text-center">
+        <div class="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/30"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-3xl mx-auto" style="opacity: 1; transform: none;">
+                <div class="mb-8"><img
+                        class="w-full h-56 md:h-80 object-cover rounded-xl shadow-2xl border-4 border-primary/50"
+                        alt="Student learning online with a tutor using FluentAll platform"
+                        src="https://images.unsplash.com/photo-1673515336170-3bf951ddb5a8"></div>
+                <h1 class="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">{{ __('welcome.heading') }}
+                    <span class="text-gradient-yellow-red">{{ __('welcome.headingColor') }}</span>
+                </h1>
+                <p class="text-lg md:text-xl text-muted-foreground mb-10">{{ __('welcome.subHeading') }}</p>
+                <div style="transform: translateY(4.56376px) translateZ(0px);"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="h-10 w-10 text-warning mx-auto">
+                        <path d="m6 9 6 6 6-6"></path>
+                    </svg></div>
+            </div>
+        </div>
+    </section>
     <div class="container-fluid" style="background-color:#f8f9fa;">
         <div class="container py-5">
-            <h2 class="text-center fw-bold mb-2">Explore Languages</h2>
-            <p class="text-center text-muted mb-5">Choose your path to fluency. We offer a wide range of languages
-                taught by expert tutors.</p>
+            <h2 class="text-center fw-bold mb-2">{{ __('welcome.exploreLanguages') }}</h2>
+            <p class="text-center text-muted mb-5">{{ __('welcome.languagesSubHeading') }}</p>
             <div class="row g-4 justify-content-center">
                 <!-- Card 1 -->
                 @foreach ($languages as $language)
@@ -290,6 +309,6 @@
             </div>
         </div>
     </div>
-   
+
 
 @endsection

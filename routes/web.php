@@ -22,6 +22,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ZoomMeetingController;
 use App\Http\Controllers\Dashboard\StripeController;
 use App\Http\Controllers\Dashboard\WalletController;
+use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -323,6 +324,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+Route::get('lang', [LanguageController::class, 'change'])->name("change.lang");
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

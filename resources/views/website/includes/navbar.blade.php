@@ -216,7 +216,7 @@
             <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100"
                 id="navbarNav">
                 <a href="{{ route('switch.to.teacher') }}" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
-                    🔁 Switch to Teacher Account
+                    <i class="bi bi-arrow-left-right"></i> Switch to Teacher Account
                 </a>
 
                 <ul class="navbar-nav me-3">
@@ -233,6 +233,25 @@
                 <a href="{{ route('student.login') }}" class="btn btn-outline-danger px-4 py-2 fw-semibold btn-sm">
                     Student Log In
                 </a>
+                @php($languages = ['en' => 'English', 'ar' => 'Arabic'])
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ $languages[Session::get('locale', 'en')] }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('change.lang', ['lang' => 'en']) }}">
+                                English
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('change.lang', ['lang' => 'ar']) }}">
+                                Arabic
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
