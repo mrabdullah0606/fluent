@@ -9,34 +9,36 @@
         <div class="row text-start text-muted">
             <!-- Teachers Column -->
             <div class="col-md-4 mb-4">
-                <h6 class="fw-bold text-dark mb-3">Teachers</h6>
+                <h6 class="fw-bold text-dark mb-3">{{ __('welcome.teachers') }}</h6>
                 <ul class="list-unstyled">
                     @foreach ($languages as $language)
                         <li><a href="{{ route('languages.teachers', $language) }}"
-                                class="text-muted text-decoration-none">{{ $language->name }} Teachers</a></li>
+                                class="text-muted text-decoration-none">{{ $language->name }}
+                                {{ __('welcome.teachers') }}</a></li>
                     @endforeach
                 </ul>
             </div>
 
             <!-- About Us Column -->
             <div class="col-md-4 mb-4">
-                <h6 class="fw-bold text-dark mb-3">About Us</h6>
+                <h6 class="fw-bold text-dark mb-3">{{ __('welcome.aboutUs') }}</h6>
                 <ul class="list-unstyled">
-                    <li><a href="{{ route('about') }}" class="text-muted text-decoration-none">Why
-                            FluentAll?</a></li>
-                    <li><a href="{{ route('about') }}" class="text-muted text-decoration-none">About
-                            FluentAll</a></li>
-                    <li><a href="{{ route('teacher.register') }}" class="text-muted text-decoration-none">Be
-                            a Teacher <i class="bi bi-box-arrow-up-right ms-1"></i></a></li>
-                    <li><a href="{{ route('careers') }}" class="text-muted text-decoration-none">We are
-                            hiring!
+                    <li><a href="{{ route('about') }}"
+                            class="text-muted text-decoration-none">{{ __('welcome.whyFluentAll') }}</a></li>
+                    <li><a href="{{ route('about') }}"
+                            class="text-muted text-decoration-none">{{ __('welcome.aboutFluentAll') }}</a></li>
+                    <li><a href="{{ route('teacher.register') }}"
+                            class="text-muted text-decoration-none">{{ __('welcome.beTeacher') }} <i
+                                class="bi bi-box-arrow-up-right ms-1"></i></a></li>
+                    <li><a href="{{ route('careers') }}"
+                            class="text-muted text-decoration-none">{{ __('welcome.weHiring') }}
                             <i class="bi bi-box-arrow-up-right ms-1"></i></a></li>
                 </ul>
             </div>
 
             <!-- Contact Column -->
             <div class="col-md-4 mb-4">
-                <h6 class="fw-bold text-dark mb-3">Contact</h6>
+                <h6 class="fw-bold text-dark mb-3">{{ __('welcome.contact') }}</h6>
                 <ul class="list-unstyled">
                     <li class="mb-2">
                         <i class="bi bi-envelope text-warning me-2"></i>
@@ -45,11 +47,13 @@
                     </li>
                     <li>
                         <i class="bi bi-chat-left-text text-warning me-2"></i>
-                        <a href="{{ route('contact') }}" class="text-muted text-decoration-none">Contact Form</a>
+                        <a href="{{ route('contact') }}"
+                            class="text-muted text-decoration-none">{{ __('welcome.contactForm') }}</a>
                     </li>
                     <li>
                         <i class="bi bi-person-lock text-warning me-2 fs-5"></i>
-                        <a href="{{ route('admin.login') }}" class="text-muted text-decoration-none">Admin Login</a>
+                        <a href="{{ route('admin.login') }}"
+                            class="text-muted text-decoration-none">{{ __('welcome.adminLogin') }}</a>
                     </li>
                 </ul>
             </div>
@@ -57,8 +61,8 @@
 
         <!-- Bottom Copyright -->
         <div class="border-top border-warning-subtle mt-4 pt-3 text-center text-muted small">
-            <p class="mb-1">© 2025 FluentAll. All rights reserved.</p>
-            <p class="mb-0">Be fluent in all Languages you want.</p>
+            <p class="mb-1">{{ __('welcome.copyRight') }}</p>
+            <p class="mb-0">{{ __('welcome.beFluent') }}</p>
         </div>
     </div>
 

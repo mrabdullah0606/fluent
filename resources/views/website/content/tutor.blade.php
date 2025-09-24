@@ -353,10 +353,16 @@
                                                     </li>
                                                 </ul>
 
-                                                <button
+                                                {{-- <button
                                                     class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white"
                                                     onclick="selectPackage({{ $package->id }}, '{{ $package->name }}', {{ $originalPrice }}, {{ $package->number_of_lessons }}, {{ $originalPrice }}, {{ $discountPercentage }}, {{ $teacher->id }})">
                                                     Select Package
+                                                </button> --}}
+                                                <button
+                                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 w-full bg-red-500 hover:bg-red-600 text-white">
+                                                    <a href="{{ route('tutor.booking', ['id' => $teacher->id]) }}">
+                                                        Select Package
+                                                    </a>
                                                 </button>
                                             </div>
                                         @endforeach

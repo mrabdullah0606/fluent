@@ -201,7 +201,7 @@
                         <span class="fw-bold text-warning fs-5">FluentAll</span>
                     </a>
                     <small class="text-dark lh-sm d-block responsive-wrap" style="white-space: nowrap;">
-                        Be fluent in all Languages you want
+                        {{ __('welcome.navSubHeading') }}
                     </small>
                 </div>
             </div>
@@ -216,26 +216,29 @@
             <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100"
                 id="navbarNav">
                 <a href="{{ route('switch.to.teacher') }}" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
-                    <i class="bi bi-arrow-left-right"></i> Switch to Teacher Account
+                    <i class="bi bi-arrow-left-right"></i> {{ __('welcome.navSubHeading') }}
                 </a>
 
                 <ul class="navbar-nav me-3">
-                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('index') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark"
+                            href="{{ route('index') }}">{{ __('welcome.home') }}</a></li>
                     {{-- <li class="nav-item"><a class="nav-link text-dark" href="{{ route('messages') }}">Messages</a></li> --}}
-                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('contact') }}">Contact Us</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('about') }}">About</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark"
+                            href="{{ route('contact') }}">{{ __('welcome.contactUs') }}</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark"
+                            href="{{ route('about') }}">{{ __('welcome.about') }}</a></li>
                 </ul>
 
                 <a href="{{ route('find.tutor') }}" class="btn btn-sm px-4 py-2 fw-semibold text-white me-2"
-                    style="background-color: #E83030;">Find Tutor</a>
+                    style="background-color: #E83030;">{{ __('welcome.findTutor') }}</a>
 
                 {{-- Not logged in - Show login button --}}
                 <a href="{{ route('student.login') }}" class="btn btn-outline-danger px-4 py-2 fw-semibold btn-sm">
-                    Student Log In
+                    {{ __('welcome.studentLogin') }}
                 </a>
                 @php($languages = ['en' => 'English', 'ar' => 'Arabic'])
-                <div class="dropdown">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown"
+                <div class="dropdown mx-2">
+                    <button class="btn btn-sm btn-outline-warning dropdown-toggle" type="button" id="languageDropdown"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         {{ $languages[Session::get('locale', 'en')] }}
                     </button>
