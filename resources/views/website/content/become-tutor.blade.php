@@ -10,17 +10,16 @@
                         <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                     </svg>
-                    <h1 class="text-4xl md:text-5xl font-bold text-foreground">Become a <span
-                            class="text-gradient-yellow-red">fluentAll</span> Tutor</h1>
-                    <p class="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">Share your language expertise, inspire
-                        learners, and earn flexibly. Join our global community of talented tutors!</p>
+                    <h1 class="text-4xl md:text-5xl font-bold text-foreground">{{ __('welcome.key_63') }} <span
+                            class="text-gradient-yellow-red">{{ __('welcome.key_24') }}</span> {{ __('welcome.key_64') }}</h1>
+                    <p class="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">{{ __('welcome.key_65') }}</p>
                 </div>
                 <form class="bg-white p-8 md:p-10 rounded-xl shadow-xl border border-primary/20 space-y-6 md:space-y-8"
                     style="opacity: 1; transform: none;">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div><label
                                 class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground font-medium"
-                                for="fullName">Full Name</label>
+                                for="fullName">{{ __('welcome.key_13') }}</label>
                             <div class="relative mt-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
@@ -34,7 +33,7 @@
                         </div>
                         <div><label
                                 class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground font-medium"
-                                for="email">Email Address</label>
+                                for="email">{{ __('welcome.key_14') }}</label>
                             <div class="relative mt-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
@@ -49,7 +48,7 @@
                     </div>
                     <div><label
                             class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground font-medium"
-                            for="phone">Phone Number (Optional)</label>
+                            for="phone">{{ __('welcome.key_66') }}</label>
                         <div class="relative mt-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round"
@@ -63,7 +62,7 @@
                     </div>
                     <div><label
                             class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground font-medium"
-                            for="languagesTaught">Languages You Teach</label>
+                            for="languagesTaught">{{ __('welcome.key_67') }}</label>
                         <div class="relative mt-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round"
@@ -74,18 +73,17 @@
                                 class="flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 bg-background border-input"
                                 id="languagesTaught" name="languagesTaught" placeholder="e.g., English, Spanish, French"
                                 required="" value=""></div>
-                        <p class="text-xs text-muted-foreground mt-1">Please list all languages you are proficient in
-                            teaching.</p>
+                        <p class="text-xs text-muted-foreground mt-1">{{ __('welcome.key_68') }}</p>
                     </div>
                     <div><label
                             class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground font-medium"
-                            for="experience">Teaching Experience (Years)</label><input type="number"
+                            for="experience">{{ __('welcome.key_69') }}</label><input type="number"
                             class="flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-background border-input mt-1"
                             id="experience" name="experience" min="0" placeholder="e.g., 5" required=""
                             value=""></div>
                     <div><label
                             class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground font-medium"
-                            for="qualifications">Qualifications &amp; Certifications</label>
+                            for="qualifications">{{ __('welcome.key_70') }}</label>
                         <textarea
                             class="flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-background border-input mt-1"
                             id="qualifications" name="qualifications" rows="3"
@@ -93,7 +91,7 @@
                     </div>
                     <div><label
                             class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground font-medium"
-                            for="cv">Upload Your CV/Resume</label>
+                            for="cv">{{ __('welcome.key_57') }}</label>
                         <div
                             class="mt-1 flex items-center space-x-3 p-3 border border-dashed border-input rounded-md bg-background hover:border-primary transition">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -105,11 +103,11 @@
                             </svg><input type="file"
                                 class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                                 id="cv" name="cv" accept=".pdf,.doc,.docx" required=""></div>
-                        <p class="text-xs text-muted-foreground mt-1">Accepted formats: PDF, DOC, DOCX. Max size: 5MB.</p>
+                        <p class="text-xs text-muted-foreground mt-1">{{ __('welcome.key_58') }}</p>
                     </div>
                     <div><label
                             class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground font-medium"
-                            for="coverLetter">Short Cover Letter / Introduction</label>
+                            for="coverLetter">{{ __('welcome.key_71') }}</label>
                         <textarea
                             class="flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-background border-input mt-1"
                             id="coverLetter" name="coverLetter" rows="4"
@@ -121,7 +119,7 @@
                             stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5">
                             <path d="m22 2-7 20-4-9-9-4Z"></path>
                             <path d="M22 2 11 13"></path>
-                        </svg> Apply Now</button>
+                        </svg> {{ __('welcome.key_72') }}</button>
                 </form>
             </div>
         </div>

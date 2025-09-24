@@ -10,7 +10,7 @@
         <div class="bg-gray-50 flex-grow p-6 md:p-10">
             <div class="container mx-auto max-w-4xl">
                 <div style="opacity: 1; transform: none;">
-                    <h1 class="text-3xl font-bold text-foreground mb-8">Edit Your Teacher Profile</h1>
+                    <h1 class="text-3xl font-bold text-foreground mb-8">{{ __('welcome.key_334') }}</h1>
                 </div>
                 <form action="{{ route('teacher.profile.update') }}" method="POST" enctype="multipart/form-data">
 
@@ -47,7 +47,7 @@
 
                             <div class="flex-grow text-center sm:text-left"><label
                                     class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium text-muted-foreground float-left"
-                                    for="name" style="float: left;margin-left: 3px;">Full Name</label>
+                                    for="name" style="float: left;margin-left: 3px;">{{ __('welcome.key_13') }}</label>
                                 <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}"
                                     class="w-full text-2xl font-bold px-1 py-2 form-control rounded-md border-b-2 border-gray-400 focus:border-blue-600 focus:outline-none">
                             </div>
@@ -55,7 +55,7 @@
                     </div>
                     {{-- Headline --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="headline" class="block text-lg font-semibold mb-2">Headline</label>
+                        <label for="headline" class="block text-lg font-semibold mb-2">{{ __('welcome.key_347') }}</label>
                         <input type="text" id="headline" name="headline" class="form-control rounded-md"
                             placeholder="E.g., Passionate English Tutor with 5+ Years Experience"
                             value="{{ old('headline', $teacher?->headline) }}">
@@ -63,14 +63,14 @@
 
                     {{-- About Me --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="about_me" class="block text-lg font-semibold mb-2">About Me</label>
+                        <label for="about_me" class="block text-lg font-semibold mb-2">{{ __('welcome.key_229') }}</label>
                         <textarea id="about_me" name="about_me" class="form-control rounded-md" rows="4"
                             placeholder="Tell students a little about yourself...">{{ old('about_me', $teacher?->about_me) }}</textarea>
                     </div>
 
                     {{-- Languages You Teach --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="teaches" class="block text-lg font-semibold mb-2">Languages You Teach</label>
+                        <label for="teaches" class="block text-lg font-semibold mb-2">{{ __('welcome.key_67') }}</label>
                         <select name="teaches[]" id="teaches" class="form-control rounded-md" multiple>
                             @foreach ($languages as $language)
                                 <option value="{{ $language->id }}"
@@ -79,33 +79,33 @@
                                 </option>
                             @endforeach
                         </select>
-                        <p class="text-sm text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple languages</p>
+                        <p class="text-sm text-gray-500 mt-1">{{ __('welcome.key_348') }}</p>
                     </div>
 
                     {{-- Languages You Speak --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="speaks" class="block text-lg font-semibold mb-2">Languages You Speak</label>
+                        <label for="speaks" class="block text-lg font-semibold mb-2">{{ __('welcome.key_349') }}</label>
                         <input type="text" id="speaks" name="speaks" class="form-control rounded-md"
                             placeholder="E.g., English, Urdu, Arabic" value="{{ old('speaks', $teacher?->speaks) }}">
                     </div>
 
                     {{-- Country --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="country" class="block text-lg font-semibold mb-2">Country</label>
+                        <label for="country" class="block text-lg font-semibold mb-2">{{ __('welcome.key_350') }}</label>
                         <input type="text" id="country" name="country" class="form-control rounded-md"
                             placeholder="E.g., Pakistan" value="{{ old('country', $teacher?->country) }}">
                     </div>
 
                     {{-- Hobbies --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="hobbies" class="block text-lg font-semibold mb-2">Hobbies</label>
+                        <label for="hobbies" class="block text-lg font-semibold mb-2">{{ __('welcome.key_351') }}</label>
                         <input type="text" id="hobbies" name="hobbies" class="form-control rounded-md"
                             placeholder="E.g., Reading, Traveling" value="{{ old('hobbies', $teacher?->hobbies) }}">
                     </div>
 
                     {{-- Certifications --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="certifications" class="block text-lg font-semibold mb-2">Certifications</label>
+                        <label for="certifications" class="block text-lg font-semibold mb-2">{{ __('welcome.key_352') }}</label>
                         <input type="text" id="certifications" name="certifications" class="form-control rounded-md"
                             placeholder="E.g., TEFL, CELTA"
                             value="{{ old('certifications', $teacher?->certifications) }}">
@@ -113,7 +113,7 @@
 
                     {{-- Experience --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="experience" class="block text-lg font-semibold mb-2">Experience</label>
+                        <label for="experience" class="block text-lg font-semibold mb-2">{{ __('welcome.key_353') }}</label>
                         <input type="text" id="experience" name="experience" class="form-control rounded-md"
                             placeholder="E.g., 5 years" value="{{ old('experience', $teacher?->experience) }}">
                     </div>
@@ -121,8 +121,7 @@
 
                     {{-- Teaching Style --}}
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="teaching_style" class="block text-lg font-semibold mb-2">Specialities (E.g.,
-                            Conversational, Grammar-Focused)</label>
+                        <label for="teaching_style" class="block text-lg font-semibold mb-2">{{ __('welcome.key_354') }}</label>
                         <input type="text" id="teaching_style" name="teaching_style" class="form-control rounded-md"
                             placeholder="E.g., Conversational, Grammar-Focused"
                             value="{{ old('teaching_style', $teacher?->teaching_style) }}">
@@ -130,13 +129,13 @@
 
 
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4">
-                        <label for="intro_video" class="block text-lg font-semibold mb-2">Intro Video</label>
+                        <label for="intro_video" class="block text-lg font-semibold mb-2">{{ __('welcome.key_355') }}</label>
 
                         {{-- Video Preview if Exists --}}
                         @if ($teacher?->intro_video)
                             <video class="w-full rounded-md border border-gray-300 mb-3" controls>
                                 <source src="{{ asset('storage/' . $teacher->intro_video) }}" type="video/mp4">
-                                Your browser does not support the video tag.
+                                {{ __('welcome.key_226') }}
                             </video>
                         @endif
 
@@ -144,7 +143,7 @@
                             class="form-control rounded-md">
 
                         <p class="text-sm text-gray-500 mt-2">
-                            Upload an intro/demo video (MP4, WebM, MOV up to 50MB)
+                            {{ __('welcome.key_357') }}
                         </p>
                     </div>
 
@@ -153,7 +152,7 @@
                     {{-- Save Button --}}
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-warning rounded-pill px-4 py-2">
-                            <i class="bi bi-save me-1"></i> Save Profile
+                            <i class="bi bi-save me-1"></i> {{ __('welcome.key_358') }}
                         </button>
                     </div>
                 </form>

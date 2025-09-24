@@ -7,14 +7,14 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h4 class="mb-0">Customer Support Chat</h4>
-                        <small class="text-muted">Manage customer inquiries and support requests</small>
+                        <h4 class="mb-0">{{ __('welcome.key_720') }}</h4>
+                        <small class="text-muted">{{ __('welcome.key_721') }}</small>
                     </div>
                     @if ($users->sum('unread_count') > 0)
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-primary">{{ $users->sum('unread_count') }} unread</span>
                             <button type="button" class="btn btn-outline-primary btn-sm" onclick="markAllAsRead()">
-                                <i class="bi bi-check-all"></i> Mark All as Read
+                                <i class="bi bi-check-all"></i> {{ __('welcome.key_290') }}
                             </button>
                         </div>
                     @endif
@@ -23,7 +23,7 @@
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <i class="bi bi-headset me-2"></i>
-                        Customer Conversations
+                        {{ __('welcome.key_722') }}
                     </div>
                     <div class="card-body p-0">
                         @forelse ($users as $user)
@@ -67,9 +67,9 @@
 
                                             @if ($user->last_message)
                                                 <div class="d-flex align-items-center">
-                                                    @if ($user->last_message->sender_id === auth()->id())
+                                                     @if ($user->last_message->sender_id === auth()->id())
                                                         <i class="bi bi-reply text-primary me-1"></i>
-                                                        <small class="text-primary me-1">You:</small>
+                                                        <small class="text-primary me-1">{{ __('welcome.key_294') }}</small>
                                                     @else
                                                         <i class="bi bi-chat-left-text text-info me-1"></i>
                                                     @endif
@@ -79,13 +79,13 @@
                                                     </p>
                                                 </div>
                                             @else
-                                                <p class="mb-0 small text-muted fst-italic">No messages yet</p>
+                                                <p class="mb-0 small text-muted fst-italic">{{ __('welcome.key_723') }}</p>
                                             @endif
                                         </div>
 
                                         <!-- Status indicators -->
                                         <div class="text-end">
-                                            @if ($user->unread_count > 0)
+                                           @if ($user->unread_count > 0)
                                                 <div class="bg-danger rounded-circle mb-2"
                                                     style="width: 10px; height: 10px; margin-left: auto;"></div>
                                             @endif
@@ -99,8 +99,8 @@
                                 <div class="mb-4">
                                     <i class="bi bi-chat-left-text-fill display-1 text-muted"></i>
                                 </div>
-                                <h5 class="text-muted">No Customer Conversations</h5>
-                                <p class="text-muted mb-0">Customer messages will appear here when users contact support.
+                                <h5 class="text-muted">{{ __('welcome.key_724') }}</h5>
+                                <p class="text-muted mb-0">{{ __('welcome.key_725') }}
                                 </p>
                             </div>
                         @endforelse

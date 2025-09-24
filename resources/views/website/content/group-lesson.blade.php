@@ -13,23 +13,22 @@
                             <path d="m12 19-7-7 7-7"></path>
                             <path d="M19 12H5"></path>
                         </svg>
-                        Back
+                        {{ __('welcome.key_73') }}
                     </button>
                 </a>
                 <h1 class="text-3xl md:text-4xl font-bold text-foreground text-center"><span
-                        class="text-gradient-yellow-red">Explore Our Group Lessons</span></h1>
-                <p class="text-md text-muted-foreground text-center mt-2 max-w-2xl mx-auto">Learn collaboratively with
-                    expert tutors and peers from around the world.</p>
+                        class="text-gradient-yellow-red">{{ __('welcome.key_159') }}</span></h1>
+                <p class="text-md text-muted-foreground text-center mt-2 max-w-2xl mx-auto">{{ __('welcome.key_160') }}</p>
             </div>
             <div class="mb-10 p-6 bg-white border border-primary/20 rounded-xl shadow-md"
                 style="opacity: 1; transform: none;">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                     <div>
-                        <label class="text-sm font-medium text-foreground">Language</label>
+                        <label class="text-sm font-medium text-foreground">{{ __('welcome.key_161') }}</label>
                         <div class="mt-1">
                             <select name="learn_language"
                                 class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-                                <option value="">Select Language</option>
+                                <option value="">{{ __('welcome.key_162') }}</option>
                                 @foreach ($languages as $language)
                                     <option value="{{ $language->id }}">{{ $language->name }}</option>
                                 @endforeach
@@ -39,7 +38,7 @@
                     </div>
                     <div><label
                             class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium text-foreground"
-                            for="price-range-filter">Price Range: $0 - $250</label><span dir="ltr"
+                            for="price-range-filter">{{ __('welcome.key_163') }}</label><span dir="ltr"
                             data-orientation="horizontal" aria-disabled="false"
                             class="relative flex w-full touch-none select-none items-center mt-2" id="price-range-filter"
                             style="--radix-slider-thumb-transform: translateX(-50%);"><span data-orientation="horizontal"
@@ -59,19 +58,19 @@
                                     data-radix-collection-item="" aria-label="Maximum" aria-valuenow="250"
                                     style=""></span></span></span></div>
                     <div>
-                        <label class="text-sm font-medium text-foreground">Max Students</label>
+                        <label class="text-sm font-medium text-foreground">{{ __('welcome.key_164') }}</label>
                         <div class="mt-1">
                             <select name="learn_language"
                                 class="inline-flex items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
-                                <option value="">Ask Any</option>
-                                <option value="">Up to 2</option>
-                                <option value="">Up to 3</option>
-                                <option value="">Up to 4</option>
-                                <option value="">Up to 5</option>
-                                <option value="">Up to 6</option>
-                                <option value="">Up to 7</option>
-                                <option value="">Up to 8</option>
-                                <option value="">Up to 9</option>
+                                <option value="">{{ __('welcome.key_165') }}</option>
+                                <option value="">{{ __('welcome.key_166') }}</option>
+                                <option value="">{{ __('welcome.key_167') }}</option>
+                                <option value="">{{ __('welcome.key_168') }}</option>
+                                <option value="">{{ __('welcome.key_169') }}</option>
+                                <option value="">{{ __('welcome.key_170') }}</option>
+                                <option value="">{{ __('welcome.key_171') }}</option>
+                                <option value="">{{ __('welcome.key_172') }}</option>
+                                <option value="">{{ __('welcome.key_173') }}</option>
                             </select>
                         </div>
                     </div>
@@ -118,7 +117,7 @@
                                                 <line x1="12" x2="12" y1="2" y2="22">
                                                 </line>
                                                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                            </svg> Price: <span class="font-semibold ml-1"
+                                            </svg> {{ __('welcome.key_174') }} <span class="font-semibold ml-1"
                                                 id="course-price">${{ $course->price_per_student }}
                                                 USD</span>
                                         </div>
@@ -187,7 +186,7 @@
                                     </div>
 
                                     <div class="pt-2">
-                                        <h4 class="text-xs font-semibold text-primary mb-1">Key Features:</h4>
+                                        <h4 class="text-xs font-semibold text-primary mb-1">{{ __('welcome.key_175') }}</h4>
 
                                         @php
                                             $features = collect((array) $course->features)
@@ -196,7 +195,7 @@
                                         @endphp
 
                                         @if ($features->isEmpty())
-                                            <p class="text-xs text-muted-foreground italic">No features added</p>
+                                            <p class="text-xs text-muted-foreground italic">{{ __('welcome.key_177') }}</p>
                                         @else
                                             <ul class="space-y-1">
                                                 @foreach ($features as $feature)
@@ -220,8 +219,7 @@
                                         class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full btn-red"
                                         data-course-id="{{ $course->id }}"
                                         data-price="{{ $course->price_per_student }}"
-                                        onclick="goToGroupCheckout(this)">Join
-                                        Course
+                                        onclick="goToGroupCheckout(this)">{{ __('welcome.key_178') }}
                                     </button></div>
                             </div>
                         </div>
@@ -230,27 +228,6 @@
             </div>
     </main>
     <script>
-        document.querySelectorAll('.course-card').forEach((card, index) => {
-            const courseInfo = {
-                id: card.dataset.courseId,
-                title: card.dataset.title,
-                price: card.dataset.price,
-                teacher: card.dataset.teacher,
-                weeks: card.dataset.weeks,
-                days: card.dataset.days,
-                maxStudents: card.dataset.maxStudents,
-                spotsFilled: card.dataset.spots
-            };
-
-            console.log(`Course ${index + 1}:`, courseInfo);
-        });
-
-        function goToGroupCheckout(button) {
-            const courseId = button.dataset.courseId;
-            const price = button.dataset.price;
-
-            const url = `/student/checkout?type=group&value=${courseId}&price=${price}`;
-            window.location.href = url;
-        }
+        document.querySelectorAll('.course-card').forEach((card, index) => {{ __('welcome.key_179') }}
     </script>
 @endsection

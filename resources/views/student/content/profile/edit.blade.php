@@ -75,7 +75,7 @@
         <div class="bg-gray-50 flex-grow p-6 md:p-10">
             <div class="container mx-auto max-w-4xl">
                 <div style="opacity: 1; transform: none;">
-                    <h1 class="text-3xl font-bold text-foreground mb-8">Edit Your Student Profile</h1>
+                    <h1 class="text-3xl font-bold text-foreground mb-8">{{ __('welcome.key_429') }}</h1>
                 </div>
                 <form action="{{ route('student.profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -108,7 +108,7 @@
                             </div>
                             <div class="flex-grow text-center sm:text-left"><label
                                     class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium text-muted-foreground"
-                                    for="name">Full Name</label>
+                                    for="name">{{ __('welcome.key_13') }}</label>
                                 <input
                                     class="flex h-10 w-full border-input bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-2xl font-bold border-0 border-b-2 rounded-none shadow-none px-1 focus-visible:ring-0 focus:border-primary"
                                     id="name" name="name" value="{{ old('name', $student->name) }}" type="text">
@@ -124,7 +124,7 @@
                                     stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5 text-primary">
                                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
-                                </svg>Description</label>
+                                </svg>{{ __('welcome.key_385') }}</label>
                             <textarea
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
                                id="description" name="description" placeholder="Tell us about yourself..." rows="4"> {{ old('description', $student->description ?? '') }}</textarea>
@@ -137,7 +137,7 @@
                                     stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5 text-primary">
                                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                </svg>My Teaching Style</label>
+                                </svg>{{ __('welcome.key_336') }}</label>
                             <textarea
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
                                 id="teachingStyle" name="teachingStyle" placeholder="Describe your teaching methods and what students can expect..."
@@ -167,7 +167,7 @@
                                     class="mr-2 h-5 w-5 text-primary">
                                     <circle cx="12" cy="8" r="6"></circle>
                                     <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-                                </svg>My Certifications</label>
+                                </svg>{{ __('welcome.key_340') }}</label>
                             <textarea
                                 class="flex min-h-[80px] w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50"
                                 id="certifications" name="certifications"
@@ -197,7 +197,7 @@
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                     <polyline points="17 8 12 3 7 8"></polyline>
                                     <line x1="12" x2="12" y1="3" y2="15"></line>
-                                </svg>Upload Certification Documents</label>
+                                </svg>{{ __('welcome.key_344') }}</label>
                             <div
                                 class="mt-1 flex items-center space-x-3 p-3 border border-dashed border-input rounded-md bg-gray-50 hover:border-primary transition">
                                 <input type="file"
@@ -216,7 +216,7 @@
                                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                                 <polyline points="17 21 17 13 7 13 7 21"></polyline>
                                 <polyline points="7 3 7 8 15 8"></polyline>
-                            </svg> Save Changes</button></div>
+                            </svg> {{ __('welcome.key_346') }}</button></div>
                 </form>
             </div>
         </div>

@@ -113,7 +113,7 @@
     <main class="flex-grow">
         <div class="container my-4">
             <h3 class="fw-bold mb-4">
-                <i class="bi bi-gear-fill text-warning me-2"></i> Lesson Settings
+                <i class="bi bi-gear-fill text-warning me-2"></i> {{ __('welcome.key_320') }}
             </h3>
             <div class="row">
                 <div class="col-md-3 mb-3">
@@ -121,13 +121,12 @@
                         <a href="{{ route('teacher.settings.index') }}" class="text-decoration-none">
                             <button class="btn list-group-item list-group-item-action border-0"
                                 style="background-color: #FFF3CD color: black;">
-                                Lesson Management
+                                {{ __('welcome.key_321') }}
                             </button>
                         </a>
 
                         <a href="{{ route('teacher.bookings') }}"class="text-decoration-none"> <button
-                                class="btn-2 list-group-item text-white list-group-item-action bg-danger">Booking
-                                Rules</button>
+                                class="btn-2 list-group-item text-white list-group-item-action bg-danger">{{ __('welcome.key_322') }}</button>
                         </a>
                     </div>
                 </div>
@@ -135,15 +134,14 @@
                     <form action="{{ route('teacher.bookings.update') }}" method="POST">
                         @csrf
                         <div class="setting-box">
-                            <h5 class="setting-title">Booking Rules</h5>
-                            <p class="setting-description">Define how and when students can book lessons with you.</p>
+                            <h5 class="setting-title">{{ __('welcome.key_323') }}</h5>
+                            <p class="setting-description">{{ __('welcome.key_324') }}</p>
                             <div class="setting-block d-flex justify-content-between align-items-center flex-wrap">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-clock icon-yellow"></i>
                                     <div>
-                                        <strong>Minimum booking notice</strong><br>
-                                        <small class="text-muted">How much advance notice you need for a new
-                                            booking.</small>
+                                        <strong>{{ __('welcome.key_325') }}</strong><br>
+                                        <small class="text-muted">{{ __('welcome.key_326') }}</small>
                                     </div>
                                 </div>
                                 <select name="min_booking_notice" class="form-select mt-3 mt-md-0" required>
@@ -159,8 +157,8 @@
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-calendar3 icon-yellow"></i>
                                     <div>
-                                        <strong>Booking window</strong><br>
-                                        <small class="text-muted">How far in the future students can book.</small>
+                                        <strong>{{ __('welcome.key_327') }}</strong><br>
+                                        <small class="text-muted">{{ __('welcome.key_328') }}</small>
                                     </div>
                                 </div>
                                 <select name="booking_window" class="form-select mt-3 mt-md-0" required>
@@ -176,8 +174,8 @@
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-clock-history icon-yellow"></i>
                                     <div>
-                                        <strong>Automatic break after lesson</strong><br>
-                                        <small class="text-muted">Set a buffer time after each lesson.</small>
+                                        <strong>{{ __('welcome.key_329') }}</strong><br>
+                                        <small class="text-muted">{{ __('welcome.key_330') }}</small>
                                     </div>
                                 </div>
                                 <select name="break_after_lesson" class="form-select mt-3 mt-md-0" required>
@@ -193,8 +191,8 @@
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-person-plus icon-yellow"></i>
                                     <div>
-                                        <strong>Accepting new students</strong><br>
-                                        <small class="text-muted">Toggle if you are open to new student bookings.</small>
+                                        <strong>{{ __('welcome.key_331') }}</strong><br>
+                                        <small class="text-muted">{{ __('welcome.key_332') }}</small>
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mt-3 mt-md-0">
@@ -204,7 +202,7 @@
                             </div>
                             <div class="text-end mt-4">
                                 <button type="submit" class="btn save-btn">
-                                    <i class="bi bi-save"></i> Save All Changes
+                                    <i class="bi bi-save"></i> {{ __('welcome.key_333') }}
                                 </button>
                             </div>
                         </div>

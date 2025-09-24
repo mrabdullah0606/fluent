@@ -4,10 +4,10 @@
 
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0">Your Chats</h4>
-            @if ($users->sum('unread_count') > 0)
+            <h4 class="mb-0">{{ __('welcome.key_289') }}</h4>
+           @if ($users->sum('unread_count') > 0)
                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="markAllAsRead()">
-                    Mark All as Read
+                    {{ __('welcome.key_290') }}
                 </button>
             @endif
         </div>
@@ -21,7 +21,7 @@
                             style="width: 45px; height: 45px; font-weight: bold; font-size: 1.1rem;">
                             <i class="bi bi-headset"></i>
                         </div>
-                        @if ($supportUnreadCount > 0)
+                         @if ($supportUnreadCount > 0)
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                                 style="font-size: 0.7rem;">
                                 {{ $supportUnreadCount > 99 ? '99+' : $supportUnreadCount }}
@@ -31,28 +31,28 @@
 
                     <div class="flex-grow-1">
                         <div class="d-flex justify-content-between align-items-start">
-                            <h6 class="mb-1 {{ $supportUnreadCount > 0 ? 'fw-bold' : '' }}">Customer Support</h6>
+                            <h6 class="mb-1 {{ $supportUnreadCount > 0 ? 'fw-bold' : '' }}">{{ __('welcome.key_291') }}</h6>
                             @if ($supportLastMessage)
                                 <small class="text-muted">
                                     {{ $supportLastMessage->created_at->diffForHumans() }}
                                 </small>
                             @else
-                                <small class="text-muted">Available</small>
+                                <small class="text-muted">{{ __('welcome.key_292') }}</small>
                             @endif
                         </div>
 
-                        @if ($supportLastMessage)
+                           @if ($supportLastMessage)
                             <p class="mb-0 text-muted small {{ $supportUnreadCount > 0 ? 'fw-semibold text-dark' : '' }}">
                                 @if ($supportLastMessage->sender_id === auth()->id())
-                                    <span class="text-primary">You:</span>
+                                       <span class="text-primary">{{ __('welcome.key_294') }}</span>
                                 @else
-                                    <span class="text-success">Support:</span>
+                                    <span class="text-success">{{ __('welcome.key_295') }}</span>
                                 @endif
                                 {{ Str::limit($supportLastMessage->message, 50) }}
                             </p>
                         @else
                             <p class="mb-0 text-muted small">
-                                Need help? Contact our support team
+                                {{ __('welcome.key_296') }}
                             </p>
                         @endif
                     </div>
@@ -76,7 +76,7 @@
                                 style="width: 45px; height: 45px; font-weight: bold; font-size: 1.1rem;">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                             </div>
-                            @if ($user->unread_count > 0)
+                               @if ($user->unread_count > 0)
                                 <span
                                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                                     style="font-size: 0.7rem;">
@@ -100,7 +100,7 @@
                                 <p
                                     class="mb-0 text-muted small {{ $user->unread_count > 0 ? 'fw-semibold text-dark' : '' }}">
                                     @if ($user->last_message->sender_id === auth()->id())
-                                        <span class="text-primary">You:</span>
+                                        <span class="text-primary">{{ __('welcome.key_294') }}</span>
                                     @endif
                                     {{ Str::limit($user->last_message->message, 50) }}
                                 </p>
@@ -108,7 +108,7 @@
                         </div>
 
                         <!-- Unread indicator dot -->
-                        @if ($user->unread_count > 0)
+                         @if ($user->unread_count > 0)
                             <div class="ms-2">
                                 <div class="bg-primary rounded-circle" style="width: 8px; height: 8px;"></div>
                             </div>
@@ -119,8 +119,8 @@
         @empty
             <div class="alert alert-secondary text-center">
                 <i class="bi bi-chat-left-text-fill fs-1 text-muted mb-3 d-block"></i>
-                <h6>No chats found</h6>
-                <p class="mb-0 text-muted">Start a conversation to see your chats here.</p>
+                <h6>{{ __('welcome.key_298') }}</h6>
+                <p class="mb-0 text-muted">{{ __('welcome.key_299') }}</p>
             </div>
         @endforelse
     </div>

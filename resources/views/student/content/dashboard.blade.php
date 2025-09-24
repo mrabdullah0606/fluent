@@ -6,7 +6,7 @@
             <div class="container mx-auto">
                 <div style="opacity: 1; transform: none;">
                     <h1 class="text-3xl font-bold text-foreground mb-2">Welcome Back, {{ $student->name }}!</h1>
-                    <p class="text-muted-foreground mb-8">Here's what's happening on your FluentAll dashboard today.</p>
+                    <p class="text-muted-foreground mb-8">{{ __('welcome.key_416') }}</p>
                 </div>
 
                 <!-- Stats Cards -->
@@ -15,7 +15,7 @@
                         <div
                             class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
                             <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-                                <h3 class="tracking-tight text-sm font-medium">Total Teachers</h3>
+                                <h3 class="tracking-tight text-sm font-medium">{{ __('welcome.key_543') }}</h3>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
@@ -27,7 +27,7 @@
                             </div>
                             <div class="p-6 pt-0">
                                 <div class="text-2xl font-bold">{{ $totalTeachers ?? 0 }}</div>
-                                <p class="text-xs text-muted-foreground">Updated recently</p>
+                                <p class="text-xs text-muted-foreground">{{ __('welcome.key_544') }}</p>
                             </div>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                         <div
                             class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary transition-colors">
                             <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-                                <h3 class="tracking-tight text-sm font-medium">Lessons This Week</h3>
+                                <h3 class="tracking-tight text-sm font-medium">{{ __('welcome.key_419') }}</h3>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="h-4 w-4 text-muted-foreground">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div style="opacity: 1; transform: none;">
-                    <h2 class="text-2xl font-bold text-foreground mb-4">Upcoming Lessons</h2>
+                    <h2 class="text-2xl font-bold text-foreground mb-4">{{ __('welcome.key_422') }}</h2>
 
                     <div class="space-y-4" id="lessonsContainer">
                         @foreach ($upcomingMeetings as $index => $meeting)
@@ -69,7 +69,7 @@
                                     <div class="flex items-center space-x-3">
                                         <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                                             <span
-                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">J</span>
+                                                class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{ __('welcome.key_423') }}</span>
                                         </span>
                                         <div>
                                             <p class="font-semibold text-foreground">{{ $meeting['teacher_name'] }}</p>
@@ -114,14 +114,14 @@
                                                 <a href="{{ $meeting['join_url'] }}" target="_blank">
                                                     <button
                                                         class="inline-flex items-center justify-center text-sm font-medium bg-primary text-white hover:bg-primary/90 h-9 rounded-md px-3">
-                                                        Rejoin Lesson
+                                                        {{ __('welcome.key_547') }}
                                                     </button>
                                                 </a>
                                             @else
                                                 <a href="{{ route('student.zoom.join', $meeting['id']) }}">
                                                     <button
                                                         class="inline-flex items-center justify-center text-sm font-medium bg-success text-white hover:bg-success/90 h-9 rounded-md px-3">
-                                                        Join Lesson
+                                                        {{ __('welcome.key_424') }}
                                                     </button>
                                                 </a>
                                             @endif
@@ -166,7 +166,7 @@
                                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
                                                 id="lessonOptions{{ $index }}" data-bs-toggle="dropdown"
                                                 aria-expanded="false">
-                                                Options
+                                                {{ __('welcome.key_548') }}
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="lessonOptions{{ $index }}">
@@ -178,12 +178,11 @@
                                                             @csrf
                                                             <button type="submit" class="dropdown-item"
                                                                 onclick="return confirm('{{ $hoursDiff < 24 ? 'If you cancel the lesson now, it will be paid to the tutor because it is cancelled within the last 24 hours.' : 'Are you sure you want to cancel this lesson?' }}')">
-                                                                Cancel
+                                                                {{ __('welcome.key_262') }}
                                                             </button>
                                                         </form>
                                                     @else
-                                                        <button class="dropdown-item disabled" type="button">Cancel
-                                                            (Already Joined)</button>
+                                                        <button class="dropdown-item disabled" type="button">{{ __('welcome.key_549') }}</button>
                                                     @endif
                                                 </li>
                                                 <hr>
@@ -192,7 +191,7 @@
                                                     @if ($pivot && !$pivot->has_joined)
                                                         @if ($hoursDiff < 24)
                                                             <button class="dropdown-item disabled" type="button">
-                                                                Cannot reschedule within 24h
+                                                                {{ __('welcome.key_550') }}
                                                             </button>
                                                         @else
                                                             <form method="POST"
@@ -201,12 +200,11 @@
                                                                 <input type="datetime-local" name="rescheduled_time"
                                                                     class="form-control m-2 w-75" required>
                                                                 <button type="submit"
-                                                                    class="dropdown-item">Reschedule</button>
+                                                                    class="dropdown-item">{{ __('welcome.key_551') }}</button>
                                                             </form>
                                                         @endif
                                                     @else
-                                                        <button class="dropdown-item disabled" type="button">Reschedule
-                                                            (Already Joined)</button>
+                                                        <button class="dropdown-item disabled" type="button">{{ __('welcome.key_552') }}</button>
                                                     @endif
                                                 </li>
                                             </ul>
@@ -227,7 +225,7 @@
                     @endif
                 </div>
 
-                <script>
+               <script>
                     document.addEventListener("DOMContentLoaded", function() {
                         let visibleCount = 4;
                         const items = document.querySelectorAll(".lesson-item");

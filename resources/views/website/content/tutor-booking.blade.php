@@ -268,7 +268,7 @@
                             <path d="m12 19-7-7 7-7"></path>
                             <path d="M19 12H5"></path>
                         </svg>
-                        Back
+                        {{ __('welcome.key_73') }}
                     </button>
                 </a>
 
@@ -287,7 +287,7 @@
                         <path d="M12 18h.01"></path>
                         <path d="M16 18h.01"></path>
                     </svg>
-                    <h1 class="text-3xl md:text-4xl font-bold text-foreground">Book Lesson with <span
+                    <h1 class="text-3xl md:text-4xl font-bold text-foreground">{{ __('welcome.key_74') }} <span
                             class="text-gradient-yellow-red">{{ $teacher->name }}</span></h1>
                 </div>
                 <div id="alertContainer"></div>
@@ -303,7 +303,7 @@
                                         <path d="m15 18-6-6 6-6"></path>
                                     </svg>
                                 </button>
-                                <div class="calendar-title" id="calendarTitle">July 2025</div>
+                                <div class="calendar-title" id="calendarTitle">{{ __('welcome.key_76') }}</div>
                                 <button class="nav-button next" id="nextMonth">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2">
@@ -314,13 +314,13 @@
 
                             <div class="calendar-grid">
                                 <div class="calendar-header-row">
-                                    <div class="day-header">Su</div>
-                                    <div class="day-header">Mo</div>
-                                    <div class="day-header">Tu</div>
-                                    <div class="day-header">We</div>
-                                    <div class="day-header">Th</div>
-                                    <div class="day-header">Fr</div>
-                                    <div class="day-header">Sa</div>
+                                    <div class="day-header">{{ __('welcome.key_77') }}</div>
+                                    <div class="day-header">{{ __('welcome.key_78') }}</div>
+                                    <div class="day-header">{{ __('welcome.key_79') }}</div>
+                                    <div class="day-header">{{ __('welcome.key_80') }}</div>
+                                    <div class="day-header">{{ __('welcome.key_81') }}</div>
+                                    <div class="day-header">{{ __('welcome.key_82') }}</div>
+                                    <div class="day-header">{{ __('welcome.key_83') }}</div>
                                 </div>
                                 <div id="calendarBody"></div>
                             </div>
@@ -329,9 +329,9 @@
 
                     <div class="lg:col-span-2 space-y-6">
                         <div>
-                            <h3 class="font-semibold text-foreground mb-3 text-lg">Available Time Slots</h3>
+                            <h3 class="font-semibold text-foreground mb-3 text-lg">{{ __('welcome.key_211') }}</h3>
                             <div id="selectedDateDisplay" class="text-sm text-muted-foreground mb-3">
-                                Select a date to see available times
+                                {{ __('welcome.key_212') }}
                             </div>
                             <div id="availableSlotsContainer" class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-2">
                                 <!-- Slots will be loaded dynamically here -->
@@ -339,11 +339,11 @@
                             <div id="slotsLoader" class="text-center py-4" style="display: none;">
                                 <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-primary">
                                 </div>
-                                <span class="ml-2 text-sm text-muted-foreground">Loading slots...</span>
+                                <span class="ml-2 text-sm text-muted-foreground">{{ __('welcome.key_213') }}</span>
                             </div>
                             <div id="noSlotsMessage" class="text-center py-4 text-sm text-muted-foreground"
                                 style="display: none;">
-                                No available slots for this date
+                                {{ __('welcome.key_214') }}
                             </div>
                         </div>
 
@@ -373,14 +373,14 @@
                             $durationPrices = $teacher->teacherSettings->pluck('value', 'key')->toArray();
                             $price60 = $durationPrices['duration_60'] ?? 'N/A';
                         @endphp
-                        <h3 class="font-semibold text-foreground mb-3 text-lg">Lesson Duration</h3>
+                        <h3 class="font-semibold text-foreground mb-3 text-lg">{{ __('welcome.key_123') }}</h3>
                         <div class="grid grid-cols-1 gap-4">
                             <div class="duration-option">
                                 <input type="radio" name="duration" value="60" id="duration-60"
                                     class="peer hidden" required checked>
                                 <label for="duration-60"
                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col items-center justify-between rounded-md border-2 border-primary bg-primary/10 p-4 text-center transition-all duration-300">
-                                    60 minutes <br>
+                                    {{ __('welcome.key_125') }} <br>
                                     <span class="text-xs text-muted">$ {{ $price60 }}</span>
                                 </label>
                             </div>
@@ -443,12 +443,12 @@
                                 <path d="m3.3 7 8.7 5 8.7-5"></path>
                                 <path d="M12 22V12"></path>
                             </svg>
-                            ...Or Buy a Package &amp; Save!
+                            {{ __('welcome.key_128') }}
                         </h2>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             @if ($teacher->lessonPackages && $teacher->lessonPackages->count() > 0)
-                                @foreach ($teacher->lessonPackages as $package)
+                                @foreach ($teacher->{{ __('welcome.key_215') }}
                                     <label for="package_{{ $package->id }}" class="block package-option">
                                         <input type="radio" name="lesson_package" value="{{ $package->id }}"
                                             id="package_{{ $package->id }}" class="hidden peer">
@@ -457,7 +457,7 @@
                                             <h4 class="font-bold text-lg text-foreground">
                                                 {{ $package->number_of_lessons }} Lessons</h4>
 
-                                            @if ($package->discount_percentage > 0)
+                                            @if ($package->discount_percentage > {{ __('welcome.key_154') }}
                                                 <p class="text-sm font-semibold text-green-600">Save
                                                     {{ $package->discount_percentage }}%</p>
                                             @endif
@@ -472,7 +472,7 @@
                                                 per lesson
                                             </p>
 
-                                            @if ($package->duration_per_lesson)
+                                            @if ($package->{{ __('welcome.key_216') }}
                                                 <p class="text-xs text-muted-foreground">
                                                     {{ $package->duration_per_lesson }} minutes per lesson
                                                 </p>
@@ -482,7 +482,7 @@
                                 @endforeach
                             @else
                                 <div class="col-span-3 text-center py-8">
-                                    <p class="text-muted-foreground">No lesson packages available at the moment.</p>
+                                    <p class="text-muted-foreground">{{ __('welcome.key_217') }}</p>
                                 </div>
                             @endif
                         </div>
@@ -491,19 +491,19 @@
                         <div class="bg-primary/10 p-4 rounded-lg border border-primary/30 text-center">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
                                 <div>
-                                    <p class="text-sm text-muted-foreground mb-1">Duration</p>
+                                    <p class="text-sm text-muted-foreground mb-1">{{ __('welcome.key_218') }}</p>
                                     <p class="text-lg font-medium text-foreground">
                                         <span id="selected-duration">—</span>
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-muted-foreground mb-1">Time Slot</p>
+                                    <p class="text-sm text-muted-foreground mb-1">{{ __('welcome.key_219') }}</p>
                                     <p class="text-lg font-medium text-foreground">
                                         <span id="selected-time-slot">—</span>
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-muted-foreground mb-1">Price</p>
+                                    <p class="text-sm text-muted-foreground mb-1">{{ __('welcome.key_220') }}</p>
                                     <p class="text-2xl font-bold text-primary">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -518,9 +518,9 @@
                         </div>
                     </div>
 
-                    @if (!($teacher->bookingRules->accepting_new_students ?? false))
+                    @if (!($teacher->bookingRules->{{ __('welcome.key_221') }}
                         <div class="lg:col-span-5 text-center">
-                            <p class="text-sm text-red-500">This tutor does not allow bookings at this time.</p>
+                            <p class="text-sm text-red-500">{{ __('welcome.key_222') }}</p>
                         </div>
                     @else
                         <div class="lg:col-span-5" style="opacity: 1;">
@@ -538,7 +538,7 @@
                                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                     </svg>
-                                    Confirm &amp; Proceed to Checkout
+                                    {{ __('welcome.key_143') }}
                                 </button>
                             </form>
                         </div>

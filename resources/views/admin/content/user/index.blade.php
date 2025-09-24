@@ -3,21 +3,21 @@
 @section('content')
     <main class="main-content" id="language-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold">User Management</h3>
+            <h3 class="fw-bold">{{ __('welcome.key_717') }}</h3>
         </div>
          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold"><a href="{{ route('admin.users.create') }}" class="btn btn-secondary">Add New User</a></h3>
+            <h3 class="fw-bold"><a href="{{ route('admin.users.create') }}" class="btn btn-secondary">{{ __('welcome.key_736') }}</a></h3>
             <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left-circle me-1"></i> Back
+                <i class="bi bi-arrow-left-circle me-1"></i> {{ __('welcome.key_73') }}
             </a>
         </div>
         <table id="userTable" class="table table-bordered bg-white shadow-sm">
             <thead class="table-warning">
                 <tr> 
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th class="text-center">Actions</th>
+                    <th>{{ __('welcome.key_598') }}</th>
+                    <th>{{ __('welcome.key_728') }}</th>
+                    <th>{{ __('welcome.key_737') }}</th>
+                    <th class="text-center">{{ __('welcome.key_604') }}</th>
                 </tr>
             </thead>
             <tbody id="language-table-body">

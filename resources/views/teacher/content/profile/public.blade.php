@@ -12,10 +12,9 @@
                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                     </svg>
-                    <p>This is a preview of how your profile appears to students.
+                    <p>{{ __('welcome.key_359') }}
                         <a href="{{ route('teacher.profile.edit') }}"
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 underline-offset-4 hover:underline p-0 h-auto ml-1 text-yellow-900">Edit
-                            Profile</a>
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 underline-offset-4 hover:underline p-0 h-auto ml-1 text-yellow-900">{{ __('welcome.key_360') }}</a>
                     </p>
                 </div>
                 <div style="opacity: 1; transform: none;">
@@ -116,10 +115,10 @@
                                         <!-- Uploaded Video -->
                                         <video controls class="w-full h-48 md:h-64 rounded-lg shadow-md">
                                             <source src="{{ asset('storage/' . $introVideo) }}" type="video/mp4">
-                                            Your browser does not support the video tag.
+                                            {{ __('welcome.key_226') }}
                                         </video>
                                     @else
-                                        <p>No video uploaded</p>
+                                        <p>{{ __('welcome.key_361') }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -143,7 +142,7 @@
                                         <path d="M8 18h.01"></path>
                                         <path d="M12 18h.01"></path>
                                         <path d="M16 18h.01"></path>
-                                    </svg> Book Lesson
+                                    </svg> {{ __('welcome.key_227') }}
                                 </button>
                                 <button
                                     class="inline-flex items-center justify-center text-sm h-10 w-full sm:w-auto border border-primary text-primary font-semibold py-3 px-6 rounded-lg"
@@ -152,7 +151,7 @@
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5">
                                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                    </svg> Message Tutor
+                                    </svg> {{ __('welcome.key_362') }}
                                 </button>
                             </div>
                         </div>
@@ -168,7 +167,7 @@
                                         stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-6 w-6 text-primary">
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                    </svg> About Me</h2>
+                                    </svg> {{ __('welcome.key_229') }}</h2>
                                 <p class="text-gray-600 leading-relaxed whitespace-pre-line">
                                     {{ $teacherProfile?->about_me ?? 'No information provided yet.' }}
                                 </p>
@@ -182,7 +181,7 @@
                                         <circle cx="12" cy="8" r="6"></circle>
                                         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
                                     </svg>
-                                    Specialties
+                                    {{ __('welcome.key_230') }}
                                 </h2>
 
                                 <div class="flex flex-wrap gap-2">
@@ -199,7 +198,7 @@
                                             @endif
                                         @endforeach
                                     @else
-                                        <span class="text-gray-500">No specialties added yet.</span>
+                                        <span class="text-gray-500">{{ __('welcome.key_363') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -238,7 +237,7 @@
                                                 @endif
 
                                                 <div class="text-xs text-gray-600 mb-2">
-                                                    <p><strong>{{ $package->number_of_lessons }}</strong> lessons</p>
+                                                    <p><strong>{{ $package->number_of_lessons }}</strong> {{ __('welcome.key_233') }}</p>
                                                     <p>
                                                         <span class="font-semibold text-black text-base">
                                                             ${{ number_format($originalPrice, 2) }}
@@ -260,7 +259,7 @@
                                                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                         </svg>
-                                                        Flexible scheduling
+                                                        {{ __('welcome.key_235') }}
                                                     </li>
                                                     <li class="flex items-center">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -270,14 +269,14 @@
                                                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                         </svg>
-                                                        Personalized learning
+                                                        {{ __('welcome.key_236') }}
                                                     </li>
                                                 </ul>
                                             </div>
                                         @endforeach
                                     @else
                                         <div class="border border-red-300 p-4 rounded-lg bg-white text-center">
-                                            <p class="text-gray-500 text-sm">No lesson packages available at the moment.
+                                            <p class="text-gray-500 text-sm">{{ __('welcome.key_217') }}
                                             </p>
                                         </div>
                                     @endif
@@ -329,7 +328,7 @@
                                     <p class="text-sm text-gray-600 italic mt-3">"{{ $review->comment }}"</p>
                                 </div>
                             @empty
-                                <p class="text-gray-500">No reviews yet.</p>
+                                <p class="text-gray-500">{{ __('welcome.key_364') }}</p>
                             @endforelse
                         </div>
                     </div>

@@ -3,23 +3,23 @@
 @section('content')
     <main class="main-content" id="language-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold">Applications</h3>
+            <h3 class="fw-bold">{{ __('welcome.key_597') }}</h3>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left-circle me-1"></i> Back
+                <i class="bi bi-arrow-left-circle me-1"></i> {{ __('welcome.key_73') }}
             </a>
         </div>
         <table id="userTable" class="table table-bordered bg-white shadow-sm">
             <thead class="table-warning">
                 <tr>
-                    <th>ID</th>
-                    <th>Job Title</th>
-                    <th>Applicant Name</th>
-                    <th>Applicant Email</th>
-                    <th>Applicant Phone</th>
-                    <th>Applicant Status</th>
-                    <th class="text-center">Actions</th>
+                    <th>{{ __('welcome.key_598') }}</th>
+                    <th>{{ __('welcome.key_599') }}</th>
+                    <th>{{ __('welcome.key_600') }}</th>
+                    <th>{{ __('welcome.key_601') }}</th>
+                    <th>{{ __('welcome.key_602') }}</th>
+                    <th>{{ __('welcome.key_603') }}</th>
+                    <th class="text-center">{{ __('welcome.key_604') }}</th>
                 </tr>
             </thead>
             <tbody id="language-table-body">

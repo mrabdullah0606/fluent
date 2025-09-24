@@ -65,7 +65,7 @@
 
     <main class="main-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold">Reviews</h3>
+            <h3 class="fw-bold">{{ __('welcome.key_788') }}</h3>
         </div>
 
         <!-- Success/Error Messages -->
@@ -76,17 +76,17 @@
                 <thead class="table-warning">
                     <tr>
                         <th>#</th>
-                        <th>Student</th>
-                        <th>Teacher</th>
-                        <th>Review</th>
-                        <th>Rating</th>
-                        <th>Status</th>
-                        <th>Approved</th>
-                        <th class="text-center">Actions</th>
+                        <th>{{ __('welcome.key_642') }}</th>
+                        <th>{{ __('welcome.key_521') }}</th>
+                        <th>{{ __('welcome.key_789') }}</th>
+                        <th>{{ __('welcome.key_487') }}</th>
+                        <th>{{ __('welcome.key_718') }}</th>
+                        <th>{{ __('welcome.key_790') }}</th>
+                        <th class="text-center">{{ __('welcome.key_604') }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($reviews as $index => $review)
+                    @foreach ($reviews as $index =>  $review)
                         <tr id="review-row-{{ $review->id }}">
                             <td>{{ $index + 1 }}</td>
                             <td>
@@ -107,7 +107,7 @@
                                         <button class="btn btn-link btn-sm p-0 toggle-full-review"
                                             data-full-text="{{ $review->comment }}"
                                             data-short-text="{{ Str::limit($review->comment, 100) }}">
-                                            Read more
+                                            {{ __('welcome.key_793') }}
                                         </button>
                                     @endif
                                 </div>
