@@ -153,7 +153,7 @@
                 <div style="opacity: 1; transform: none;">
                     <h1 class="display-6 fw-bold text-black mb-4 d-flex align-items-center">
                         <i class="fas fa-calendar-alt me-3" style="font-size: 2rem;color: #ffbf00"></i>
-                        {{ __('welcome.key_249') }}
+                        My Calendar & Availability
                     </h1>
                 </div>
 
@@ -165,7 +165,7 @@
                                 <div class="p-3 rounded w-100">
                                     <!-- Calendar Header -->
                                     <div class="calendar-header">
-                                        <h4 class="mb-0 text-primary" id="currentMonth">{{ __('welcome.key_76') }}</h4>
+                                        <h4 class="mb-0 text-primary" id="currentMonth">July 2025</h4>
                                         <div class="d-flex gap-2">
                                             <button class="calendar-nav prev btn" onclick="previousMonth()">
                                                 <i class="fas fa-chevron-left"></i>
@@ -181,13 +181,13 @@
                                         <table class="table table-borderless">
                                             <thead>
                                                 <tr class="text-center">
-                                                    <th class="fw-normal text-muted">{{ __('welcome.key_77') }}</th>
-                                                    <th class="fw-normal text-muted">{{ __('welcome.key_78') }}</th>
-                                                    <th class="fw-normal text-muted">{{ __('welcome.key_79') }}</th>
-                                                    <th class="fw-normal text-muted">{{ __('welcome.key_80') }}</th>
-                                                    <th class="fw-normal text-muted">{{ __('welcome.key_81') }}</th>
-                                                    <th class="fw-normal text-muted">{{ __('welcome.key_82') }}</th>
-                                                    <th class="fw-normal text-muted">{{ __('welcome.key_83') }}</th>
+                                                    <th class="fw-normal text-muted">Su</th>
+                                                    <th class="fw-normal text-muted">Mo</th>
+                                                    <th class="fw-normal text-muted">Tu</th>
+                                                    <th class="fw-normal text-muted">We</th>
+                                                    <th class="fw-normal text-muted">Th</th>
+                                                    <th class="fw-normal text-muted">Fr</th>
+                                                    <th class="fw-normal text-muted">Sa</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="calendarBody">
@@ -205,9 +205,9 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-white border-0">
                                 <h5 class="card-title mb-1 text-primary">
-                                    <i class="fas fa-clock me-2"></i>{{ __('welcome.key_250') }}
+                                    <i class="fas fa-clock me-2"></i>Availability
                                 </h5>
-                                <p class="text-muted small mb-0" id="selectedDateText">{{ __('welcome.key_251') }}</p>
+                                <p class="text-muted small mb-0" id="selectedDateText">Tuesday, July 29</p>
                             </div>
                             <div class="card-body">
                                 <!-- Time Slots Container -->
@@ -215,11 +215,11 @@
                                     <div id="timeSlotsContainer">
                                         <div class="text-center py-4" id="slotsLoader" style="display: none;">
                                             <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">{{ __('welcome.key_252') }}</span>
+                                                <span class="visually-hidden">Loading...</span>
                                             </div>
                                         </div>
                                         <p class="text-muted text-center py-4" id="noSlotsMessage">
-                                            {{ __('welcome.key_253') }}
+                                            No available slots for this day.
                                         </p>
                                     </div>
                                 </div>
@@ -227,11 +227,11 @@
                                 <!-- Action Buttons -->
                                 <button class="btn btn-primary w-100 mb-2" onclick="openAddTimeSlotsModal()">
                                     <i class="fas fa-plus me-2"></i>
-                                    {{ __('welcome.key_254') }}
+                                    Add Time Slots
                                 </button>
                                 <button class="btn btn-outline-danger w-100" onclick="markDayUnavailable()">
                                     <i class="fas fa-times me-2"></i>
-                                    {{ __('welcome.key_255') }}
+                                    Mark Full Day as Unavailable
                                 </button>
                             </div>
                         </div>
@@ -248,27 +248,27 @@
             <div class="modal-content">
                 <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title fw-bold text-primary" id="addTimeSlotsModalLabel">
-                        <i class="fas fa-clock me-2"></i>{{ __('welcome.key_256') }}
+                        <i class="fas fa-clock me-2"></i>Add Multiple Time Slots
                     </h5>
                     <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pt-2">
                     <p class="text-muted mb-4">
-                        {{ __('welcome.key_257') }}<br>
-                        {{ __('welcome.key_258') }}
+                        Quickly add a range of available times for the selected date.<br>
+                        This will add slots every hour between your selected times.
                     </p>
 
                     <div class="time-picker-group mb-4">
                         <div class="row g-3">
                             <!-- Start Time -->
                             <div class="col-12">
-                                <label class="form-label fw-medium">{{ __('welcome.key_259') }}</label>
+                                <label class="form-label fw-medium">Start Time</label>
                                 <input type="time" class="form-control" id="startTime" value="08:00">
                             </div>
 
                             <!-- End Time -->
                             <div class="col-12">
-                                <label class="form-label fw-medium">{{ __('welcome.key_260') }}</label>
+                                <label class="form-label fw-medium">End Time</label>
                                 <input type="time" class="form-control" id="endTime" value="17:00">
                             </div>
                         </div>
@@ -277,13 +277,13 @@
                     <!-- Time Preview -->
                     <div class="alert alert-info mb-3" id="timePreview">
                         <i class="fas fa-info-circle me-2"></i>
-                        <span id="previewText">{{ __('welcome.key_261') }}</span>
+                        <span id="previewText">Selected time: 8:00 AM to 5:00 PM</span>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">{{ __('welcome.key_262') }}</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                     <button type="button" class="btn btn-primary" onclick="addTimeSlots()" id="addSlotsBtn">
-                        <i class="fas fa-plus me-2"></i>{{ __('welcome.key_263') }}
+                        <i class="fas fa-plus me-2"></i>Add to Calendar
                     </button>
                 </div>
             </div>
@@ -293,7 +293,7 @@
     <!-- Alert Container -->
     <div id="alertContainer"></div>
 
-   <script>
+    <script>
         const API_BASE = '/teacher/availability';
         let currentDate = new Date();
         let selectedDate = new Date().getDate();

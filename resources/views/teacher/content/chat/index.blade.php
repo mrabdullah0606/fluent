@@ -8,7 +8,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
                             <h4 class="mb-0">Chat with {{ $user->name }}</h4>
-                            <small id="connection-status" class="text-muted">{{ __('welcome.key_280') }}</small>
+                            <small id="connection-status" class="text-muted">Connecting...</small>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <button type="button" id="sound-toggle" class="btn btn-outline-secondary btn-sm"
@@ -16,7 +16,7 @@
                                 <i id="sound-icon" class="bi bi-volume-up"></i>
                             </button>
                             <a href="{{ route('teacher.chats.index') }}" class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-arrow-left"></i> {{ __('welcome.key_281') }}
+                                <i class="bi bi-arrow-left"></i> Back to Chats
                             </a>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                             <div class="input-group">
                                 <input type="text" id="message" class="form-control" placeholder="Type a message..."
                                     required maxlength="1000">
-                                <button type="submit" class="btn btn-primary" id="send-btn">{{ __('welcome.key_282') }}</button>
+                                <button type="submit" class="btn btn-primary" id="send-btn">Send</button>
                             </div>
                         </form>
                     </div>
@@ -59,7 +59,7 @@
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="messageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <strong class="me-auto">{{ __('welcome.key_283') }}</strong>
+                <strong class="me-auto">New Message</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body" id="toastBody">

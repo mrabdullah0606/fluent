@@ -13,7 +13,7 @@
                         <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
                         <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
                         <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
-                    </svg> {{ __('welcome.key_365') }}
+                    </svg> My Wallet
                 </h1>
 
                 {{-- Success/Error Messages --}}
@@ -32,18 +32,18 @@
                 <div class="mb-8">
                     <div class="rounded-lg border bg-gradient-to-r from-primary to-yellow-500 text-white shadow-lg">
                         <div class="flex flex-col space-y-1.5 p-6">
-                            <h3 class="tracking-tight text-lg font-medium">{{ __('welcome.key_366') }}</h3>
+                            <h3 class="tracking-tight text-lg font-medium">Available Balance</h3>
                         </div>
                         <div class="p-6 pt-0">
                             <p class="text-5xl font-bold">${{ number_format($wallet->balance, 2) }}</p>
-                            <p class="opacity-80 mt-1">{{ __('welcome.key_367') }}</p>
+                            <p class="opacity-80 mt-1">Ready for withdrawal</p>
                             <div class="mt-4 grid grid-cols-2 gap-4 text-sm opacity-90">
                                 <div>
-                                    <p class="text-xs uppercase tracking-wider">{{ __('welcome.key_368') }}</p>
+                                    <p class="text-xs uppercase tracking-wider">Total Earned</p>
                                     <p class="text-xl font-semibold">${{ number_format($wallet->total_earned, 2) }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs uppercase tracking-wider">{{ __('welcome.key_369') }}</p>
+                                    <p class="text-xs uppercase tracking-wider">Total Withdrawn</p>
                                     <p class="text-xl font-semibold">${{ number_format($wallet->total_withdrawn, 2) }}</p>
                                 </div>
                             </div>
@@ -54,22 +54,23 @@
                 {{-- Tabs --}}
                 <div>
                     <div class="grid grid-cols-3 gap-2 bg-muted rounded-md text-muted-foreground mb-4">
-                        <button onclick="showTab('withdraw-tab')" class="tab-btn active-tab">{{ __('welcome.key_370') }}</button>
-                        <button onclick="showTab('history-tab')" class="tab-btn">{{ __('welcome.key_371') }}</button>
-                        <button onclick="showTab('settings-tab')" class="tab-btn">{{ __('welcome.key_372') }}</button>
+                        <button onclick="showTab('withdraw-tab')" class="tab-btn active-tab">Withdraw</button>
+                        <button onclick="showTab('history-tab')" class="tab-btn">Transaction History</button>
+                        <button onclick="showTab('settings-tab')" class="tab-btn">Payment Settings</button>
                     </div>
 
                     {{-- Withdraw Tab --}}
                     <div id="withdraw-tab" class="tab-content">
                         <div class="rounded-lg border bg-white shadow-sm p-6">
-                            <h3 class="text-2xl font-semibold mb-2">{{ __('welcome.key_373') }}</h3>
+                            <h3 class="text-2xl font-semibold mb-2">Withdraw Funds</h3>
                             <p class="text-sm text-muted-foreground mb-4">
-                                {{ __('welcome.key_374') }}
+                                Choose your preferred method to withdraw your earnings.
+                                You can only withdraw using your connected payment method.
                             </p>
                             
                             @if(!$paymentSettings || !$paymentSettings->is_verified)
                                 <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-                                    <strong>{{ __('welcome.key_376') }}</strong> {{ __('welcome.key_377') }}
+                                    <strong>Warning:</strong> Please configure and verify your payment settings first.
                                 </div>
                             @endif
 
@@ -79,7 +80,7 @@
                                     onclick="{{ ($paymentSettings && $paymentSettings->paypal_email) ? 'openModal(\'paypal\')' : '' }}"
                                     {{ ($paymentSettings && $paymentSettings->paypal_email) ? '' : 'disabled' }}>
                                     Withdraw via PayPal
-                                   @if($paymentSettings && $paymentSettings->paypal_email)
+                                    @if($paymentSettings && $paymentSettings->paypal_email)
                                         <span class="block text-xs opacity-75">{{ $paymentSettings->paypal_email }}</span>
                                     @endif
                                 </button>
@@ -88,21 +89,21 @@
                                     class="btn-primary {{ ($paymentSettings && $paymentSettings->payoneer_id) ? '' : 'opacity-50 cursor-not-allowed' }}"
                                     onclick="{{ ($paymentSettings && $paymentSettings->payoneer_id) ? 'openModal(\'payoneer\')' : '' }}"
                                     {{ ($paymentSettings && $paymentSettings->payoneer_id) ? '' : 'disabled' }}>
-                                    {{ __('welcome.key_379') }}
+                                    Withdraw via Payoneer
                                 </button>
                                 
                                 <button 
                                     class="btn-primary {{ ($paymentSettings && $paymentSettings->wise_account) ? '' : 'opacity-50 cursor-not-allowed' }}"
                                     onclick="{{ ($paymentSettings && $paymentSettings->wise_account) ? 'openModal(\'wise\')' : '' }}"
                                     {{ ($paymentSettings && $paymentSettings->wise_account) ? '' : 'disabled' }}>
-                                    {{ __('welcome.key_380') }}
+                                    Withdraw via Wise
                                 </button>
                             </div>
 
                             {{-- Recent Withdrawal Requests --}}
                             @if($wallet->withdrawalRequests()->latest()->limit(3)->exists())
                                 <div class="mt-8">
-                                    <h4 class="text-lg font-semibold mb-3">{{ __('welcome.key_382') }}</h4>
+                                    <h4 class="text-lg font-semibold mb-3">Recent Withdrawal Requests</h4>
                                     <div class="space-y-2">
                                         @foreach($wallet->withdrawalRequests()->latest()->limit(3)->get() as $withdrawal)
                                             <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
@@ -127,16 +128,16 @@
                     {{-- Transaction History Tab --}}
                     <div id="history-tab" class="tab-content hidden">
                         <div class="rounded-lg border bg-white shadow-sm p-6">
-                            <h3 class="text-2xl font-semibold mb-4">{{ __('welcome.key_371') }}</h3>
+                            <h3 class="text-2xl font-semibold mb-4">Transaction History</h3>
                             <div class="overflow-x-auto">
                                 <table class="w-full table-auto text-sm text-left border">
                                     <thead>
                                         <tr class="bg-gray-100">
-                                            <th class="p-2 border">{{ __('welcome.key_384') }}</th>
-                                            <th class="p-2 border">{{ __('welcome.key_385') }}</th>
-                                            <th class="p-2 border">{{ __('welcome.key_386') }}</th>
-                                            <th class="p-2 border">{{ __('welcome.key_387') }}</th>
-                                            <th class="p-2 border">{{ __('welcome.key_388') }}</th>
+                                            <th class="p-2 border">Date</th>
+                                            <th class="p-2 border">Description</th>
+                                            <th class="p-2 border">Type</th>
+                                            <th class="p-2 border">Amount</th>
+                                            <th class="p-2 border">Balance</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -149,7 +150,7 @@
                                             </td>
                                             <td class="p-2 border">
                                                 {{ $txn->description }}
-                                                 @if($txn->payment_id)
+                                                @if($txn->payment_id)
                                                     <br><small class="text-blue-600">Payment #{{ $txn->payment_id }}</small>
                                                 @endif
                                                 @if($txn->withdrawal_id)
@@ -173,14 +174,15 @@
                                         @empty
                                         <tr>
                                             <td colspan="5" class="p-4 text-center text-gray-500">
-                                                {{ __('welcome.key_391') }}
+                                                No transactions found
                                             </td>
                                         </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
                             </div>
-                           {{-- Pagination --}}
+                            
+                            {{-- Pagination --}}
                             @if($transactions->hasPages())
                                 <div class="mt-4">
                                     {{ $transactions->links() }}
@@ -192,11 +194,11 @@
                     {{-- Payment Settings Tab --}}
                     <div id="settings-tab" class="tab-content hidden">
                         <div class="rounded-lg border bg-white shadow-sm p-6">
-                            <h3 class="text-2xl font-semibold mb-4">{{ __('welcome.key_372') }}</h3>
+                            <h3 class="text-2xl font-semibold mb-4">Payment Settings</h3>
                             
                             @if(!$paymentSettings)
                                 <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
-                                    <strong>{{ __('welcome.key_393') }}</strong> {{ __('welcome.key_394') }}
+                                    <strong>Setup Required:</strong> Configure your payment methods to start receiving withdrawals.
                                 </div>
                             @endif
 
@@ -206,13 +208,13 @@
                                 {{-- PayPal Settings --}}
                                 <div class="border rounded-lg p-4">
                                     <div class="flex items-center justify-between mb-3">
-                                        <h4 class="text-lg font-medium">{{ __('welcome.key_395') }}</h4>
+                                        <h4 class="text-lg font-medium">PayPal</h4>
                                         @if($paymentSettings && $paymentSettings->paypal_email && $paymentSettings->is_verified)
-                                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">{{ __('welcome.key_396') }}</span>
+                                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Verified</span>
                                         @endif
                                     </div>
                                     <div>
-                                        <label for="paypal_email" class="block text-sm font-medium mb-1">{{ __('welcome.key_397') }}</label>
+                                        <label for="paypal_email" class="block text-sm font-medium mb-1">PayPal Email</label>
                                         <input 
                                             type="email" 
                                             name="paypal_email" 
@@ -229,9 +231,9 @@
 
                                 {{-- Payoneer Settings --}}
                                 <div class="border rounded-lg p-4">
-                                    <h4 class="text-lg font-medium mb-3">{{ __('welcome.key_398') }}</h4>
+                                    <h4 class="text-lg font-medium mb-3">Payoneer</h4>
                                     <div>
-                                        <label for="payoneer_id" class="block text-sm font-medium mb-1">{{ __('welcome.key_399') }}</label>
+                                        <label for="payoneer_id" class="block text-sm font-medium mb-1">Payoneer ID</label>
                                         <input 
                                             type="text" 
                                             name="payoneer_id" 
@@ -248,9 +250,9 @@
 
                                 {{-- Wise Settings --}}
                                 <div class="border rounded-lg p-4">
-                                    <h4 class="text-lg font-medium mb-3">{{ __('welcome.key_400') }}</h4>
+                                    <h4 class="text-lg font-medium mb-3">Wise (formerly TransferWise)</h4>
                                     <div>
-                                        <label for="wise_account" class="block text-sm font-medium mb-1">{{ __('welcome.key_401') }}</label>
+                                        <label for="wise_account" class="block text-sm font-medium mb-1">Wise Account Email</label>
                                         <input 
                                             type="email" 
                                             name="wise_account" 
@@ -267,20 +269,20 @@
 
                                 {{-- Preferred Method --}}
                                 <div class="border rounded-lg p-4">
-                                    <h4 class="text-lg font-medium mb-3">{{ __('welcome.key_402') }}</h4>
+                                    <h4 class="text-lg font-medium mb-3">Preferred Withdrawal Method</h4>
                                     <select 
                                         name="preferred_method" 
                                         class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-500"
                                     >
-                                        <option value="paypal" {{ ($paymentSettings && $paymentSettings->preferred_method == 'paypal') ? 'selected' : '' }}>{{ __('welcome.key_395') }}</option>
-                                        <option value="payoneer" {{ ($paymentSettings && $paymentSettings->preferred_method == 'payoneer') ? 'selected' : '' }}>{{ __('welcome.key_398') }}</option>
-                                        <option value="wise" {{ ($paymentSettings && $paymentSettings->preferred_method == 'wise') ? 'selected' : '' }}>{{ __('welcome.key_403') }}</option>
+                                        <option value="paypal" {{ ($paymentSettings && $paymentSettings->preferred_method == 'paypal') ? 'selected' : '' }}>PayPal</option>
+                                        <option value="payoneer" {{ ($paymentSettings && $paymentSettings->preferred_method == 'payoneer') ? 'selected' : '' }}>Payoneer</option>
+                                        <option value="wise" {{ ($paymentSettings && $paymentSettings->preferred_method == 'wise') ? 'selected' : '' }}>Wise</option>
                                     </select>
                                 </div>
 
                                 <div class="flex justify-end">
                                     <button type="submit" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90">
-                                        {{ __('welcome.key_404') }}
+                                        Save Settings
                                     </button>
                                 </div>
                             </form>
@@ -288,26 +290,26 @@
                             {{-- Current Settings Display --}}
                             @if($paymentSettings)
                                 <div class="mt-8 pt-6 border-t">
-                                    <h4 class="text-lg font-semibold mb-3">{{ __('welcome.key_405') }}</h4>
+                                    <h4 class="text-lg font-semibold mb-3">Current Settings</h4>
                                     <div class="space-y-2 text-sm">
                                         <div class="flex justify-between">
-                                            <span class="font-medium">{{ __('welcome.key_406') }}</span>
+                                            <span class="font-medium">PayPal Email:</span>
                                             <span>{{ $paymentSettings->paypal_email ?? 'Not Set' }}</span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="font-medium">{{ __('welcome.key_407') }}</span>
+                                            <span class="font-medium">Payoneer ID:</span>
                                             <span>{{ $paymentSettings->payoneer_id ?? 'Not Set' }}</span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="font-medium">{{ __('welcome.key_408') }}</span>
+                                            <span class="font-medium">Wise Account:</span>
                                             <span>{{ $paymentSettings->wise_account ?? 'Not Set' }}</span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="font-medium">{{ __('welcome.key_409') }}</span>
+                                            <span class="font-medium">Preferred Method:</span>
                                             <span>{{ ucfirst($paymentSettings->preferred_method) }}</span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span class="font-medium">{{ __('welcome.key_410') }}</span>
+                                            <span class="font-medium">Verification Status:</span>
                                             <span class="{{ $paymentSettings->is_verified ? 'text-green-600' : 'text-red-600' }}">
                                                 {{ $paymentSettings->is_verified ? 'Verified' : 'Pending Verification' }}
                                             </span>
@@ -324,10 +326,10 @@
         <!-- Withdrawal Modal -->
         <div id="withdrawModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
             <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
-                <h2 class="text-xl font-semibold mb-2">{{ __('welcome.key_373') }}</h2>
+                <h2 class="text-xl font-semibold mb-2">Withdraw Funds</h2>
                 <p class="text-sm text-muted-foreground mb-4">
-                    {{ __('welcome.key_411') }} <span id="withdrawal-method"></span>
-                    <br>{{ __('welcome.key_412') }} <strong>${{ number_format($wallet->balance, 2) }}</strong>
+                    Enter the amount you'd like to withdraw via <span id="withdrawal-method"></span>
+                    <br>Available: <strong>${{ number_format($wallet->balance, 2) }}</strong>
                 </p>
 
                 <form action="{{ route('teacher.wallet.withdraw') }}" method="POST">
@@ -335,7 +337,7 @@
                     <input type="hidden" name="method" id="withdrawal-method-input">
                     
                     <div class="mb-4">
-                        <label for="amount" class="block text-sm font-medium mb-1">{{ __('welcome.key_413') }}</label>
+                        <label for="amount" class="block text-sm font-medium mb-1">Amount ($)</label>
                         <input 
                             type="number" 
                             name="amount" 
@@ -346,7 +348,7 @@
                             class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-500"
                             required
                         >
-                        <small class="text-gray-500">{{ __('welcome.key_414') }}</small>
+                        <small class="text-gray-500">Minimum withdrawal: $1.00</small>
                     </div>
 
                     <div id="account-info" class="mb-4 p-3 bg-gray-50 rounded">
@@ -355,9 +357,10 @@
 
                     <div class="flex justify-end space-x-2 mt-4">
                         <button type="button" onclick="closeModal()"
-                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">{{ __('welcome.key_262') }}</button>
+                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancel</button>
                         <button type="submit"
-                            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">{{ __('welcome.key_415') }}</button>
+                            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Confirm
+                            Withdrawal</button>
                     </div>
                 </form>
 

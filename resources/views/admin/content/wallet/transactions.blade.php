@@ -5,12 +5,12 @@
         <div class="row m-3">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">{{ __('welcome.key_759') }}</h4>
+                    <h4 class="mb-sm-0">Admin Wallet Transactions</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('welcome.key_632') }}</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('admin.wallet.index') }}">{{ __('welcome.key_749') }}</a></li>
-                            <li class="breadcrumb-item active">{{ __('welcome.key_760') }}</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.wallet.index') }}">Wallet</a></li>
+                            <li class="breadcrumb-item active">Transactions</li>
                         </ol>
                     </div>
                 </div>
@@ -25,45 +25,45 @@
                         <form method="GET" action="{{ route('admin.wallet.transactions') }}">
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <label class="form-label">{{ __('welcome.key_386') }}</label>
+                                    <label class="form-label">Type</label>
                                     <select class="form-select" name="type">
-                                        <option value="">{{ __('welcome.key_761') }}</option>
-                                        <option value="credit" {{ request('type') == 'credit' ? 'selected' : '' }}>{{ __('welcome.key_755') }}
+                                        <option value="">All Types</option>
+                                        <option value="credit" {{ request('type') == 'credit' ? 'selected' : '' }}>Credit
                                         </option>
-                                        <option value="debit" {{ request('type') == 'debit' ? 'selected' : '' }}>{{ __('welcome.key_756') }}
+                                        <option value="debit" {{ request('type') == 'debit' ? 'selected' : '' }}>Debit
                                         </option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">{{ __('welcome.key_762') }}</label>
+                                    <label class="form-label">Category</label>
                                     <select class="form-select" name="category">
-                                        <option value="">{{ __('welcome.key_763') }}</option>
+                                        <option value="">All Categories</option>
                                         <option value="commission"
-                                            {{ request('category') == 'commission' ? 'selected' : '' }}>{{ __('welcome.key_764') }}</option>
+                                            {{ request('category') == 'commission' ? 'selected' : '' }}>Commission</option>
                                         <option value="withdrawal"
-                                            {{ request('category') == 'withdrawal' ? 'selected' : '' }}>{{ __('welcome.key_765') }}</option>
+                                            {{ request('category') == 'withdrawal' ? 'selected' : '' }}>Withdrawal</option>
                                         <option value="refund" {{ request('category') == 'refund' ? 'selected' : '' }}>
-                                            {{ __('welcome.key_766') }}</option>
+                                            Refund</option>
                                         <option value="adjustment"
-                                            {{ request('category') == 'adjustment' ? 'selected' : '' }}>{{ __('welcome.key_767') }}</option>
+                                            {{ request('category') == 'adjustment' ? 'selected' : '' }}>Adjustment</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label">{{ __('welcome.key_635') }}</label>
+                                    <label class="form-label">From Date</label>
                                     <input type="date" class="form-control" name="date_from"
                                         value="{{ request('date_from') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label">{{ __('welcome.key_636') }}</label>
+                                    <label class="form-label">To Date</label>
                                     <input type="date" class="form-control" name="date_to"
                                         value="{{ request('date_to') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label">{{ __('welcome.key_637') }}</label>
+                                    <label class="form-label">&nbsp;</label>
                                     <div>
-                                        <button type="submit" class="btn btn-primary">{{ __('welcome.key_638') }}</button>
+                                        <button type="submit" class="btn btn-primary">Filter</button>
                                         <a href="{{ route('admin.wallet.transactions') }}"
-                                            class="btn btn-secondary">{{ __('welcome.key_639') }}</a>
+                                            class="btn btn-secondary">Reset</a>
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">{{ __('welcome.key_371') }}</h5>
+                        <h5 class="card-title mb-0">Transaction History</h5>
                     </div>
                     <div class="card-body">
                         @if ($transactions->count() > 0)
@@ -86,13 +86,13 @@
                                 <table id="userTable" class="table table-hover align-middle table-nowrap mb-0">
                                     <thead>
                                         <tr>
-                                            <th scope="col">{{ __('welcome.key_384') }}</th>
-                                            <th scope="col">{{ __('welcome.key_386') }}</th>
-                                            <th scope="col">{{ __('welcome.key_762') }}</th>
-                                            <th scope="col">{{ __('welcome.key_387') }}</th>
-                                            <th scope="col">{{ __('welcome.key_385') }}</th>
-                                            <th scope="col">{{ __('welcome.key_768') }}</th>
-                                            <th scope="col">{{ __('welcome.key_769') }}</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Category</th>
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Balance After</th>
+                                            <th scope="col">Reference</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -102,11 +102,11 @@
                                                 <td>
                                                     @if ($transaction->type == 'credit')
                                                         <span class="badge bg-success-subtle text-success">
-                                                            <i class="ri-arrow-down-line me-1"></i>{{ __('welcome.key_755') }}
+                                                            <i class="ri-arrow-down-line me-1"></i>Credit
                                                         </span>
                                                     @else
                                                         <span class="badge bg-danger-subtle text-danger">
-                                                            <i class="ri-arrow-up-line me-1"></i>{{ __('welcome.key_756') }}
+                                                            <i class="ri-arrow-up-line me-1"></i>Debit
                                                         </span>
                                                     @endif
                                                 </td>
@@ -139,8 +139,8 @@
                         @else
                             <div class="text-center py-5">
                                 <i class="ri-file-list-3-line display-4 text-muted"></i>
-                                <h5 class="mt-3">{{ __('welcome.key_391') }}</h5>
-                                <p class="text-muted">{{ __('welcome.key_771') }}</p>
+                                <h5 class="mt-3">No transactions found</h5>
+                                <p class="text-muted">Try adjusting your filters to find transactions.</p>
                             </div>
                         @endif
                     </div>

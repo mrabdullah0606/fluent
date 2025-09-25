@@ -12,7 +12,7 @@
                             class="mr-2 h-4 w-4">
                             <path d="m12 19-7-7 7-7"></path>
                             <path d="M19 12H5"></path>
-                        </svg> {{ __('welcome.key_73') }}
+                        </svg> Back
                     </button>
                     <div class="text-center mb-8">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -29,8 +29,8 @@
                             <path d="M12 18h.01"></path>
                             <path d="M16 18h.01"></path>
                         </svg>
-                        <h1 class="text-3xl md:text-4xl font-bold text-foreground">{{ __('welcome.key_74') }} <span
-                                class="text-gradient-yellow-red">{{ __('welcome.key_75') }}</span>
+                        <h1 class="text-3xl md:text-4xl font-bold text-foreground">Book Lesson with <span
+                                class="text-gradient-yellow-red">Sarah Williams</span>
                         </h1>
                     </div>
                     <div
@@ -41,7 +41,7 @@
                                     <div class="space-y-4 rdp-caption_start rdp-caption_end">
                                         <div class="flex justify-center pt-1 relative items-center">
                                             <div class="text-sm font-medium" aria-live="polite" role="presentation"
-                                                id="react-day-picker-4">{{ __('welcome.key_76') }}</div>
+                                                id="react-day-picker-4">July 2025</div>
                                             <div class="space-x-1 flex items-center"><button name="previous-month"
                                                     aria-label="Go to previous month"
                                                     class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-1"
@@ -65,25 +65,25 @@
                                                 <tr class="flex">
                                                     <th scope="col"
                                                         class="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]"
-                                                        aria-label="Sunday">{{ __('welcome.key_77') }}</th>
+                                                        aria-label="Sunday">Su</th>
                                                     <th scope="col"
                                                         class="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]"
-                                                        aria-label="Monday">{{ __('welcome.key_78') }}</th>
+                                                        aria-label="Monday">Mo</th>
                                                     <th scope="col"
                                                         class="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]"
-                                                        aria-label="Tuesday">{{ __('welcome.key_79') }}</th>
+                                                        aria-label="Tuesday">Tu</th>
                                                     <th scope="col"
                                                         class="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]"
-                                                        aria-label="Wednesday">{{ __('welcome.key_80') }}</th>
+                                                        aria-label="Wednesday">We</th>
                                                     <th scope="col"
                                                         class="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]"
-                                                        aria-label="Thursday">{{ __('welcome.key_81') }}</th>
+                                                        aria-label="Thursday">Th</th>
                                                     <th scope="col"
                                                         class="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]"
-                                                        aria-label="Friday">{{ __('welcome.key_82') }}</th>
+                                                        aria-label="Friday">Fr</th>
                                                     <th scope="col"
                                                         class="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]"
-                                                        aria-label="Saturday">{{ __('welcome.key_83') }}</th>
+                                                        aria-label="Saturday">Sa</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="rdp-tbody">
@@ -92,183 +92,183 @@
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50 day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_84') }}</button></td>
+                                                            type="button">29</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50 day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_85') }}</button></td>
+                                                            type="button">30</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_86') }}</button></td>
+                                                            type="button">1</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_87') }}</button></td>
+                                                            type="button">2</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_88') }}</button></td>
+                                                            type="button">3</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_89') }}</button></td>
+                                                            type="button">4</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_90') }}</button></td>
+                                                            type="button">5</button></td>
                                                 </tr>
                                                 <tr class="flex w-full mt-2">
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_91') }}</button></td>
+                                                            type="button">6</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_92') }}</button></td>
+                                                            type="button">7</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_93') }}</button></td>
+                                                            type="button">8</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_94') }}</button></td>
+                                                            type="button">9</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_95') }}</button></td>
+                                                            type="button">10</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_96') }}</button></td>
+                                                            type="button">11</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_97') }}</button></td>
+                                                            type="button">12</button></td>
                                                 </tr>
                                                 <tr class="flex w-full mt-2">
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_98') }}</button></td>
+                                                            type="button">13</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_99') }}</button></td>
+                                                            type="button">14</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_100') }}</button></td>
+                                                            type="button">15</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_101') }}</button></td>
+                                                            type="button">16</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_102') }}</button></td>
+                                                            type="button">17</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_103') }}</button></td>
+                                                            type="button">18</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_104') }}</button></td>
+                                                            type="button">19</button></td>
                                                 </tr>
                                                 <tr class="flex w-full mt-2">
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_105') }}</button></td>
+                                                            type="button">20</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_106') }}</button></td>
+                                                            type="button">21</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_107') }}</button></td>
+                                                            type="button">22</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_108') }}</button></td>
+                                                            type="button">23</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_109') }}</button></td>
+                                                            type="button">24</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_110') }}</button></td>
+                                                            type="button">25</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_111') }}</button></td>
+                                                            type="button">26</button></td>
                                                 </tr>
                                                 <tr class="flex w-full mt-2">
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_112') }}</button></td>
+                                                            type="button">27</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-muted-foreground opacity-50"
                                                             role="gridcell" disabled="" tabindex="-1"
-                                                            type="button">{{ __('welcome.key_113') }}</button></td>
+                                                            type="button">28</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground bg-accent text-accent-foreground"
                                                             role="gridcell" aria-selected="true" tabindex="0"
-                                                            type="button">{{ __('welcome.key_84') }}</button></td>
+                                                            type="button">29</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100"
-                                                            role="gridcell" tabindex="-1" type="button">{{ __('welcome.key_85') }}</button>
+                                                            role="gridcell" tabindex="-1" type="button">30</button>
                                                     </td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100"
-                                                            role="gridcell" tabindex="-1" type="button">{{ __('welcome.key_114') }}</button>
+                                                            role="gridcell" tabindex="-1" type="button">31</button>
                                                     </td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30"
-                                                            role="gridcell" tabindex="-1" type="button">{{ __('welcome.key_86') }}</button></td>
+                                                            role="gridcell" tabindex="-1" type="button">1</button></td>
                                                     <td class="h-9 w-9 text-center text-sm p-0 relative [&amp;:has([aria-selected].day-range-end)]:rounded-r-md [&amp;:has([aria-selected].day-outside)]:bg-accent/50 [&amp;:has([aria-selected])]:bg-accent first:[&amp;:has([aria-selected])]:rounded-l-md last:[&amp;:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
                                                         role="presentation"><button name="day"
                                                             class="rdp-button_reset rdp-button inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 font-normal aria-selected:opacity-100 day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30"
-                                                            role="gridcell" tabindex="-1" type="button">{{ __('welcome.key_87') }}</button></td>
+                                                            role="gridcell" tabindex="-1" type="button">2</button></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -278,19 +278,19 @@
                         </div>
                         <div class="lg:col-span-2 space-y-6">
                             <div>
-                                <h3 class="font-semibold text-foreground mb-3 text-lg">{{ __('welcome.key_115') }} <span
-                                        class="text-primary">{{ __('welcome.key_116') }}</span></h3>
+                                <h3 class="font-semibold text-foreground mb-3 text-lg">Available Slots for <span
+                                        class="text-primary">July 29th, 2025</span></h3>
                                 <div class="grid grid-cols-3 gap-3 max-h-60 overflow-y-auto pr-2"><button
-                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">{{ __('welcome.key_117') }}</button><button
-                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">{{ __('welcome.key_118') }}</button><button
-                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">{{ __('welcome.key_119') }}</button><button
-                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">{{ __('welcome.key_120') }}</button><button
-                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">{{ __('welcome.key_121') }}</button><button
-                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">{{ __('welcome.key_122') }}</button>
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">09:00</button><button
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">10:00</button><button
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">11:00</button><button
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">14:00</button><button
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">15:00</button><button
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background hover:text-accent-foreground h-10 px-4 py-2 w-full border-input hover:bg-accent">16:00</button>
                                 </div>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-foreground mb-3 text-lg">{{ __('welcome.key_123') }}</h3>
+                                <h3 class="font-semibold text-foreground mb-3 text-lg">Lesson Duration</h3>
                                 <div role="radiogroup" aria-required="false" dir="ltr"
                                     class="grid grid-cols-2 gap-4" tabindex="0" style="outline: none;">
                                     <div><button type="button" role="radio" aria-checked="false"
@@ -298,7 +298,7 @@
                                             class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 peer sr-only"
                                             id="duration-30" tabindex="-1" data-radix-collection-item=""></button><label
                                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&amp;:has([data-state=checked])]:border-primary cursor-pointer text-center"
-                                            for="duration-30">{{ __('welcome.key_124') }}</label></div>
+                                            for="duration-30">30 minutes</label></div>
                                     <div><button type="button" role="radio" aria-checked="true" data-state="checked"
                                             value="60"
                                             class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 peer sr-only"
@@ -311,20 +311,20 @@
                                                     <circle cx="12" cy="12" r="10"></circle>
                                                 </svg></span></button><label
                                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&amp;:has([data-state=checked])]:border-primary cursor-pointer text-center"
-                                            for="duration-60">{{ __('welcome.key_125') }}</label></div>
+                                            for="duration-60">60 minutes</label></div>
                                     <div><button type="button" role="radio" aria-checked="false"
                                             data-state="unchecked" value="90"
                                             class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 peer sr-only"
                                             id="duration-90" tabindex="-1" data-radix-collection-item=""></button><label
                                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&amp;:has([data-state=checked])]:border-primary cursor-pointer text-center"
-                                            for="duration-90">{{ __('welcome.key_126') }}</label></div>
+                                            for="duration-90">90 minutes</label></div>
                                     <div><button type="button" role="radio" aria-checked="false"
                                             data-state="unchecked" value="120"
                                             class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 peer sr-only"
                                             id="duration-120" tabindex="-1"
                                             data-radix-collection-item=""></button><label
                                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&amp;:has([data-state=checked])]:border-primary cursor-pointer text-center"
-                                            for="duration-120">{{ __('welcome.key_127') }}</label></div>
+                                            for="duration-120">2 hours</label></div>
                                 </div>
                             </div>
                         </div>
@@ -339,41 +339,41 @@
                                     </path>
                                     <path d="m3.3 7 8.7 5 8.7-5"></path>
                                     <path d="M12 22V12"></path>
-                                </svg>{{ __('welcome.key_128') }}</h2>
+                                </svg>...Or Buy a Package &amp; Save!</h2>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div
                                     class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted hover:border-primary/50">
-                                    <h4 class="font-bold text-lg text-foreground">{{ __('welcome.key_129') }}</h4>
-                                    <p class="text-sm font-semibold text-green-600">{{ __('welcome.key_130') }}</p>
-                                    <p class="text-2xl font-bold text-primary mt-2">{{ __('welcome.key_131') }}</p>
-                                    <p class="text-xs text-muted-foreground">{{ __('welcome.key_132') }}</p>
+                                    <h4 class="font-bold text-lg text-foreground">5 Lessons</h4>
+                                    <p class="text-sm font-semibold text-green-600">Save 5%</p>
+                                    <p class="text-2xl font-bold text-primary mt-2">$133.00</p>
+                                    <p class="text-xs text-muted-foreground">Just $26.60 per lesson</p>
                                 </div>
                                 <div
                                     class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted hover:border-primary/50">
-                                    <h4 class="font-bold text-lg text-foreground">{{ __('welcome.key_133') }}</h4>
-                                    <p class="text-sm font-semibold text-green-600">{{ __('welcome.key_134') }}</p>
-                                    <p class="text-2xl font-bold text-primary mt-2">{{ __('welcome.key_135') }}</p>
-                                    <p class="text-xs text-muted-foreground">{{ __('welcome.key_136') }}</p>
+                                    <h4 class="font-bold text-lg text-foreground">10 Lessons</h4>
+                                    <p class="text-sm font-semibold text-green-600">Save 10%</p>
+                                    <p class="text-2xl font-bold text-primary mt-2">$252.00</p>
+                                    <p class="text-xs text-muted-foreground">Just $25.20 per lesson</p>
                                 </div>
                                 <div
                                     class="p-4 border-2 rounded-lg cursor-pointer transition-all text-center border-muted hover:border-primary/50">
-                                    <h4 class="font-bold text-lg text-foreground">{{ __('welcome.key_137') }}</h4>
-                                    <p class="text-sm font-semibold text-green-600">{{ __('welcome.key_138') }}</p>
-                                    <p class="text-2xl font-bold text-primary mt-2">{{ __('welcome.key_139') }}</p>
-                                    <p class="text-xs text-muted-foreground">{{ __('welcome.key_140') }}</p>
+                                    <h4 class="font-bold text-lg text-foreground">20 Lessons</h4>
+                                    <p class="text-sm font-semibold text-green-600">Save 20%</p>
+                                    <p class="text-2xl font-bold text-primary mt-2">$448.00</p>
+                                    <p class="text-xs text-muted-foreground">Just $22.40 per lesson</p>
                                 </div>
                             </div>
                         </div>
                         <div class="lg:col-span-5" style="opacity: 1;">
                             <div class="bg-primary/10 p-4 rounded-lg border border-primary/30 text-center">
-                                <p class="text-lg font-medium text-foreground">{{ __('welcome.key_141') }}</p>
+                                <p class="text-lg font-medium text-foreground">60 min Lesson</p>
                                 <p class="text-2xl font-bold text-primary mt-1"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="inline h-6 w-6 relative -top-0.5">
                                         <line x1="12" x2="12" y1="2" y2="22"></line>
                                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg>{{ __('welcome.key_142') }}</p>
+                                    </svg>28.00</p>
                             </div>
                         </div>
                         <div class="lg:col-span-5" style="opacity: 1;"><button
@@ -383,7 +383,7 @@
                                     stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-5 w-5">
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg> {{ __('welcome.key_143') }}</button></div>
+                                </svg> Confirm &amp; Proceed to Checkout</button></div>
                     </div>
                 </div>
             </div>

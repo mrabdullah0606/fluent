@@ -7,37 +7,38 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="attendanceModalLabel">{{ __('welcome.key_491') }}</h5>
+                        <h5 class="modal-title" id="attendanceModalLabel">Confirm Lesson Attendance</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div id="attendanceDetails">
-                            <p><strong>{{ __('welcome.key_492') }}</strong> <span id="lessonTopic"></span></p>
-                            <p><strong>{{ __('welcome.key_493') }}</strong> <span id="teacherName"></span></p>
-                            <p><strong>{{ __('welcome.key_494') }}</strong> <span id="lessonDate"></span></p>
-                            <p><strong>{{ __('welcome.key_495') }}</strong> $<span id="lessonAmount"></span></p>
+                            <p><strong>Lesson:</strong> <span id="lessonTopic"></span></p>
+                            <p><strong>Teacher:</strong> <span id="teacherName"></span></p>
+                            <p><strong>Date:</strong> <span id="lessonDate"></span></p>
+                            <p><strong>Amount:</strong> $<span id="lessonAmount"></span></p>
                         </div>
                         <hr>
-                        <h6>{{ __('welcome.key_496') }}</h6>
+                        <h6>Please confirm attendance:</h6>
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="studentAttended">
                             <label class="form-check-label" for="studentAttended">
-                                <strong>{{ __('welcome.key_497') }}</strong>
+                                <strong>I attended this lesson</strong>
                             </label>
                         </div>
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="teacherAttended">
                             <label class="form-check-label" for="teacherAttended">
-                                <strong>{{ __('welcome.key_498') }}</strong>
+                                <strong>My teacher attended this lesson</strong>
                             </label>
                         </div>
                         <div class="alert alert-info">
-                            <small><i class="fas fa-info-circle"></i> {{ __('welcome.key_499') }}</small>
+                            <small><i class="fas fa-info-circle"></i> Teacher payment will only be processed if both you and
+                                your teacher attended the lesson.</small>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('welcome.key_262') }}</button>
-                        <button type="button" class="btn btn-primary" id="confirmAttendanceBtn">{{ __('welcome.key_500') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmAttendanceBtn">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -45,11 +46,11 @@
 
         <div class="row mb-4">
             <div class="col-10">
-                <h2 class="mb-0"><i class="fas fa-video me-2"></i>{{ __('welcome.key_501') }}</h2>
+                <h2 class="mb-0"><i class="fas fa-video me-2"></i>My Zoom Meetings</h2>
             </div>
             <div class="col-2 text-end">
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#packagesModal">
-                    {{ __('welcome.key_502') }}
+                    View My Packages
                 </button>
             </div>
             <div class="modal fade" id="packagesModal" tabindex="-1" aria-labelledby="packagesModalLabel"
@@ -57,7 +58,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="packagesModalLabel">{{ __('welcome.key_503') }}</h5>
+                            <h5 class="modal-title" id="packagesModalLabel">My Purchased Packages</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -65,13 +66,13 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>{{ __('welcome.key_504') }}</th>
-                                            <th>{{ __('welcome.key_505') }}</th>
-                                            <th>{{ __('welcome.key_506') }}</th>
-                                            <th>{{ __('welcome.key_507') }}</th>
-                                            <th>{{ __('welcome.key_508') }}</th>
-                                            <th>{{ __('welcome.key_509') }}</th>
-                                            <th>{{ __('welcome.key_510') }}</th>
+                                            <th>Package</th>
+                                            <th>Total Lessons</th>
+                                            <th>Taken</th>
+                                            <th>Remaining</th>
+                                            <th>Price per Lesson</th>
+                                            <th>Purchase Date</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -88,8 +89,8 @@
                                                 <td>
                                                     <button class="btn btn-sm btn-warning deduct-lesson-btn"
                                                         data-id="{{ $package->id }}"
-                                                        {{ $package->{{ __('welcome.key_511') }} <= 0 ? 'disabled' : '' }}>
-                                                        {{ __('welcome.key_512') }}
+                                                        {{ $package->lessons_remaining <= 0 ? 'disabled' : '' }}>
+                                                        Deduct
                                                     </button>
                                                 </td>
                                             </tr>
@@ -97,11 +98,11 @@
                                     </tbody>
                                 </table>
                             @else
-                                <p class="text-muted">{{ __('welcome.key_513') }}</p>
+                                <p class="text-muted">You haven't purchased any packages yet.</p>
                             @endif
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('welcome.key_514') }}</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -133,10 +134,10 @@
                 <div class="col-12">
                     <div class="alert alert-warning alert-dismissible fade show">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>{{ __('welcome.key_515') }}</strong>
+                        <strong>Attendance Confirmation Required!</strong>
                         You have {{ $pendingAttendances->count() }} lesson(s) that need attendance confirmation.
                         <button type="button" class="btn btn-sm btn-outline-dark ms-2" onclick="showPendingAttendances()">
-                            {{ __('welcome.key_516') }}
+                            Review Now
                         </button>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -148,7 +149,7 @@
             <div class="col-md-4">
                 <div class="card shadow-sm text-center border-success">
                     <div class="card-body">
-                        <h5 class="card-title text-success">{{ __('welcome.key_517') }}</h5>
+                        <h5 class="card-title text-success">Remaining Lessons</h5>
                         <p class="h3">{{ $remaining }}</p>
                     </div>
                 </div>
@@ -156,7 +157,7 @@
             <div class="col-md-4">
                 <div class="card shadow-sm text-center border-primary">
                     <div class="card-body">
-                        <h5 class="card-title text-primary">{{ __('welcome.key_518') }}</h5>
+                        <h5 class="card-title text-primary">Taken Lessons</h5>
                         <p class="h3">{{ $lessonsTaken }}</p>
                     </div>
                 </div>
@@ -164,7 +165,7 @@
             <div class="col-md-4">
                 <div class="card shadow-sm text-center border-dark">
                     <div class="card-body">
-                        <h5 class="card-title text-dark">{{ __('welcome.key_519') }}</h5>
+                        <h5 class="card-title text-dark">Total Lessons Purchased</h5>
                         <p class="h3">{{ $totalPurchased }}</p>
                     </div>
                 </div>
@@ -178,13 +179,13 @@
                         <table id="zoomTable" class="table table-striped table-bordered align-middle">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>{{ __('welcome.key_520') }}</th>
-                                    <th>{{ __('welcome.key_521') }}</th>
-                                    <th>{{ __('welcome.key_259') }}</th>
-                                    <th>{{ __('welcome.key_218') }}</th>
-                                    <th>{{ __('welcome.key_522') }}</th>
-                                    <th>{{ __('welcome.key_523') }}</th>
-                                    <th>{{ __('welcome.key_524') }}</th>
+                                    <th>Topic</th>
+                                    <th>Teacher</th>
+                                    <th>Start Time</th>
+                                    <th>Duration</th>
+                                    <th>Meeting ID</th>
+                                    <th>Password</th>
+                                    <th>Link</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -216,18 +217,18 @@
                                             @if ($attendee && $attendee->pivot->has_joined)
                                                 <a href="{{ $meeting->join_url }}" target="_blank"
                                                     class="btn btn-sm btn-primary">
-                                                    {{ __('welcome.key_526') }}
+                                                    Rejoin
                                                 </a>
                                             @else
                                                 <a href="{{ route('student.zoom.join', $meeting->id) }}"
                                                     class="btn btn-sm btn-success">
-                                                    {{ __('welcome.key_527') }}
+                                                    Join
                                                 </a>
                                             @endif
 
                                             <button class="btn btn-sm btn-outline-secondary"
                                                 onclick="copyMeetingLink('{{ $meeting->join_url }}', '{{ $meeting->meeting_id }}', '{{ $meeting->password }}')">
-                                                {{ __('welcome.key_528') }}
+                                                Copy
                                             </button>
                                         </td>
                                     </tr>
@@ -238,7 +239,7 @@
                 @else
                     <div class="alert alert-light text-center">
                         <i class="fas fa-video-slash fa-2x mb-2 text-muted"></i>
-                        <p class="mb-0">{{ __('welcome.key_529') }}</p>
+                        <p class="mb-0">No meetings found</p>
                     </div>
                 @endif
             </div>

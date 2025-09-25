@@ -3,28 +3,28 @@
 @section('content')
     <main class="main-content" id="language-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold">{{ __('welcome.key_717') }}</h3>
+            <h3 class="fw-bold">User Management</h3>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold"><a href="{{ route('admin.careers.create') }}" class="btn btn-secondary">{{ __('welcome.key_703') }}</a></h3>
+            <h3 class="fw-bold"><a href="{{ route('admin.careers.create') }}" class="btn btn-secondary">Add New Job</a></h3>
             <a href="{{ route('admin.careers.index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left-circle me-1"></i> {{ __('welcome.key_73') }}
+                <i class="bi bi-arrow-left-circle me-1"></i> Back
             </a>
         </div>
         <table id="userTable" class="table table-bordered bg-white shadow-sm">
             <thead class="table-warning">
                 <tr>
-                    <th>{{ __('welcome.key_598') }}</th>
-                    <th>{{ __('welcome.key_599') }}</th>
-                    <th>{{ __('welcome.key_705') }}</th>
-                    <th>{{ __('welcome.key_706') }}</th>
-                    <th>{{ __('welcome.key_704') }}</th>
-                    <th>{{ __('welcome.key_718') }}</th>
-                    <th class="text-center">{{ __('welcome.key_604') }}</th>
+                    <th>ID</th>
+                    <th>Job Title</th>
+                    <th>Salary</th>
+                    <th>Job Type</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="language-table-body">
-               @foreach ($careers as $key => $career)
+                @foreach ($careers as $key => $career)
                     <tr data-id="{{ $career->id }}">
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $career->title }}</td>

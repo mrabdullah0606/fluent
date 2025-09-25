@@ -13,12 +13,13 @@
                             <path d="m12 19-7-7 7-7"></path>
                             <path d="M19 12H5"></path>
                         </svg>
-                        {{ __('welcome.key_73') }}
+                        Back
                     </button>
                 </a>
                 <h1 class="text-3xl md:text-4xl font-bold text-foreground text-center"><span
-                        class="text-gradient-yellow-red">{{ __('welcome.key_159') }}</span></h1>
-                <p class="text-md text-muted-foreground text-center mt-2 max-w-2xl mx-auto">{{ __('welcome.key_557') }}</p>
+                        class="text-gradient-yellow-red">Explore Our Group Lessons</span></h1>
+                <p class="text-md text-muted-foreground text-center mt-2 max-w-2xl mx-auto">Learn collaboratively with
+                    expert tutors and peers from around the world.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 @foreach ($courses as $course)
@@ -48,7 +49,9 @@
                                 </div>
                             </div>
                             <div class="p-4 space-y-3 flex-grow">
-                                <p class="text-muted-foreground text-sm line-clamp-3">{{ __('welcome.key_558') }}
+                                <p class="text-muted-foreground text-sm line-clamp-3">Master the basics of French
+                                    conversation
+                                    in a fun, interactive group setting. Perfect for absolute beginners aiming for A1 level.
                                 </p>
                                 <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-foreground">
                                     <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -57,7 +60,7 @@
                                             class="h-3.5 w-3.5 mr-1.5 text-primary">
                                             <line x1="12" x2="12" y1="2" y2="22"></line>
                                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                        </svg> {{ __('welcome.key_174') }} <span class="font-semibold ml-1"
+                                        </svg> Price: <span class="font-semibold ml-1"
                                             id="course-price">${{ $course->price_per_student }}
                                             USD</span>
                                     </div>
@@ -116,7 +119,7 @@
                                         </svg> Spots: 5/{{ $course->max_students }}</div>
                                 </div>
                                 <div class="pt-2">
-                                    <h4 class="text-xs font-semibold text-primary mb-1">{{ __('welcome.key_175') }}</h4>
+                                    <h4 class="text-xs font-semibold text-primary mb-1">Key Features:</h4>
                                     <ul class="space-y-1">
                                         <li class="flex items-center text-xs text-muted-foreground"><svg
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -125,7 +128,7 @@
                                                 class="h-3 w-3 mr-1.5 text-green-500 flex-shrink-0">
                                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                            </svg> {{ __('welcome.key_559') }}</li>
+                                            </svg> Interactive role-plays</li>
                                         <li class="flex items-center text-xs text-muted-foreground"><svg
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -133,14 +136,15 @@
                                                 class="h-3 w-3 mr-1.5 text-green-500 flex-shrink-0">
                                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                            </svg> {{ __('welcome.key_560') }}</li>
+                                            </svg> Cultural insights</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="flex items-center p-4 mt-auto"><button
                                     class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full btn-red"
                                     data-course-id="{{ $course->id }}" data-price="{{ $course->price_per_student }}"
-                                    onclick="goToGroupCheckout(this)">{{ __('welcome.key_561') }}
+                                    onclick="goToGroupCheckout(this)">Join
+                                    Course
                                 </button></div>
                         </div>
                     </div>

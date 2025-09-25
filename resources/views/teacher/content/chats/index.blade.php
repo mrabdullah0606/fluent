@@ -235,8 +235,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
-                            <p class="text-lg font-medium">{{ __('welcome.key_304') }}</p>
-                            <p class="text-sm">{{ __('welcome.key_305') }}</p>
+                            <p class="text-lg font-medium">No conversations yet</p>
+                            <p class="text-sm">Start a conversation to see it here</p>
                         </div>
                     @endif
                 </div>
@@ -247,7 +247,7 @@
                         <span>{{ auth()->user()->name }}</span>
                         <span class="flex items-center">
                             <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
-                            {{ __('welcome.key_306') }}
+                            Online
                         </span>
                     </div>
                 </div>
@@ -269,8 +269,8 @@
                             <div>
                                 <h3 class="text-lg font-semibold" id="chatUserName">{{ $user->name }}</h3>
                                 <p class="text-sm text-muted-foreground" id="chatUserStatus">
-                                    <span class="typing-status hidden">{{ __('welcome.key_307') }}</span>
-                                    <span class="online-status">{{ __('welcome.key_306') }}</span>
+                                    <span class="typing-status hidden">typing...</span>
+                                    <span class="online-status">Online</span>
                                 </p>
                             </div>
                         </div>
@@ -311,12 +311,12 @@
                     <div id="messagesContainer"
                         class="flex-grow p-6 overflow-y-auto chat-scrollbar bg-gradient-to-b from-gray-50 to-white">
                         <div class="space-y-4" id="messagesList">
-                             @if (isset($messages) && $messages->count() > 0)
+                            @if (isset($messages) && $messages->count() > 0)
                                 @foreach ($messages as $message)
                                     <div
                                         class="flex items-end gap-2 {{ $message->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
                                         @if ($message->sender_id != auth()->id())
-                                           <span class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8">
+                                            <span class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8">
                                                 <span
                                                     class="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/40 text-primary text-sm font-semibold">
                                                     {{ strtoupper(substr($message->sender->name, 0, 1)) }}
@@ -330,9 +330,9 @@
                                                 <div class="flex items-center justify-between mt-2">
                                                     <small
                                                         class="text-xs opacity-70">{{ $message->created_at->format('g:i A') }}</small>
-                                                     @if ($message->sender_id == auth()->id())
-                                                       <div class="message-status ml-2">
-                                                             @if ($message->read_at)
+                                                    @if ($message->sender_id == auth()->id())
+                                                        <div class="message-status ml-2">
+                                                            @if ($message->read_at)
                                                                 <svg class="text-blue-300" width="12" height="12"
                                                                     fill="currentColor" viewBox="0 0 20 20">
                                                                     <path
@@ -362,7 +362,7 @@
                                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                         </svg>
                                     </div>
-                                    <p class="text-gray-500">{{ __('welcome.key_308') }}</p>
+                                    <p class="text-gray-500">No messages yet. Start the conversation!</p>
                                 </div>
                             @endif
                         </div>
@@ -405,7 +405,7 @@
 
                                 <!-- Character Count -->
                                 <div class="absolute bottom-1 right-2 text-xs text-muted-foreground">
-                                    <span id="charCount">{{ __('welcome.key_198') }}</span>{{ __('welcome.key_309') }}
+                                    <span id="charCount">0</span>/1000
                                 </div>
                             </div>
 
@@ -437,19 +437,19 @@
                         <div class="flex flex-wrap gap-2 mt-2" id="quickResponses">
                             <button
                                 class="quick-response px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                                {{ __('welcome.key_310') }}
+                                👍 Thanks!
                             </button>
                             <button
                                 class="quick-response px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                                {{ __('welcome.key_311') }}
+                                👋 Hello
                             </button>
                             <button
                                 class="quick-response px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                                {{ __('welcome.key_312') }}
+                                ✅ Okay
                             </button>
                             <button
                                 class="quick-response px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                                {{ __('welcome.key_313') }}
+                                ❓ Can you help?
                             </button>
                         </div>
                     </div>
@@ -462,12 +462,13 @@
                                 stroke-linejoin="round" class="mx-auto mb-6 text-gray-300">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                             </svg>
-                            <h3 class="text-xl font-semibold text-gray-600 mb-3">{{ __('welcome.key_314') }}</h3>
-                            <p class="text-gray-500 mb-4">{{ __('welcome.key_315') }}</p>
+                            <h3 class="text-xl font-semibold text-gray-600 mb-3">Welcome to FluentAll Chat</h3>
+                            <p class="text-gray-500 mb-4">Select a conversation from the sidebar to start chatting with
+                                students and teachers.</p>
                             <div class="text-sm text-gray-400">
-                                <p>{{ __('welcome.key_316') }}</p>
-                                <p>{{ __('welcome.key_317') }}</p>
-                                <p>{{ __('welcome.key_318') }}</p>
+                                <p>💬 Send messages instantly</p>
+                                <p>📁 Share files and documents</p>
+                                <p>🔔 Get real-time notifications</p>
                             </div>
                         </div>
                     </div>
@@ -487,7 +488,7 @@
                             d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                         </path>
                     </svg>
-                    <span class="text-gray-700">{{ __('welcome.key_319') }}</span>
+                    <span class="text-gray-700">Loading chat...</span>
                 </div>
             </div>
         </div>

@@ -5,11 +5,11 @@
         <div class="row m-3">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">{{ __('welcome.key_631') }}</h4>
+                    <h4 class="mb-sm-0">Lesson Attendance Approvals</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('welcome.key_632') }}</a></li>
-                            <li class="breadcrumb-item active">{{ __('welcome.key_633') }}</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Attendance Approvals</li>
                         </ol>
                     </div>
                 </div>
@@ -24,9 +24,9 @@
                         <form method="GET" action="{{ route('admin.attendances.index') }}">
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <label class="form-label">{{ __('welcome.key_521') }}</label>
+                                    <label class="form-label">Teacher</label>
                                     <select class="form-select" name="teacher_id">
-                                        <option value="">{{ __('welcome.key_634') }}</option>
+                                        <option value="">All Teachers</option>
                                         @foreach ($teachers as $teacher)
                                             <option value="{{ $teacher->id }}"
                                                 {{ request('teacher_id') == $teacher->id ? 'selected' : '' }}>
@@ -36,20 +36,20 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label">{{ __('welcome.key_635') }}</label>
+                                    <label class="form-label">From Date</label>
                                     <input type="date" class="form-control" name="date_from"
                                         value="{{ request('date_from') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label">{{ __('welcome.key_636') }}</label>
+                                    <label class="form-label">To Date</label>
                                     <input type="date" class="form-control" name="date_to"
                                         value="{{ request('date_to') }}">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">{{ __('welcome.key_637') }}</label>
+                                    <label class="form-label">&nbsp;</label>
                                     <div>
-                                        <button type="submit" class="btn btn-primary">{{ __('welcome.key_638') }}</button>
-                                        <a href="{{ route('admin.attendances.index') }}" class="btn btn-secondary">{{ __('welcome.key_639') }}</a>
+                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                        <a href="{{ route('admin.attendances.index') }}" class="btn btn-secondary">Reset</a>
                                     </div>
                                 </div>
                             </div>
@@ -64,9 +64,9 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">{{ __('welcome.key_640') }}</h5>
+                        <h5 class="card-title mb-0">Pending Attendance Approvals</h5>
                         <button class="btn btn-success" onclick="bulkApprove()">
-                            <i class="ri-check-double-line me-1"></i>{{ __('welcome.key_641') }}
+                            <i class="ri-check-double-line me-1"></i>Bulk Approve
                         </button>
                     </div>
                     <div class="card-body">
@@ -81,13 +81,13 @@
                                                 <th>
                                                     <input type="checkbox" id="selectAll">
                                                 </th>
-                                                <th>{{ __('welcome.key_384') }}</th>
-                                                <th>{{ __('welcome.key_642') }}</th>
-                                                <th>{{ __('welcome.key_521') }}</th>
-                                                <th>{{ __('welcome.key_643') }}</th>
-                                                <th>{{ __('welcome.key_387') }}</th>
-                                                <th>{{ __('welcome.key_644') }}</th>
-                                                <th>{{ __('welcome.key_604') }}</th>
+                                                <th>Date</th>
+                                                <th>Student</th>
+                                                <th>Teacher</th>
+                                                <th>Meeting</th>
+                                                <th>Amount</th>
+                                                <th>Attendance Status</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -130,16 +130,16 @@
                                                             @if ($attendance->student_attended && $attendance->teacher_attended)
                                                                 <button type="button" class="btn btn-sm btn-success"
                                                                     onclick="approveAttendance({{ $attendance->id }})">
-                                                                    <i class="ri-check-line me-1"></i>{{ __('welcome.key_646') }}
+                                                                    <i class="ri-check-line me-1"></i>Approve
                                                                 </button>
                                                             @endif
                                                             <button type="button" class="btn btn-sm btn-danger"
                                                                 onclick="rejectAttendance({{ $attendance->id }})">
-                                                                <i class="ri-close-line me-1"></i>{{ __('welcome.key_647') }}
+                                                                <i class="ri-close-line me-1"></i>Reject
                                                             </button>
                                                             <a href="{{ route('admin.attendances.show', $attendance->id) }}"
                                                                 class="btn btn-sm btn-info">
-                                                                <i class="ri-eye-line me-1"></i>{{ __('welcome.key_648') }}
+                                                                <i class="ri-eye-line me-1"></i>View
                                                             </a>
                                                         </div>
                                                     </td>
@@ -156,8 +156,8 @@
                         @else
                             <div class="text-center py-5">
                                 <i class="ri-checkbox-circle-line display-4 text-muted"></i>
-                                <h5 class="mt-3">{{ __('welcome.key_649') }}</h5>
-                                <p class="text-muted">{{ __('welcome.key_650') }}</p>
+                                <h5 class="mt-3">No pending approvals</h5>
+                                <p class="text-muted">All lesson attendances have been processed.</p>
                             </div>
                         @endif
                     </div>
@@ -171,21 +171,21 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">{{ __('welcome.key_651') }}</h5>
+                    <h5 class="modal-title" id="modalTitle">Approve Attendance</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="approvalForm" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">{{ __('welcome.key_652') }}</label>
+                            <label class="form-label">Admin Notes (Optional)</label>
                             <textarea class="form-control" name="admin_notes" rows="3" placeholder="Add any notes about this approval..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('welcome.key_262') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-success" id="submitBtn">
-                            <i class="ri-check-line me-1"></i>{{ __('welcome.key_646') }}
+                            <i class="ri-check-line me-1"></i>Approve
                         </button>
                     </div>
                 </form>
@@ -198,22 +198,22 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ __('welcome.key_653') }}</h5>
+                    <h5 class="modal-title">Reject Attendance</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="rejectForm" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">{{ __('welcome.key_654') }} <span class="text-danger">*</span></label>
+                            <label class="form-label">Reason for Rejection <span class="text-danger">*</span></label>
                             <textarea class="form-control" name="admin_notes" rows="3" required
                                 placeholder="Please provide a reason for rejecting this attendance..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('welcome.key_262') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-danger">
-                            <i class="ri-close-line me-1"></i>{{ __('welcome.key_647') }}
+                            <i class="ri-close-line me-1"></i>Reject
                         </button>
                     </div>
                 </form>

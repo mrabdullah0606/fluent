@@ -15,7 +15,7 @@
                             <path d="m12 19-7-7 7-7"></path>
                             <path d="M19 12H5"></path>
                         </svg>
-                        {{ __('welcome.key_530') }}
+                        Back to Booking
                     </a>
 
                     <div class="rounded-lg border bg-card text-card-foreground shadow-xl border-primary/30">
@@ -27,10 +27,10 @@
                                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
-                                {{ __('welcome.key_531') }}
+                                Secure Checkout
                             </h3>
                             <p class="text-sm text-muted-foreground">
-                                {{ __('welcome.key_152') }}
+                                You're just a step away from starting your learning journey!
                             </p>
                         </div>
 
@@ -43,7 +43,7 @@
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg>
-                                    {{ __('welcome.key_153') }}
+                                    Order Summary
                                 </h3>
 
                                 <div class="space-y-3">
@@ -79,7 +79,7 @@
                                     </div>
                                     <div class="flex justify-between items-center text-muted-foreground">
                                         <div class="flex items-center">
-                                            <p>{{ __('welcome.key_532') }}</p>
+                                            <p>Processing Fee (3%)</p>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                 stroke-linejoin="round" class="ml-1 text-gray-400">
@@ -93,7 +93,7 @@
                                     </div>
                                     <hr class="border-t border-gray-200">
                                     <div class="flex justify-between items-center font-bold text-foreground text-lg">
-                                        <p>{{ __('welcome.key_533') }}</p>
+                                        <p>Total Amount</p>
                                         <span class="text-primary text-xl">
                                             ${{ number_format($total, 2) }}
                                         </span>
@@ -101,9 +101,9 @@
                                     @if ($type === 'package' && isset($additionalData['number_of_lessons']) && $additionalData['number_of_lessons'] > 0)
                                         <div class="bg-green-50 border border-green-200 rounded-lg p-3 mt-3">
                                             <p class="text-sm text-green-800 font-medium">
-                                                {{ __('welcome.key_534') }} <span
+                                                💡 You're paying only <span
                                                     class="font-bold">${{ number_format($calculatedPrice / $additionalData['number_of_lessons'], 2) }}</span>
-                                                {{ __('welcome.key_535') }}
+                                                per lesson!
                                             </p>
                                         </div>
                                     @endif
@@ -125,7 +125,7 @@
                                         <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                                         <path d="M7 15h.01M11 15h4"></path>
                                     </svg>
-                                    {{ __('welcome.key_155') }}
+                                    Payment Method
                                 </label>
                                 <div
                                     class="border border-blue-300 rounded-lg p-4 bg-blue-50 hover:bg-blue-100 transition-colors">
@@ -135,7 +135,7 @@
                                             <div class="h-2.5 w-2.5 rounded-full bg-blue-600"></div>
                                         </div>
                                         <div class="flex items-center space-x-2">
-                                            <span class="text-blue-900 font-medium">{{ __('welcome.key_156') }}</span>
+                                            <span class="text-blue-900 font-medium">Pay with Stripe</span>
                                             <div class="flex items-center space-x-2">
                                                 <svg class="h-4 w-4 text-blue-600" viewBox="0 0 24 24" fill="none">
                                                     <rect x="2" y="4" width="20" height="16" rx="2"
@@ -143,12 +143,14 @@
                                                     <path d="M7 15h.01M11 15h4" stroke="currentColor" stroke-width="2"
                                                         stroke-linecap="round" />
                                                 </svg>
-                                                <span class="text-xs text-blue-600 font-medium">{{ __('welcome.key_536') }}</span>
+                                                <span class="text-xs text-blue-600 font-medium">256-bit SSL
+                                                    Encrypted</span>
                                             </div>
                                         </div>
                                     </div>
                                     <p class="text-xs text-blue-700 mt-2 ml-8">
-                                        {{ __('welcome.key_537') }}
+                                        Secure payment processing with industry-standard encryption. We accept Visa,
+                                        Mastercard, American Express, and more.
                                     </p>
                                 </div>
                             </div>
@@ -179,14 +181,14 @@
                                         onclick="togglePayButton()" />
 
                                     <label for="agreeTerms" class="ml-2 text-sm text-gray-700">
-                                        {{ __('welcome.key_538') }}
+                                        I agree to the
                                         <button type="button"
                                             onclick="openPdfModal('{{ asset('assets/website/pdf/refundPolicy.pdf') }}')"
-                                            class="text-primary hover:underline font-medium">{{ __('welcome.key_539') }}</button>
-                                        {{ __('welcome.key_540') }}
+                                            class="text-primary hover:underline font-medium">Terms of Service</button>
+                                        and
                                         <button type="button"
                                             onclick="openPdfModal('{{ asset('assets/website/pdf/refundPolicy.pdf') }}')"
-                                            class="text-primary hover:underline font-medium">{{ __('welcome.key_541') }}</button>.
+                                            class="text-primary hover:underline font-medium">Privacy Policy</button>.
                                     </label>
                                 </div>
 
@@ -210,7 +212,7 @@
                                 <div class="bg-white rounded-lg shadow-lg w-full h-full relative">
                                     <!-- Close Button -->
                                     <button onclick="closePdfModal(event)"
-                                        class="absolute top-4 right-6 text-gray-600 hover:text-black text-3xl font-bold">{{ __('welcome.key_542') }}</button>
+                                        class="absolute top-4 right-6 text-gray-600 hover:text-black text-3xl font-bold">&times;</button>
 
                                     <!-- PDF Viewer Fullscreen -->
                                     <iframe id="pdfFrame" src="" class="w-full h-full"></iframe>

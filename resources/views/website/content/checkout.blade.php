@@ -17,14 +17,14 @@
                                 <!-- Secure Checkout Title -->
                             </h3>
                             <p class="text-sm text-muted-foreground">
-                                {{ __('welcome.key_152') }}
+                                You're just a step away from starting your learning journey!
                             </p>
                         </div>
 
                         <div class="p-6 space-y-6">
                             <!-- Order Summary -->
                             <div class="border border-input rounded-lg p-4 bg-background">
-                                <h3 class="text-lg font-semibold text-foreground mb-2">{{ __('welcome.key_153') }}</h3>
+                                <h3 class="text-lg font-semibold text-foreground mb-2">Order Summary</h3>
                                 {{-- <div class="space-y-1">
                                 <div class="flex justify-between items-center text-muted-foreground">
                                     <p>{{ $summary }}</p>
@@ -70,7 +70,7 @@
 
                             <!-- Payment Options -->
                             <div>
-                                <label class="text-lg font-semibold text-foreground mb-3 block">{{ __('welcome.key_155') }}</label>
+                                <label class="text-lg font-semibold text-foreground mb-3 block">Payment Method</label>
                                 <div role="radiogroup" class="grid gap-4" id="payment-options">
                                     <label
                                         class="flex items-center space-x-3 p-4 border border-gray-300 rounded-lg cursor-pointer">
@@ -81,7 +81,7 @@
                                                 class="h-2.5 w-2.5 rounded-full bg-blue-600 scale-0 peer-checked:scale-100 transition-transform duration-200">
                                             </div>
                                         </div>
-                                        <span class="text-blue-900 font-medium">{{ __('welcome.key_156') }}</span>
+                                        <span class="text-blue-900 font-medium">Pay with Stripe</span>
                                     </label>
 
                                     <label
@@ -93,7 +93,7 @@
                                                 class="h-2.5 w-2.5 rounded-full bg-green-600 scale-0 peer-checked:scale-100 transition-transform duration-200">
                                             </div>
                                         </div>
-                                        <span class="text-green-900 font-medium">{{ __('welcome.key_157') }}</span>
+                                        <span class="text-green-900 font-medium">Demo Payment</span>
                                     </label>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                             </div>
 
                             <p class="text-xs text-muted-foreground text-center">
-                                {{ __('welcome.key_158') }}
+                                By clicking "Pay Securely", you agree to our Terms of Service and Privacy Policy.
                             </p>
                         </div>
                     </div>
