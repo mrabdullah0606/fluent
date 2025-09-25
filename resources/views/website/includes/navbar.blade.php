@@ -216,7 +216,7 @@
             <div class="collapse navbar-collapse justify-content-end align-items-center mt-2 mt-lg-0 w-100"
                 id="navbarNav">
                 <a href="{{ route('switch.to.teacher') }}" class="btn btn-outline-warning px-4 py-2 fw-semibold me-3">
-                    <i class="bi bi-arrow-left-right"></i> {{ __('welcome.navSubHeading') }}
+                    <i class="bi bi-arrow-left-right"></i> {{ __('welcome.switchToTeacher') }}
                 </a>
 
                 <ul class="navbar-nav me-3">

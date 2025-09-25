@@ -22,11 +22,6 @@ class HomeController extends Controller
      *
      * @return View
      */
-    // function index(): View
-    // {
-    //     $languages = Language::withCount('teachers')->get();
-    //     return view('website.content.index', compact('languages'));
-    // }
     public function index()
     {
         $languages = Language::all()->map(function ($language) {
@@ -38,25 +33,22 @@ class HomeController extends Controller
         return view('website.content.index', compact('languages'));
     }
 
-
-    // public function showByLanguage($languageId): View
-    // {
-    //     $language = Language::findOrFail($languageId);
-
-    //     $teachers = Teacher::with('user')
-    //         ->where('language_id', $languageId)
-    //         ->get();
-
-    //     return view('website.content.language', compact('language', 'teachers'));
-    // }
     public function showByLanguage($languageId): View
     {
         $language = Language::findOrFail($languageId);
-
-        $teachers = Teacher::with('user')
+        $teachers = Teacher::with([
+            'user.teacherProfile',
+            'user.lessonPackages',
+            'user.teacherSettings'
+        ])
             ->whereJsonContains('teaches', (string) $languageId)
             ->get();
-
+        $teachers->map(function ($teacher) {
+            $teacher->duration60Rate = optional(
+                $teacher->user->teacherSettings->firstWhere('key', 'duration_60')
+            )->value ?? 0;
+            $teacher->packages = $teacher->user->lessonPackages;
+        });
         return view('website.content.language', compact('language', 'teachers'));
     }
 
@@ -105,49 +97,6 @@ class HomeController extends Controller
         return view('website.content.find-tutor');
     }
 
-    // public function tutor($id): View
-    // {
-    //     // Fetch teacher user with relations
-    //     $teacher = User::with(['teacherProfile', 'lessonPackages', 'teacherSettings'])
-    //         ->where('id', $id)
-    //         ->where('role', 'teacher')
-    //         ->firstOrFail();
-    //     // Teacher profile details
-    //     $teacherProfile = \App\Models\Teacher::where('user_id', $id)->first();
-    //     $introVideo = $teacherProfile?->intro_video;
-    //     $profileImage = $teacherProfile?->profile_image;
-
-    //     // Languages they teach
-    //     $languages = [];
-    //     if (!empty($teacherProfile?->teaches)) {
-    //         $languages = \App\Models\Language::whereIn('id', $teacherProfile->teaches)->pluck('name')->toArray();
-    //     }
-
-    //     // Rates (example from teacherSettings)
-    //     $duration60Rate = optional($teacher->teacherSettings->firstWhere('key', 'duration_60'))->value ?? 0;
-
-    //     // Reviews
-    //     $reviews = Review::with('student')
-    //         ->where('teacher_id', $teacher->id)
-    //         ->where('is_approved', true)
-    //         ->latest()
-    //         ->get();
-
-    //     $reviewsCount = $reviews->count();
-    //     $averageRating = $reviewsCount > 0 ? round($reviews->avg('rating'), 1) : 0;
-
-    //     return view('website.content.tutor', compact(
-    //         'teacher',
-    //         'teacherProfile',
-    //         'introVideo',
-    //         'profileImage',
-    //         'languages',
-    //         'duration60Rate',
-    //         'reviews',
-    //         'reviewsCount',
-    //         'averageRating'
-    //     ));
-    // }
 
     public function tutor($id): View
     {

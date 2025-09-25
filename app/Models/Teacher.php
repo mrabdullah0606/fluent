@@ -43,8 +43,7 @@ class Teacher extends Model
         return $this->hasMany(Review::class);
     }
     public function lessonPackages()
-{
-    return $this->hasMany(\App\Models\LessonPackage::class, 'teacher_id');
-}
-
+    {
+        return $this->hasMany(\App\Models\LessonPackage::class, 'teacher_id');
+    }
 }
